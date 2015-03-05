@@ -12,6 +12,6 @@
 	<modules>
 		<module>java_cup</module>
 		<module>grappa</module>
-		<module>dmp-core</module>
+		<module>core</module>
 	</modules>
 </project>

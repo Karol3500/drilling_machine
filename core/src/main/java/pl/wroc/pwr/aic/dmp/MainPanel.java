@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import pl.wroc.pwr.aic.dmp.fileUtils.MapReader;
+
 public class MainPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 3679573816029791253L;
 
@@ -323,7 +325,7 @@ public class MainPanel extends JPanel implements ActionListener {
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 		}
 	}
-
+	
 	public boolean loadFile() throws InputMismatchException {
 		JFileChooser fc = new JFileChooser("input");
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -331,18 +333,9 @@ public class MainPanel extends JPanel implements ActionListener {
 	        fc.setFileFilter(filter);
 		int fcReturn = fc.showOpenDialog(fc);
 		if (fcReturn == JFileChooser.APPROVE_OPTION) {
-
-			System.out.println("Rozpoczęto wczytywanie pliku");
-			FileReader fr = null;
-			try {
-				fr = new FileReader(fc.getSelectedFile().getPath());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null,"Błąd: Brak dostępu do pliku!");
-				return false;
-			}
+			MapReader reader = new MapReader();
 			filePath = fc.getSelectedFile().getPath();
-			Scanner sca = new Scanner(fr);
+			Scanner sca = reader.readFileAsScanner(filePath);
 
 			System.out.println("Rozpoczęto parsowanie pliku");
 			try {
