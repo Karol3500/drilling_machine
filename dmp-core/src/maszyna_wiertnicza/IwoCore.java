@@ -68,9 +68,9 @@ public class IwoCore extends Core {
         mapOn=parent.iwoPanel.mapOn.isSelected();
 
         this.parent = parent;
-        cAmount = parent.cAmount-1;
-        cIds = parent.cIds;
-        cCoords = parent.cCoords;
+        cAmount = parent.numberOfCities-1;
+        cIds = parent.citiesIds;
+        cCoords = parent.citiesCoordinates;
 
         // inicjalizacja zmiennych
         abort = false;
@@ -334,10 +334,10 @@ public class IwoCore extends Core {
 
         // ustawienie przycisk�w g��wnego okna do stanu pozwalaj�cego na dalsze badania
         parent.pb.setVisible(false);
-        parent.b1.setEnabled(true);
-        parent.b2.setEnabled(true);
-        parent.b3.setEnabled(false);
-        parent.b_tour.setEnabled(true);
+        parent.buttonReadMap.setEnabled(true);
+        parent.buttonRunAlgorithm.setEnabled(true);
+        parent.buttonInterrupt.setEnabled(false);
+        parent.buttonReadTour.setEnabled(true);
         parent.running = false;
         System.gc();
     }

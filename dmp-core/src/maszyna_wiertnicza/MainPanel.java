@@ -29,11 +29,11 @@ public class MainPanel extends JPanel implements ActionListener {
 	boolean running; // czy algorytm pracuje
 	boolean fileLoaded; // czy za�adowano miasta
 	String filePath; // �cie�ka pliku do odczytu
-	int cAmount; // ilo�� miast
-	int cTourAmount;
-	int[] cIds; // tablica id miast
-	int[] cTourIds; 
-	double[][] cCoords; // tablica lokalizacji miast
+	int numberOfCities; // ilo�� miast
+	int numberOfCitiesInTour;
+	int[] citiesIds; // tablica id miast
+	int[] citiesIdsInTour; 
+	double[][] citiesCoordinates; // tablica lokalizacji miast
 	int selectedTab;
 
 	// referencje okien komunikacyjnych
@@ -54,10 +54,10 @@ public class MainPanel extends JPanel implements ActionListener {
 
 	// elementy interfejsu
 	Graphics g = getGraphics();
-	JButton b1;
-	JButton b2;
-	JButton b3;
-	JButton b_tour;
+	JButton buttonReadMap;
+	JButton buttonRunAlgorithm;
+	JButton buttonInterrupt;
+	JButton buttonReadTour;
 	JProgressBar pb;
 
 	// obraz t�a
@@ -102,68 +102,68 @@ public class MainPanel extends JPanel implements ActionListener {
 
 		// sekcja przycisk�w
 
-		b1 = new JButton("Wczytaj mapę");
-		b1.setBounds(5, 95, 115, 25);
-		add(b1);
-		b1.addActionListener(this);
+		buttonReadMap = new JButton("Wczytaj mapę");
+		buttonReadMap.setBounds(5, 95, 115, 25);
+		add(buttonReadMap);
+		buttonReadMap.addActionListener(this);
 		
-		b_tour = new JButton("Wczytaj trasę");
-		b_tour.setBounds(125, 95, 115, 25);
-		b_tour.setEnabled(false);
-		add(b_tour);
-		b_tour.addActionListener(this);
+		buttonReadTour = new JButton("Wczytaj trasę");
+		buttonReadTour.setBounds(125, 95, 115, 25);
+		buttonReadTour.setEnabled(false);
+		add(buttonReadTour);
+		buttonReadTour.addActionListener(this);
 
-		b2 = new JButton("Uruchom");
-		b2.setBounds(245, 95, 90, 25);
-		b2.setEnabled(false);
-		add(b2);
-		b2.addActionListener(this);
+		buttonRunAlgorithm = new JButton("Uruchom");
+		buttonRunAlgorithm.setBounds(245, 95, 90, 25);
+		buttonRunAlgorithm.setEnabled(false);
+		add(buttonRunAlgorithm);
+		buttonRunAlgorithm.addActionListener(this);
 
-		b3 = new JButton("Przerwij");
-		b3.setBounds(340, 95, 90, 25);
-		b3.setEnabled(false);
-		add(b3);
-		b3.addActionListener(this);
+		buttonInterrupt = new JButton("Przerwij");
+		buttonInterrupt.setBounds(340, 95, 90, 25);
+		buttonInterrupt.setEnabled(false);
+		add(buttonInterrupt);
+		buttonInterrupt.addActionListener(this);
 
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		// Odebranie uchwytu od listenera i wykonanie adekwatnej operacji
 		Object source = event.getSource();
-		if (source == b1) {
+		if (source == buttonReadMap) {
 			// wczytywanie pliku z miastami
 			fileLoaded = loadFile();
 			if (fileLoaded) {
-				b2.setEnabled(true);
-				b_tour.setEnabled(true);
+				buttonRunAlgorithm.setEnabled(true);
+				buttonReadTour.setEnabled(true);
 			}
-		} else if (source == b2) {
+		} else if (source == buttonRunAlgorithm) {
 			// odpalenie algorytmu z wybranymi ustawieniami
 			if (!running && fileLoaded) {
 				selectedTab=parent.tabbedP.getSelectedIndex();
 				if(selectedTab==0 ||  selectedTab>6){ // 2 tymczasowo nie do odpalenia
 					JOptionPane.showMessageDialog(null,"Aby uruchomić symulację wybierz najpierw zakładkę któregoś algorytmu.");
 				} else {
-				b1.setEnabled(false);
-				b2.setEnabled(false);
-				b3.setEnabled(true);
-				b_tour.setEnabled(false);
+				buttonReadMap.setEnabled(false);
+				buttonRunAlgorithm.setEnabled(false);
+				buttonInterrupt.setEnabled(true);
+				buttonReadTour.setEnabled(false);
 				pb.setValue(0);
 				pb.setVisible(true);
 				running = true;
 				runAlg();
 				}
 			}
-		} else if (source == b3) {
+		} else if (source == buttonInterrupt) {
 			// wstrzymanie pracy algorytmu
 			alg.abort();
 			running = false;
-			b1.setEnabled(true);
-			b2.setEnabled(true);
-			b3.setEnabled(false);
+			buttonReadMap.setEnabled(true);
+			buttonRunAlgorithm.setEnabled(true);
+			buttonInterrupt.setEnabled(false);
 			pb.setVisible(false);
 		}
-		else if (source == b_tour) {
+		else if (source == buttonReadTour) {
 			if (!running && fileLoaded) {
 				testRoute();
 			}
@@ -177,20 +177,6 @@ public class MainPanel extends JPanel implements ActionListener {
 	}
 
 	public void runAlg() {
-
-		//test - odpalmy wszystkie algo naraz w osobnych w�tkach
-		/*
-		alg = new GACore(this);
-		algRun = new Thread(alg);
-		algRun.setPriority(Thread.MAX_PRIORITY);
-		(algRun).start();
-		alg = new RandomCore(this);
-		algRun = new Thread(alg);
-		algRun.setPriority(Thread.MAX_PRIORITY);
-		(algRun).start();
-		*/
-		
-		
 		
 		try{
 		if(selectedTab==1){
@@ -206,8 +192,6 @@ public class MainPanel extends JPanel implements ActionListener {
         }else if(selectedTab==6){
             alg = new IwoCore(this);
         }
-
-
 		
 		algRun = new Thread(alg);
 		algRun.setPriority(Thread.MAX_PRIORITY);
@@ -215,10 +199,10 @@ public class MainPanel extends JPanel implements ActionListener {
 		} catch(Exception e){
 			JOptionPane.showMessageDialog(null,"Próba uruchomienia algorytmu zakończyła się niespodziewanym błędem. Szczegóły w statystykach.");
 			pb.setVisible(false);
-			b1.setEnabled(true);
-			b2.setEnabled(true);
-			b3.setEnabled(false);
-			b_tour.setEnabled(true);
+			buttonReadMap.setEnabled(true);
+			buttonRunAlgorithm.setEnabled(true);
+			buttonInterrupt.setEnabled(false);
+			buttonReadTour.setEnabled(true);
 			running = false;
 			stats.addLine("============================================================================================================");
 			stats.addDate();
@@ -227,7 +211,6 @@ public class MainPanel extends JPanel implements ActionListener {
 			e.printStackTrace();
 			stats.addLine("============================================================================================================");
 		}
-
 	}
 	
 	public void testRoute() throws InputMismatchException {
@@ -259,13 +242,14 @@ public class MainPanel extends JPanel implements ActionListener {
 				while (!sca.hasNextInt()) {
 					sca.next();
 				}
-				cTourAmount = sca.nextInt()-1;
-				if(cTourAmount+1!=cAmount){
+				numberOfCitiesInTour = sca.nextInt()-1;
+				if(numberOfCitiesInTour+1!=numberOfCities){
 					JOptionPane.showMessageDialog(null,"Błąd: Liczba punktów trasy nie zgadza się z mapą. Trasa ta nie jest przeznaczona dla tej mapy.");
+					sca.close();
 					return;
 				}
 				
-				cTourIds = new int[cTourAmount];
+				citiesIdsInTour = new int[numberOfCitiesInTour];
 
 				while (!sca.next().contains("TOUR_SECTION")) {
 
@@ -277,6 +261,7 @@ public class MainPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(null,"Błąd: Nie znaleziono DIMENSION lub TOUR_SECTION w pliku!");
 				System.out.println("Nie znaleziono DIMENSION lub TOUR_SECTION!");
 				e.printStackTrace();
+				sca.close();
 				return;
 			}
 			int i = 0;
@@ -284,7 +269,7 @@ public class MainPanel extends JPanel implements ActionListener {
 				try {
 					int id = sca.nextInt();
 					if(id!=1 && id!=-1){
-						cTourIds[i] = id;
+						citiesIdsInTour[i] = id;
 						i++;
 					}
 					
@@ -292,24 +277,26 @@ public class MainPanel extends JPanel implements ActionListener {
 					System.out.println("Wystąpił błąd przy wczytywaniu identyfikatorów trasy!");
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null,"Błąd: Nie udało się wczytać identyfikatorów trasy!");
+					sca.close();
 					return;
 				}
 			}
+			sca.close();
 			//System.out.println("tour:"+Arrays.toString(cTourIds));
 			System.out.println("Wczytano " + i + " punktów");
 			
 			
 			try{
-			City cTourList[]=new City[cTourAmount];
+			City cTourList[]=new City[numberOfCitiesInTour];
 			//wyliczanie d�ugo�ci trasy
-			for(int j=0;j<cTourAmount;j++){
-				int cityId=cTourIds[j];
-				double x=cCoords[cityId-1][0];
-				double y=cCoords[cityId-1][1];
+			for(int j=0;j<numberOfCitiesInTour;j++){
+				int cityId=citiesIdsInTour[j];
+				double x=citiesCoordinates[cityId-1][0];
+				double y=citiesCoordinates[cityId-1][1];
 				cTourList[j]=new City(cityId,x,y);
 			}
 			RandomCore testcore=new RandomCore(this);
-			testcore.startCity= new City(cIds[0], cCoords[0][0], cCoords[0][1]);
+			testcore.startCity= new City(citiesIds[0], citiesCoordinates[0][0], citiesCoordinates[0][1]);
 			Specimen tester=new Specimen(testcore);
 			tester.setRoute(cTourList);
 			double optymalna=tester.getRate();
@@ -325,12 +312,7 @@ public class MainPanel extends JPanel implements ActionListener {
 				System.out.println("Wystąpił błąd przy obliczaniu długości trasy, być może błąd w pliku trasy.");
 				e.printStackTrace();
 			}
-			
-
-
 		}
-
-
 		return;
 	}
 	
@@ -341,8 +323,6 @@ public class MainPanel extends JPanel implements ActionListener {
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 		}
 	}
-
-
 
 	public boolean loadFile() throws InputMismatchException {
 		JFileChooser fc = new JFileChooser("input");
@@ -372,9 +352,9 @@ public class MainPanel extends JPanel implements ActionListener {
 				while (!sca.hasNextInt()) {
 					sca.next();
 				}
-				cAmount = sca.nextInt();
-				cIds = new int[cAmount];
-				cCoords = new double[cAmount][2];
+				numberOfCities = sca.nextInt();
+				citiesIds = new int[numberOfCities];
+				citiesCoordinates = new double[numberOfCities][2];
 				while (!sca.next().contains("NODE_COORD_SECTION")) {
 
 				}
@@ -386,6 +366,7 @@ public class MainPanel extends JPanel implements ActionListener {
 						.println("Nie znaleziono DIMENSION lub NODE_COORD_SECTION!");
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,"Błąd: Nie znaleziono DIMENSION lub NODE_COORD_SECTION w pliku!");
+				sca.close();
 				return false;
 			}
 			int i = 0;
@@ -395,20 +376,20 @@ public class MainPanel extends JPanel implements ActionListener {
 					//System.out.println(id);
 					double x = sca.nextDouble();
 					double y = sca.nextDouble();
-					cIds[i] = id;
-					cCoords[i][0] = x;
-					cCoords[i][1] = y;
+					citiesIds[i] = id;
+					citiesCoordinates[i][0] = x;
+					citiesCoordinates[i][1] = y;
 					i++;
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null,"Błąd: Nie udało się wczytać listy miast. Prawdopodobnie plik jest źle sformatowany.");
 					System.out.println("Wystąpił błąd przy wczytywaniu listy miast!");
 					e.printStackTrace();
-
+					sca.close();
 					return false;
 				}
 			}
 			System.out.println("Wczytano " + i + " punktów");
-
+			sca.close();
 			return true;
 		}
 

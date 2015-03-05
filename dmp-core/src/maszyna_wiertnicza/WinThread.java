@@ -51,7 +51,6 @@ class Window extends JFrame {
 	public Window() {
 		Container contents = getContentPane();
 		tabbedP = new JTabbedPane();
-		//uwaga na kolejno��!!!
 		machinepanel = new MachinePanel();
 		tabbedP.addTab("Maszyna", machinepanel);
 		gapanel = new GAPanel();
@@ -76,8 +75,5 @@ class Window extends JFrame {
 		main = new MainPanel(this,machinepanel, gapanel,antpanel,sapanel, randpanel, brutepanel, iwopanel, stats, plot, map);
 		contents.add(main);
 		tabbedP.setBounds(2, 125, 798, 495);
-		//tabbedP.setBounds(2, 35, 798, 565); //poprzednie
-		
-		
 	}
 }
