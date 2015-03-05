@@ -1,4 +1,4 @@
-package org.pwr.aic.dmp;
+package pl.wroc.pwr.aic.dmp;
 
 public abstract class Core extends Thread {
 	boolean abort;

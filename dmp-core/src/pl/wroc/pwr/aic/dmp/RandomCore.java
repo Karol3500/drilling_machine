@@ -1,18 +1,14 @@
-package org.pwr.aic.dmp;
-
+package pl.wroc.pwr.aic.dmp;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BruteCore extends Core{
-
+public class RandomCore extends Core{
 
 
 	int cAmount; // liczba miast
 	int[] cIds; // tablica id miast
 	double[][] cCoords; // tablica koordynat�w miast
-	List<City> cList; // lista miast
+	City[] cList; // lista miast
+	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami
 	double currentLen; // warto�� funkcji oceny najepszego osobnika
 	int bestCycle; // nr cyklu z najlepszym osobnikiem
 	Specimen best; // najlepszy osobnik ze wszystkich
@@ -20,9 +16,10 @@ public class BruteCore extends Core{
 	long start; // start licznika
 	long stop; //stop licznika
 	boolean detailedStatsOn,plotOn,mapOn;
-	Permutations<City> permutationEngine;
+	
 
-	long permutationCount; // liczba permutacji
+	int cycles; // liczba cykli
+
 	
 	
 	// zmienne na potrzeby statystyki
@@ -30,8 +27,11 @@ public class BruteCore extends Core{
 	double cycleLen[];
 
 
-	public BruteCore(MainPanel parent) {
+	public RandomCore(MainPanel parent) {
 		super(parent);
+		// buduj� randomizer
+
+
 		
 		// tu wczytuj� miasta
 		this.parent = parent;
@@ -39,35 +39,18 @@ public class BruteCore extends Core{
 		cIds = parent.citiesIds;
 		cCoords = parent.citiesCoordinates;
 		
-		//permutationCount=silnia(cAmount);
-		
-		
-		  BigInteger silnia = BigInteger.ONE;
-	      String s = ""+cAmount;
-	      BigInteger n=new BigInteger(s);
-	 
-	        while (n.compareTo(BigInteger.ONE)>0) {
-	            silnia = silnia.multiply(n);
-	            n = n.subtract(BigInteger.ONE);
-	        }
-	        
-	        permutationCount=silnia.longValue();
-		
-		
-		
-		
 		// tu wczytuj� wsp�czynniki
-			detailedStatsOn=parent.brutepanel.statsOn.isSelected();
-			plotOn=parent.brutepanel.plotOn.isSelected();
-			mapOn=parent.brutepanel.mapOn.isSelected();
-
+		cycles = Integer.parseInt(parent.randpanel.cycles.getText());
+		detailedStatsOn=parent.randpanel.statsOn.isSelected();
+		plotOn=parent.randpanel.plotOn.isSelected();
+		mapOn=parent.randpanel.mapOn.isSelected();
 		// inicjalizacja zmiennych
-		abort = false;
+		cList = new City[cAmount];
 		bestLen = Double.POSITIVE_INFINITY;
 		currentLen = Double.POSITIVE_INFINITY;
 		bestCycle = -1;
 		
-
+		cycleLen = new double[cycles + 1];
 
 		//genSumPow, gebSum
 		
@@ -75,42 +58,35 @@ public class BruteCore extends Core{
 
 	public void run() {
 		
+		//utworzenie serii danych na wykresie
 		if(plotOn){
 			parent.plot.resetData();
-			parent.plot.setTitle("Przebieg algorytmu brutalnego");
+			parent.plot.setTitle("Przebieg algorytmu losowego");
 			parent.plot.addXYSeries("Długość trasy");
 		}
-		
 		// utworzenie listy miast
-		
-		
-		cList=new ArrayList<City>();
 		for (int i = 0; i < cAmount; i++) {
-			cList.add(new City(cIds[i+1], cCoords[i+1][0], cCoords[i+1][1]));
-			
+			cList[i] = new City(cIds[i+1], cCoords[i+1][0], cCoords[i+1][1]);
 		}
 		startCity= new City(cIds[0], cCoords[0][0], cCoords[0][1]);
-		
-		permutationEngine=new Permutations<City>(cList);
+		currentSpecimen = new Specimen(this);
+		currentSpecimen.setRoute(cList);
 		
 		if(mapOn){
-				parent.map.clearAll();
-				parent.map.addNode(startCity.getNumber(), startCity.getX(), startCity.getY(),"cyan");
-			for(City c:cList){
-				parent.map.addNode(c.getNumber(), c.getX(), c.getY(),null);
-			}
-			parent.map.setAutoScale();
+			parent.map.clearAll();
+			parent.map.addNode(startCity.getNumber(), startCity.getX(), startCity.getY(),"cyan");
+		for(City c:cList){
+			parent.map.addNode(c.getNumber(), c.getX(), c.getY(),null);
 		}
-		
-		
+		parent.map.setAutoScale();
+	}
 
 		start=System.currentTimeMillis(); // start licznika czasu
 		// rozpoczynamy obliczenia
 		int i = 0;
-		
-		parent.pb.setMaximum((int)permutationCount); //ustaw maksymaln� warto�� dla paska postepu
+		parent.pb.setMaximum(cycles); //ustaw maksymaln� warto�� dla paska postepu
 		try{
-			while (!abort && permutationEngine.hasNext()) {
+			while (!abort && i <= cycles) {
 				
 				generateSpecimen(i); // budowa i-tej populacji
 				parent.pb.setValue(i); // ustawienie warto�ci paska post�pu
@@ -138,79 +114,75 @@ public class BruteCore extends Core{
 	
 
 	public void generateSpecimen(int n) {
-		// generowanie n-tego osobnika
-
-			ArrayList<City> permutacja=(ArrayList)permutationEngine.next();
-			currentSpecimen=new Specimen(this);
-			currentSpecimen.setRoute(permutacja);
+		// generowanie n-tej populacji
+	
+			
+		
+			//randomizuj i zrob nowego
+			currentSpecimen.shuffleRoute();
 			currentLen=currentSpecimen.getRate();
 			
 			
-		
-			
-			
 
-			
+			//sprawdz czy lepszy od poprzednik�w
 			if(currentLen<bestLen){
 			best=currentSpecimen;
 			bestLen=currentLen;
 			bestCycle=n;
+			}
 			
-		}
 			
-            double time=System.currentTimeMillis(); //1367415958031
-            double miliseconds= time % 100000;
-            int seconds = (int)(miliseconds / 1000);
-            
-        	if((seconds % 3 ==0) && mapOn){
-        		//System.out.println(seconds);
-    			parent.map.clearEdges();
-    			parent.map.addEdge(startCity.getNumber(), best.trasa.get(0).getNumber(),null);
-    			//System.out.println("1Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(0).getNumber());
-    			int i;
-    			for(i=0;i<best.trasa.size()-1;i++){
-    				if(((i+1) % interwal_wymiany)==0){
-    					parent.map.addEdge(best.trasa.get(i).getNumber(),startCity.getNumber(),"blue");
-    					//System.out.println("2Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-    					parent.map.addEdge(startCity.getNumber(),best.trasa.get(i+1).getNumber(),"blue");
-    					//System.out.println("3Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-    				} else {
-    					parent.map.addEdge(best.trasa.get(i).getNumber(),best.trasa.get(i+1).getNumber(),null);
-    					//System.out.println("4Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-    				}
-    			}
-    			parent.map.addEdge(best.trasa.get(i).getNumber(),startCity.getNumber(),null);
-    			//System.out.println("5Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-    			parent.map.plotEdges();
-    		}
 			
-		
-
+			//rysujemy
 			if(plotOn){
 			parent.plot.addPoint(0, n, currentLen);
 			}
+			
+			 double time=System.currentTimeMillis(); //1367415958031
+	            double miliseconds= time % 100000;
+	            int seconds = (int)(miliseconds / 1000);
+	            
+	        	if((seconds % 3 ==0) && mapOn){
+	        		//System.out.println(seconds);
+	    			parent.map.clearEdges();
+	    			parent.map.addEdge(startCity.getNumber(), best.trasa.get(0).getNumber(),null);
+	    			//System.out.println("1Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(0).getNumber());
+	    			int i;
+	    			for(i=0;i<best.trasa.size()-1;i++){
+	    				if(((i+1) % interwal_wymiany)==0){
+	    					parent.map.addEdge(best.trasa.get(i).getNumber(),startCity.getNumber(),"blue");
+	    					//System.out.println("2Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
+	    					parent.map.addEdge(startCity.getNumber(),best.trasa.get(i+1).getNumber(),"blue");
+	    					//System.out.println("3Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
+	    				} else {
+	    					parent.map.addEdge(best.trasa.get(i).getNumber(),best.trasa.get(i+1).getNumber(),null);
+	    					//System.out.println("4Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
+	    				}
+	    			}
+	    			parent.map.addEdge(best.trasa.get(i).getNumber(),startCity.getNumber(),null);
+	    			//System.out.println("5Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
+	    			parent.map.plotEdges();
+	    		}
+				
 
 
-			if(detailedStatsOn){
-			String line = "Permutacja #" + n + " -> długość trasy: " + round(currentLen,2);
-			addLine(line);
-			}
-
+				if(detailedStatsOn){
+				String line = "Los #" + n + " -> długość trasy: " + round(currentLen,2);
+				addLine(line);
+				}
 			
 			
-			
+		}
+		
 
-	}
-	
 
 	
 
 	
 	public void showEffects() {
 		
-		
 		if(mapOn){
-/*			parent.map.clearEdges();
+			/*parent.map.clearEdges();
 			parent.map.addEdge(startCity.getNumber(), best.trasa.get(0).getNumber(),null);
 			//System.out.println("1Adding "+startCity.getNumber()+"->"+best.trasa.get(0).getNumber());
 			int i;
@@ -227,10 +199,7 @@ public class BruteCore extends Core{
 			}
 			parent.map.addEdge(best.trasa.get(i).getNumber(),startCity.getNumber(),null);
 			//System.out.println("5Adding "+best.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-			 parent.map.plogEdges();
-*/			
-			
-			
+			parent.map.plotEdges();*/
 			parent.map.finishedSimulation();
 		}
 		
@@ -241,11 +210,10 @@ public class BruteCore extends Core{
 		if (abort == true) {
 			temp = "(z powodu przerwania w " + round(100*parent.pb.getPercentComplete(),2) + " %) ";
 		}
-		addLine(">>> Algorytm BRUTALNY zakończył pracę " + temp + "z następującym wynikiem:");
+		addLine(">>> Algorytm LOSOWY zakończył pracę " + temp + "z następującym wynikiem:");
 		addPhrase("Czas pracy algorytmu: " + (stop-start)/1000.0+" s");
 		newLine();
 		addLine("Interwał wymiany wiertła: " + interwal_wymiany);
-		addLine("Liczba wszystkich permutacji="+permutationCount);
 		addLine("Długość trasy: " + bestLen);
 		String tempS = "";
 		if(abort){
@@ -291,15 +259,5 @@ public class BruteCore extends Core{
 		}
 	}
 	
-	
-	/*
-	  public long silnia(int i) 
-	  {
-	    if (i == 0) 
-	      return 1;
-	    else 
-	      return i * silnia(i - 1);
-	  }
-	*/
 
 }

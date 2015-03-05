@@ -1,4 +1,4 @@
-package org.pwr.aic.dmp;
+package pl.wroc.pwr.aic.dmp;
 /**
  *
  * @author Maciej

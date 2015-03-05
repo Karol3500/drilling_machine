@@ -1,8 +1,8 @@
-package org.pwr.aic.dmp;
+package pl.wroc.pwr.aic.dmp;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import org.pwr.aic.dmp.AntCore.WalkedWay;
+import pl.wroc.pwr.aic.dmp.AntCore.WalkedWay;
 
 
 public final class AntAgent implements Callable<WalkedWay> {

@@ -1,4 +1,4 @@
-package org.pwr.aic.dmp;
+package pl.wroc.pwr.aic.dmp;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,23 +18,21 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-public class RandomPanel extends JPanel implements ActionListener {
+public class BrutePanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -2385801152153763104L;
 
 	// elementy interfejsu
 	Graphics g = getGraphics();
-	JLabel cyclesL;
-	JTextField cycles;
 	JTextField interval;
+	JLabel notice;
 	JCheckBox statsOn;
 	JCheckBox mapOn;
 	JCheckBox plotOn;
 	JPanel basicSettings;
 	JPanel otherSettings;
 	JLabel warning;
-	
 
-	public RandomPanel() {
+	public BrutePanel() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -50,41 +48,7 @@ public class RandomPanel extends JPanel implements ActionListener {
 		
 		
 		
-		
-		// kontener na ustawienia podstawowe algorytmu
-		basicSettings = new JPanel();
-		basicSettings.setLayout(new GridBagLayout());
-		GridBagConstraints gbcBS = new GridBagConstraints();
-		gbcBS.fill = GridBagConstraints.NONE;
-		gbcBS.anchor = GridBagConstraints.WEST;
-		gbcBS.insets =  new Insets(3,5,3,5);
-		gbcBS.gridx = 99;
-		gbcBS.gridy = 4;
-		gbcBS.weightx = 1.0;
-		gbcBS.weighty = 1.0;
-		JLabel placeholder0 = new JLabel("");
-		basicSettings.add(placeholder0, gbcBS);
-		gbcBS.weightx = 0.0;
-		gbcBS.weighty = 0.0;
-		
-		cycles = new JTextField("500000", 5);
-		cyclesL = new JLabel("Liczba losowań");
-		cyclesL.setLabelFor(cycles);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 0;
-		basicSettings.add(cycles, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 0;
-		basicSettings.add(cyclesL, gbcBS);
-		
-		
-		TitledBorder basicSetBorder = BorderFactory.createTitledBorder("Ustawienia algorytmu losowego");
-		basicSettings.setBorder(basicSetBorder);
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		add(basicSettings, gbc);
-		
-		
+	
 		
 		//kontener na pozosta�e ustawienia
 				otherSettings = new JPanel();
@@ -121,11 +85,16 @@ public class RandomPanel extends JPanel implements ActionListener {
 				otherSettings.add(mapOn, gbcOS);
 
 				
-				TitledBorder otherSetBorder = BorderFactory.createTitledBorder("Pozostałe");
+				TitledBorder otherSetBorder = BorderFactory.createTitledBorder("Pozosta�e");
 				otherSettings.setBorder(otherSetBorder);
 				gbc.gridx = 0;
-				gbc.gridy = 1;
+				gbc.gridy = 0;
 				add(otherSettings, gbc);
+				
+				notice=new JLabel("Uwaga: Dla algorytmu brutalnego zaleca się wprowadzanie mapy z maksymalnie 13 punktami.");
+				gbc.gridx = 0;
+				gbc.gridy = 1;
+				add(notice, gbc);
 				
 				warning=new JLabel("Uwaga: Użycie dodatkowych ustawień może zmniejszyć prędkość działania programu.");
 				gbc.gridx = 0;
