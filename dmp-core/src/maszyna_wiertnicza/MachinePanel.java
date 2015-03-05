@@ -34,8 +34,6 @@ public class MachinePanel extends JPanel implements ActionListener {
 	JPanel machineSettings;
 	
 	JPanel instructions;
-	JLabel linstructions;
-	
 
 	public MachinePanel() {
 		setLayout(new GridBagLayout());
@@ -154,18 +152,11 @@ public class MachinePanel extends JPanel implements ActionListener {
 				gbci.weightx = 0.0;
 				gbci.weighty = 0.0;
 				
-				linstructions=new JLabel("<html>Aby program wyświetał się poprawnie, należy go umieścić w tym samym folderze, w którym znajduje się folder img. <br>Użytowanie programu przebiega następująco:<br>1) Ustawienie parametrów maszyny wiertniczej służących do obliczenia interwału wymiany wiertła<br>2) Wczytanie mapy punktów<br>3) Przejście do zakładki dowolnego algorytmu i ustawienie jego parametrów<br>4) Uruchomienie symulacji<br>5) Odczytanie wyników w zakładce statystyki<br><br>Dodatkowo po wczytaniu mapy można wczytać trasę z pliku aby wyliczyć jej długość.</html>");
-				gbci.gridx = 0;
-				gbci.gridy = 0;
-				instructions.add(linstructions, gbci);
-				
 				TitledBorder instrSetBorder = BorderFactory.createTitledBorder("Instrukcja użytkowania programu");
 				instructions.setBorder(instrSetBorder);
 				gbc.gridx = 0;
 				gbc.gridy = 1;
 				add(instructions, gbc);
-				
-				
 	}
 
 	public void paintComponent(Graphics g) {
