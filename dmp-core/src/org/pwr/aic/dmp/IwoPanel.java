@@ -1,4 +1,4 @@
-package maszyna_wiertnicza;
+package org.pwr.aic.dmp;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

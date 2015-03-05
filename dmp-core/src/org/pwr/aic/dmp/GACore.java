@@ -1,4 +1,4 @@
-package maszyna_wiertnicza;
+package org.pwr.aic.dmp;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package maszyna_wiertnicza;
+package org.pwr.aic.dmp;
 
 public abstract class Core extends Thread {
 	boolean abort;

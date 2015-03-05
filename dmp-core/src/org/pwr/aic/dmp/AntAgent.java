@@ -1,7 +1,8 @@
-package maszyna_wiertnicza;
+package org.pwr.aic.dmp;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import maszyna_wiertnicza.AntCore.WalkedWay;
+
+import org.pwr.aic.dmp.AntCore.WalkedWay;
 
 
 public final class AntAgent implements Callable<WalkedWay> {

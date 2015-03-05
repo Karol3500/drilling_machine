@@ -1,4 +1,4 @@
-package maszyna_wiertnicza;
+package org.pwr.aic.dmp;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,24 +18,23 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-public class AntPanel extends JPanel implements ActionListener {
+public class RandomPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -2385801152153763104L;
 
 	// elementy interfejsu
 	Graphics g = getGraphics();
+	JLabel cyclesL;
+	JTextField cycles;
 	JTextField interval;
-	JLabel notice;
 	JCheckBox statsOn;
 	JCheckBox mapOn;
 	JCheckBox plotOn;
-	JTextField antCount,alpha,beta,q,f_pers,f_init;
-	JLabel lantCount,lalpha,lbeta,lq,lf_pers,lf_init;
 	JPanel basicSettings;
 	JPanel otherSettings;
 	JLabel warning;
 	
 
-	public AntPanel() {
+	public RandomPanel() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -48,6 +47,9 @@ public class AntPanel extends JPanel implements ActionListener {
 		JLabel placeholder = new JLabel("");
 		add(placeholder, gbc);
 		gbc.weighty = 0.0;
+		
+		
+		
 		
 		// kontener na ustawienia podstawowe algorytmu
 		basicSettings = new JPanel();
@@ -65,74 +67,22 @@ public class AntPanel extends JPanel implements ActionListener {
 		gbcBS.weightx = 0.0;
 		gbcBS.weighty = 0.0;
 		
-		antCount = new JTextField("40960", 5);
-		lantCount = new JLabel("Liczba mrówek");
-		lantCount.setLabelFor(antCount);
+		cycles = new JTextField("500000", 5);
+		cyclesL = new JLabel("Liczba losowań");
+		cyclesL.setLabelFor(cycles);
 		gbcBS.gridx = 0;
 		gbcBS.gridy = 0;
-		basicSettings.add(antCount, gbcBS);
+		basicSettings.add(cycles, gbcBS);
 		gbcBS.gridx = 1;
 		gbcBS.gridy = 0;
-		basicSettings.add(lantCount, gbcBS);
-		
-		alpha = new JTextField("-0.2", 5);
-		lalpha = new JLabel("Współczynnik alfa ");
-		lalpha.setLabelFor(alpha);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 1;
-		basicSettings.add(alpha, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 1;
-		basicSettings.add(lalpha, gbcBS);
-		
-		beta = new JTextField("9.6", 5);
-		lbeta = new JLabel("Współczynnik beta");
-		lbeta.setLabelFor(beta);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 2;
-		basicSettings.add(beta, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 2;
-		basicSettings.add(lbeta, gbcBS);
-		
-		q = new JTextField("0.0001", 5);
-		lq = new JLabel("Współczynnik Q [0,1]");
-		lq.setLabelFor(q);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 3;
-		basicSettings.add(q, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 3;
-		basicSettings.add(lq, gbcBS);
-		
-		f_pers = new JTextField("0.3", 5);
-		lf_pers = new JLabel("Współczynnik wyparowywania feromonów[0,1]");
-		lf_pers.setLabelFor(f_pers);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 4;
-		basicSettings.add(f_pers, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 4;
-		basicSettings.add(lf_pers, gbcBS);
-		
-		f_init = new JTextField("1.2", 5);
-		lf_init = new JLabel("Początkowe feromony");
-		lf_init.setLabelFor(f_init);
-		gbcBS.gridx = 0;
-		gbcBS.gridy = 5;
-		basicSettings.add(f_init, gbcBS);
-		gbcBS.gridx = 1;
-		gbcBS.gridy = 5;
-		basicSettings.add(lf_init, gbcBS);
+		basicSettings.add(cyclesL, gbcBS);
 		
 		
-		TitledBorder basicSetBorder = BorderFactory.createTitledBorder("Ustawienia algorytmu mrówkowego");
+		TitledBorder basicSetBorder = BorderFactory.createTitledBorder("Ustawienia algorytmu losowego");
 		basicSettings.setBorder(basicSetBorder);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		add(basicSettings, gbc);
-		
-
 		
 		
 		
@@ -176,13 +126,11 @@ public class AntPanel extends JPanel implements ActionListener {
 				gbc.gridx = 0;
 				gbc.gridy = 1;
 				add(otherSettings, gbc);
-		
+				
 				warning=new JLabel("Uwaga: Użycie dodatkowych ustawień może zmniejszyć prędkość działania programu.");
 				gbc.gridx = 0;
 				gbc.gridy = 2;
 				add(warning,gbc);
-		
-
 		
 	}
 
