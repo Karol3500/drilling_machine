@@ -10,11 +10,11 @@ import javax.swing.JTabbedPane;
 
 public class WinThread extends Thread{
 	Window mainWindow;
-	
+
 	public WinThread(){
-		
+
 	}
-	
+
 	public void run(){
 		mainWindow = new Window();
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,7 @@ public class WinThread extends Thread{
 
 class Window extends JFrame {
 	private static final long serialVersionUID = 7415829889250112455L;
-	
+
 	Container contents;
 	JTabbedPane tabbedP;
 	MachinePanel machinepanel;
@@ -42,12 +42,10 @@ class Window extends JFrame {
 	SAPanel sapanel;
 	RandomPanel randpanel;
 	BrutePanel brutepanel;
-    IwoPanel iwopanel;
+	IwoPanel iwopanel;
 	StatsPanel stats;
-	PlotPanel plot;
-	MapPanel map;
 	MainPanel main;
-	
+
 	public Window() {
 		Container contents = getContentPane();
 		tabbedP = new JTabbedPane();
@@ -63,16 +61,12 @@ class Window extends JFrame {
 		tabbedP.addTab("Alg losowy", randpanel);
 		brutepanel= new BrutePanel();
 		tabbedP.addTab("Alg brutalny", brutepanel);
-        iwopanel = new IwoPanel();
-        tabbedP.addTab("Alg IWO", iwopanel);
-        stats = new StatsPanel();
+		iwopanel = new IwoPanel();
+		tabbedP.addTab("Alg IWO", iwopanel);
+		stats = new StatsPanel();
 		tabbedP.addTab("Statystyki", stats);
-		plot = new PlotPanel();
-		tabbedP.addTab("Wykres", plot.chartPanel);
-		map = new MapPanel();
-		tabbedP.addTab("Mapa", map);
 		contents.add(tabbedP);
-		main = new MainPanel(this,machinepanel, gapanel,antpanel,sapanel, randpanel, brutepanel, iwopanel, stats, plot, map);
+		main = new MainPanel(this,machinepanel, gapanel,antpanel,sapanel, randpanel, brutepanel, iwopanel, stats);
 		contents.add(main);
 		tabbedP.setBounds(2, 125, 798, 495);
 	}

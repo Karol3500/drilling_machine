@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -16,15 +17,14 @@ import java.util.concurrent.Executors;
 import cern.jet.random.Uniform;
 
 public final class AntCore extends Core {
-
 	Record startRecord;
 	WalkedWay bestway;
 	int bestAnt;
-
 	long start; // start licznika
 	long stop; // stop licznika
-	boolean detailedStatsOn,plotOn,mapOn;
+	boolean detailedStatsOn;
 
+	String message;
 	// parametry
 	// greedy
 	public double ALPHA;// = -0.2d;
@@ -56,25 +56,18 @@ public final class AntCore extends Core {
 	private final double[][] pheromones;
 	private final Object[][] mutexes;
 
-	public AntCore(MainPanel mainpanel) {
-		super(mainpanel);
-		
-		
+	public AntCore(double alpha, double beta, double q, double pheromonePersistence,
+			double initialPheromones, int numberOfAgents, boolean detailedStatsOn, String filePath) {
 
-		ALPHA = Double.parseDouble(parent.antpanel.alpha.getText());
-		BETA = Double.parseDouble(parent.antpanel.beta.getText());
-		Q = Double.parseDouble(parent.antpanel.q.getText());
-		PHEROMONE_PERSISTENCE = Double.parseDouble(parent.antpanel.f_pers
-				.getText());
-		INITIAL_PHEROMONES = Double.parseDouble(parent.antpanel.f_init
-				.getText());
-		numOfAgents = Integer.parseInt(parent.antpanel.antCount.getText());
-		detailedStatsOn = parent.antpanel.statsOn.isSelected();
-		plotOn=parent.antpanel.plotOn.isSelected();
-		mapOn=parent.antpanel.mapOn.isSelected();
+		ALPHA = alpha;
+		BETA = beta;
+		Q = q;
+		PHEROMONE_PERSISTENCE = pheromonePersistence;
+		INITIAL_PHEROMONES = initialPheromones;
+		numOfAgents = numberOfAgents;
+		this.detailedStatsOn = detailedStatsOn;
 
-		// read the matrix
-		matrix = readMatrixFromFile();
+		matrix = readMatrixFromFile(filePath);
 		invertedMatrix = invertMatrix();
 		pheromones = initializePheromones();
 		mutexes = initializeMutexObjects();
@@ -145,17 +138,12 @@ public final class AntCore extends Core {
 		return localMatrix;
 	}
 
-	private final double[][] readMatrixFromFile() {
-		
-		if(mapOn){
-			parent.map.clearAll();
-		}
+	private final double[][] readMatrixFromFile(String filePath) {
 
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new FileReader(new File(parent.filePath)));
+			br = new BufferedReader(new FileReader(new File(filePath)));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -176,7 +164,6 @@ public final class AntCore extends Core {
 					while (!sc.hasNextInt()) {
 						sc.next();
 					}
-					int id_miasta = sc.nextInt();
 					double x = sc.nextDouble();
 					double y = sc.nextDouble();
 
@@ -184,15 +171,10 @@ public final class AntCore extends Core {
 					if (startRecord == null) {
 						startRecord = new Record(x, y);
 						startCity = new City(1, startRecord.x, startRecord.y);
-		    			if(mapOn){
-		    				parent.map.addNode(1, startRecord.x, startRecord.y, "cyan");
-		    		}
 					} else {
 						records.add(new Record(x, y));
-						if(mapOn){
-						parent.map.addNode(id_miasta, x, y,null);
-						}
 					}
+					sc.close();
 				}
 
 				if (line.equals("NODE_COORD_SECTION")) {
@@ -200,20 +182,17 @@ public final class AntCore extends Core {
 				}
 			}
 		} catch (NumberFormatException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		parent.map.setAutoScale();
 
 		try {
 			br.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		final double[][] localMatrix = new double[records.size()][records
-				.size()];
+		                                                          .size()];
 
 		int rIndex = 0;
 		for (Record r : records) {
@@ -260,22 +239,12 @@ public final class AntCore extends Core {
 	}
 
 	public void run() {
-		
-		if(plotOn){
-			parent.plot.resetData();
-			parent.plot.setTitle("Przebieg algorytmu mrówkowego");
-			parent.plot.addXYSeries("Długość trasy");
-		}
-		
-		
-
 		WalkedWay bestDistance = null;
 
 		int agentsSend = 0;
 		int agentsDone = 0;
 		int agentsWorking = 0;
 		start = System.currentTimeMillis(); // start licznika czasu
-		parent.pb.setMaximum(numOfAgents);
 		for (int agentNumber = 0; !abort && agentNumber < numOfAgents; agentNumber++) {
 			agentCompletionService.submit(new AntAgent(this,
 					getGaussianDistributionRowIndex()));
@@ -285,20 +254,12 @@ public final class AntCore extends Core {
 				WalkedWay way = null;
 				try {
 					way = agentCompletionService.take().get();
-					if(plotOn){
-						parent.plot.addPoint(0, agentsDone, way.distance);
-						}
 					if (detailedStatsOn) {
 						String line = "Mrówka #" + agentsDone
 								+ " -> długość trasy: "
 								+ round(way.distance, 2);
 						addLine(line);
 					}
-					//rysujemy mape
-					 
-					
-					
-					
 				} catch (InterruptedException | ExecutionException e) {
 
 					e.printStackTrace();
@@ -307,37 +268,9 @@ public final class AntCore extends Core {
 						|| way.distance < bestDistance.distance) {
 					bestDistance = way;
 					bestAnt = agentNumber;
-					// System.out.println("Agent returned with new best distance of: "
-					// + way.distance);
 				}
-				
-				double time=System.currentTimeMillis(); //1367415958031
-		         double miliseconds= time % 100000;
-		         int seconds = (int)(miliseconds / 1000);
-				if((seconds % 3 ==0) && mapOn){
-		     		//System.out.println(seconds);
-		 			parent.map.clearEdges();
-		 			parent.map.addEdge(startCity.getNumber(), (bestDistance.way[0]+2),null);
-		 			//System.out.println("1Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(0).getNumber());
-		 			int s;
-		 			for(s=0;s<bestDistance.way.length-1;s++){
-		 				if(((s+1) % interwal_wymiany)==0){
-		 					parent.map.addEdge((bestDistance.way[s]+2),startCity.getNumber(),"blue");
-		 					//System.out.println("2Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-		 					parent.map.addEdge(startCity.getNumber(),(bestDistance.way[s+1]+2),"blue");
-		 					//System.out.println("3Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-		 				} else {
-		 					parent.map.addEdge((bestDistance.way[s]+2),(bestDistance.way[s+1]+2),null);
-		 					//System.out.println("4Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-		 				}
-		 			}
-		 			parent.map.addEdge((bestDistance.way[s]+2),startCity.getNumber(),null);
-		 			//System.out.println("5Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-		 			parent.map.plotEdges();
-		 		}
-				
+
 				agentsDone++;
-				parent.pb.setValue(agentsDone);
 				agentsWorking--;
 			}
 		}
@@ -350,26 +283,19 @@ public final class AntCore extends Core {
 			try {
 				way = agentCompletionService.take().get();
 				int agentnum=agentsSend-left+i;
-				parent.pb.setValue(agentnum);
-				if(plotOn){
-					parent.plot.addPoint(0, agentnum, way.distance);
-					}
 				if (detailedStatsOn) {
 					String line = "Mrówka #" + agentnum
 							+ " -> długość trasy: "
 							+ round(way.distance, 2);
 					addLine(line);
 				}
-				
+
 			} catch (InterruptedException | ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (bestDistance == null || way.distance < bestDistance.distance) {
 				bestDistance = way;
 				bestAnt = agentsDone + i;
-				// System.out.println("Agent returned with new best distance of: "
-				// + way.distance);
 			}
 		}
 
@@ -377,9 +303,6 @@ public final class AntCore extends Core {
 		bestway = bestDistance;
 		stop = System.currentTimeMillis(); // stop licznika czasu
 		showEffects();
-
-		// return bestDistance.distance;
-
 	}
 
 	private final int getGaussianDistributionRowIndex() {
@@ -409,84 +332,44 @@ public final class AntCore extends Core {
 	}
 
 	public void showEffects() {
-		
-		//TODO - NOT WORKING
-		
-		if(mapOn){
-			/*parent.map.clearEdges();
-			parent.map.addEdge(startCity.getNumber(), (bestway.way[0]+2),null);
-			//System.out.println("1Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(0).getNumber());
-			int i;
-			for(i=0;i<bestway.way.length-1;i++){
-				if(((i+1) % interwal_wymiany)==0){
-					parent.map.addEdge((bestway.way[i]+2),startCity.getNumber(),"blue");
-					//System.out.println("2Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-					parent.map.addEdge(startCity.getNumber(),(bestway.way[i+1]+2),"blue");
-					//System.out.println("3Adding "+startCity.getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-				} else {
-					parent.map.addEdge((bestway.way[i]+2),(bestway.way[i+1]+2),null);
-					//System.out.println("4Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+bestOsobnik.trasa.get(i+1).getNumber());
-				}
-			}
-			parent.map.addEdge((bestway.way[i]+2),startCity.getNumber(),null);
-			//System.out.println("5Adding "+bestOsobnik.trasa.get(i).getNumber()+"->"+startCity.getNumber());
-			parent.map.plotEdges();*/
-			
-			parent.map.finishedSimulation();
-			
-		}
-		
-		
 		// zapis wynik�w do logu i przebiegu
 		addLine("============================================================================================================");
 		addDate();
 		String temp = "";
 		if (abort == true) {
-			temp = "(z powodu przerwania w "
-					+ round(100 * parent.pb.getPercentComplete(), 2) + " %) ";
+			temp = "(z powodu przerwania) ";
 		}
 		addLine(">>> Algorytm MRÓWKOWY zakończył pracę " + temp
 				+ "z następującym wynikiem:");
 		addPhrase("Czas pracy algorytmu: " + (stop - start) / 1000.0 + " s");
 		newLine();
-		addLine("Interwał wymiany wiertła: " + interwal_wymiany);
+		addLine("Interwał wymiany wiertła: " + drillChangeInterval);
 		// addLine("Liczba wys�anych mr�wek="+numOfAgents);
 		addLine("Długość trasy: " + round(bestway.distance, 2));
 		String tempS = "";
-		if (abort) {
-			tempS = " ( z " + parent.pb.getValue() + ")";
-		}
 		addLine("Mrówka która znalazła najlepszą trasę: " + bestAnt + tempS);
 		addPhrase("Najlepsza trasa: " + printRoute(bestway.way));
 		newLine();
 
 		addLine("============================================================================================================");
-
-		// ustawienie przycisk�w g��wnego okna do stanu pozwalaj�cego na dalsze
-		// badania
-		parent.pb.setVisible(false);
-		parent.buttonReadMap.setEnabled(true);
-		parent.buttonRunAlgorithm.setEnabled(true);
-		parent.buttonInterrupt.setEnabled(false);
-		parent.buttonReadTour.setEnabled(true);
-		parent.running = false;
 		System.gc(); 
 	}
 
-	public void addPhrase(String s) {
-		parent.stats.addPhrase(s);
+	public void addPhrase(String s){
+		message += s;
 	}
 
-	public void addDate() {
-		parent.stats.addDate();
+	public void addDate(){
+		message += new Date();
 	}
 
-	public void addLine(String s) {
-		parent.stats.addLine(s);
+	public void addLine(String s){
+		addPhrase(s);
+		newLine();
 	}
 
-	public void newLine() {
-		parent.stats.newLine();
+	public void newLine(){
+		message += "\n";
 	}
 
 	public double round(double d, int pos) {
@@ -502,31 +385,31 @@ public final class AntCore extends Core {
 		if (way == null) {
 			return "";
 		}
-		
-		 String s="";
-		 
-	        //start ze startowego
-	       s+="("+startCity.getNumber()+") ";
 
-/*		 for(int i=0;i<way.length;i++) {
+		String s="";
+
+		//start ze startowego
+		s+="("+startCity.getNumber()+") ";
+
+		/*		 for(int i=0;i<way.length;i++) {
 			 s+=(way[i]+2)+" ";
 		 }*/
-		 
 
-	        for(int i=0;i<way.length;i++) {
-	        	if(((i+1) % interwal_wymiany)==0){
-	        		//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
-	        		  s+="<<"+startCity.getNumber()+">> ";
-	        		  s+=(way[i]+2)+" ";
-	        	} else { 
-	        		s+=(way[i]+2)+" ";
-	        	}
-	        }
-	        //na koniec wracamy do punktu startowego
-	        s+="("+startCity.getNumber()+") ";
-	        
-	        
-	        return s;
+
+		for(int i=0;i<way.length;i++) {
+			if(((i+1) % drillChangeInterval)==0){
+				//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
+				s+="<<"+startCity.getNumber()+">> ";
+				s+=(way[i]+2)+" ";
+			} else { 
+				s+=(way[i]+2)+" ";
+			}
+		}
+		//na koniec wracamy do punktu startowego
+		s+="("+startCity.getNumber()+") ";
+
+
+		return s;
 	}
 
 }

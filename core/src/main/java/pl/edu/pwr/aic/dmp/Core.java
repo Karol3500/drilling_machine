@@ -2,37 +2,26 @@ package pl.edu.pwr.aic.dmp;
 
 public abstract class Core extends Thread {
 	boolean abort;
-	int interwal_wymiany;
+	Integer drillChangeInterval;
 	City startCity;
-	MainPanel parent;
 	
-
-	
-	Core(MainPanel parent){
-		super();
-		abort = false;
-		this.parent=parent;
+	public void calculateInterval(
+			double drillDurabilityInM,
+			double drillDiameterInMm,
+			double movePerRotation,
+			double holeDeepnessInMm,
+			double spindleSpeedInRotPerMin){
 		
-		double TL,Dc,Fn,d,n;
-		TL=Double.parseDouble(parent.machinepanel.TL.getText());
-		Dc=Double.parseDouble(parent.machinepanel.Dc.getText());
-		Fn=Double.parseDouble(parent.machinepanel.Fn.getText());
-		d=Double.parseDouble(parent.machinepanel.d.getText());
-		n=Double.parseDouble(parent.machinepanel.n.getText());
-		
-		double Vc = (Math.PI * Dc * n) / 1000d;
-		
-		
-		interwal_wymiany=(int)Math.floor(TL * (Vc/Fn) / d);
+		double vc = (Math.PI * drillDiameterInMm * spindleSpeedInRotPerMin) / 1000d;
+		drillChangeInterval=(int)Math.floor(drillDurabilityInM * (vc/movePerRotation) / holeDeepnessInMm);
 	}
 	
 	public void abort() {
-		// zako�czenie dzia�ania algorytmu przed czasem
 		abort = true;
 	}
 	
 	public int getInterwal(){
-		return interwal_wymiany;
+		return drillChangeInterval;
 	}
 	
 	public City getstartCity(){

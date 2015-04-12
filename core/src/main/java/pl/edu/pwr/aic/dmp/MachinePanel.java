@@ -20,12 +20,12 @@ public class MachinePanel extends JPanel implements ActionListener {
 	// elementy interfejsu
 	Graphics g = getGraphics();
 	JLabel legend;
-	JTextField TL;
-	JTextField Dc;
+	JTextField drillEnduranceTextField;
+	JTextField drillDiameterTextField;
 	JTextField Vc;
-	JTextField n;
-	JTextField Fn;
-	JTextField d;
+	JTextField spindleSpeedTextField;
+	JTextField movePerRotationTextField;
+	JTextField holeDeepnessTextField;
 	JLabel lTL,lDc,lVc,ln,lFn,ld;
 	JPanel machineSettings;
 
@@ -61,52 +61,52 @@ public class MachinePanel extends JPanel implements ActionListener {
 		gbcOS.weightx = 0.0;
 		gbcOS.weighty = 0.0;
 
-		TL = new JTextField("4", 5);
+		drillEnduranceTextField = new JTextField("4", 5);
 		lTL = new JLabel("TL (m)  | Trwałość wiertła");
-		lTL.setLabelFor(TL);
+		lTL.setLabelFor(drillEnduranceTextField);
 		gbcOS.gridx = 0;
 		gbcOS.gridy = 0;
-		machineSettings.add(TL, gbcOS);
+		machineSettings.add(drillEnduranceTextField, gbcOS);
 		gbcOS.gridx = 1;
 		gbcOS.gridy = 0;
 		machineSettings.add(lTL, gbcOS);
 
-		Dc = new JTextField("20", 5);
+		drillDiameterTextField = new JTextField("20", 5);
 		lDc = new JLabel("Dc (mm)  | Średnica wiertła");
-		lDc.setLabelFor(Dc);
+		lDc.setLabelFor(drillDiameterTextField);
 		gbcOS.gridx = 0;
 		gbcOS.gridy = 1;
-		machineSettings.add(Dc, gbcOS);
+		machineSettings.add(drillDiameterTextField, gbcOS);
 		gbcOS.gridx = 1;
 		gbcOS.gridy = 1;
 		machineSettings.add(lDc, gbcOS);
 
-		n = new JTextField("3184", 5);
+		spindleSpeedTextField = new JTextField("3184", 5);
 		ln = new JLabel("n (obr/min)  | Prędkość obrotowa wrzeciona");
-		ln.setLabelFor(n);
+		ln.setLabelFor(spindleSpeedTextField);
 		gbcOS.gridx = 0;
 		gbcOS.gridy = 2;
-		machineSettings.add(n, gbcOS);
+		machineSettings.add(spindleSpeedTextField, gbcOS);
 		gbcOS.gridx = 1;
 		gbcOS.gridy = 2;
 		machineSettings.add(ln, gbcOS);
 
-		Fn = new JTextField("0.80", 5);
+		movePerRotationTextField = new JTextField("0.80", 5);
 		lFn = new JLabel("Fn (mm/obr)  | Posuw na obrót");
-		lFn.setLabelFor(Fn);
+		lFn.setLabelFor(movePerRotationTextField);
 		gbcOS.gridx = 0;
 		gbcOS.gridy = 3;
-		machineSettings.add(Fn, gbcOS);
+		machineSettings.add(movePerRotationTextField, gbcOS);
 		gbcOS.gridx = 1;
 		gbcOS.gridy = 3;
 		machineSettings.add(lFn, gbcOS);
 
-		d = new JTextField("50", 5);
+		holeDeepnessTextField = new JTextField("50", 5);
 		ld = new JLabel("d (mm)  | Głębokość otworów");
-		ld.setLabelFor(d);
+		ld.setLabelFor(holeDeepnessTextField);
 		gbcOS.gridx = 0;
 		gbcOS.gridy = 4;
-		machineSettings.add(d, gbcOS);
+		machineSettings.add(holeDeepnessTextField, gbcOS);
 		gbcOS.gridx = 1;
 		gbcOS.gridy = 4;
 		machineSettings.add(ld, gbcOS);

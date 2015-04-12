@@ -23,7 +23,7 @@ public class SAPanel extends JPanel implements ActionListener {
 
 	// elementy interfejsu
 	Graphics g = getGraphics();
-	JTextField cycles,alpha,Tstart,attempts;
+	JTextField cycles,alpha,tStart,attempts;
 	JLabel lcycles,lalpha,lTstart,lattempts;
 	JCheckBox statsOn;
 	JCheckBox mapOn;
@@ -75,12 +75,12 @@ public class SAPanel extends JPanel implements ActionListener {
 				gbcBS.gridy = 0;
 				basicSettings.add(lcycles, gbcBS);
 				
-				Tstart = new JTextField("700", 5);
+				tStart = new JTextField("700", 5);
 				lTstart = new JLabel("Temperatura początkowa");
-				lTstart.setLabelFor(Tstart);
+				lTstart.setLabelFor(tStart);
 				gbcBS.gridx = 0;
 				gbcBS.gridy = 1;
-				basicSettings.add(Tstart, gbcBS);
+				basicSettings.add(tStart, gbcBS);
 				gbcBS.gridx = 1;
 				gbcBS.gridy = 1;
 				basicSettings.add(lTstart, gbcBS);

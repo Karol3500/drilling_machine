@@ -7,9 +7,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -38,7 +37,7 @@ public class MainPanel extends JPanel implements ActionListener {
 	int[] citiesIdsInTour; 
 	int selectedTab;
 	List<City> cities;
-	
+
 	// referencje okien komunikacyjnych
 	GAPanel gapanel;
 	RandomPanel randpanel;
@@ -46,9 +45,9 @@ public class MainPanel extends JPanel implements ActionListener {
 	StatsPanel stats;
 	PlotPanel plot;
 	MapPanel map;
-	MachinePanel machinepanel;
+	MachinePanel machinePanel;
 	AntPanel antpanel;
-	SAPanel sapanel;
+	SAPanel saPanel;
 	IwoPanel iwoPanel;
 
 	// algorytm genetyczny
@@ -68,24 +67,18 @@ public class MainPanel extends JPanel implements ActionListener {
 	Image tlo = null;
 
 	public MainPanel(Window parent, MachinePanel machinepanel, GAPanel gapanel, AntPanel antpanel, SAPanel sapanel, RandomPanel randpanel, BrutePanel brutepanel, IwoPanel iwoPanel,
-			StatsPanel chart, PlotPanel plot, MapPanel map) {
-
-		// inicjacja zmiennych stanu
+			StatsPanel chart) {
 		running = false;
-
-		// zebranie referencji do okien
 		this.parent = parent;
 		this.gapanel = gapanel;
 		this.randpanel = randpanel;
 		this.brutepanel = brutepanel;
-		this.machinepanel=machinepanel;
+		this.machinePanel=machinepanel;
 		this.antpanel=antpanel;
-		this.sapanel=sapanel;
+		this.saPanel=sapanel;
 		this.iwoPanel = iwoPanel;
 
 		this.stats = chart;
-		this.plot = plot;
-		this.map = map;
 
 		try {
 			tlo = ImageIO.read(getClass().getResource("/bg.jpg"));
@@ -102,8 +95,6 @@ public class MainPanel extends JPanel implements ActionListener {
 		pb.setBounds(435, 95, 365, 25);
 		pb.setVisible(false);
 		add(pb);
-
-		// sekcja przycisk�w
 
 		buttonReadMap = new JButton("Wczytaj mapę");
 		buttonReadMap.setBounds(5, 95, 115, 25);
@@ -166,11 +157,6 @@ public class MainPanel extends JPanel implements ActionListener {
 			buttonInterrupt.setEnabled(false);
 			pb.setVisible(false);
 		}
-		else if (source == buttonReadTour) {
-			if (!running && fileLoaded) {
-//				testRoute();
-			}
-		}
 	}
 
 	public void paintComponent(Graphics g) {
@@ -180,22 +166,39 @@ public class MainPanel extends JPanel implements ActionListener {
 	}
 
 	public void runAlg() {
-
 		try{
 			if(selectedTab==1){
 				alg = new GACore(this);
 			} else if(selectedTab==2){
-				alg = new AntCore(this);
+				alg = new AntCore(Double.parseDouble(antpanel.alpha.getText()),
+						Double.parseDouble(antpanel.beta.getText()),
+						Double.parseDouble(antpanel.q.getText()),
+						Double.parseDouble(antpanel.pheromonePersistence.getText()),
+						Double.parseDouble(antpanel.initialPheromones.getText()),
+						Integer.parseInt(antpanel.antCount.getText()),
+						antpanel.statsOn.isSelected(),
+						filePath);
 			} else if(selectedTab==3){
-				alg = new SACore(this);
+				alg = new SACore(new ArrayList<City>(cities),
+						Integer.parseInt(saPanel.cycles.getText()),
+						Double.parseDouble(saPanel.alpha.getText()),
+						Double.parseDouble(saPanel.tStart.getText()),
+						Integer.parseInt(saPanel.attempts.getText()),
+						saPanel.statsOn.isSelected());
 			} else if(selectedTab==4){
-				alg = new RandomCore(this);
+				alg = new RandomCore(new ArrayList<City>(cities),Integer.parseInt(randpanel.cycles.getText()),randpanel.statsOn.isSelected());
 			} else if(selectedTab==5) {
-				alg = new BruteCore(this);
+				alg = new BruteCore(new ArrayList<City>(cities));
 			}else if(selectedTab==6){
 				alg = new IwoCore(this);
 			}
-
+			
+			alg.calculateInterval(Double.parseDouble(machinePanel.drillEnduranceTextField.getText()),
+					Double.parseDouble(machinePanel.drillDiameterTextField.getText()),
+					Double.parseDouble(machinePanel.movePerRotationTextField.getText()),
+					Double.parseDouble(machinePanel.holeDeepnessTextField.getText()),
+					Double.parseDouble(machinePanel.spindleSpeedTextField.getText()));
+			
 			algRun = new Thread(alg);
 			algRun.setPriority(Thread.MAX_PRIORITY);
 			(algRun).start();
@@ -215,109 +218,6 @@ public class MainPanel extends JPanel implements ActionListener {
 			stats.addLine("============================================================================================================");
 		}
 	}
-
-//	public void testRoute() throws InputMismatchException {
-//		JFileChooser fc = new JFileChooser("input");
-//		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-//				"TXT & TOUR Text Files", "txt", "tour");
-//		fc.setFileFilter(filter);
-//		int fcReturn = fc.showOpenDialog(fc);
-//		if (fcReturn == JFileChooser.APPROVE_OPTION) {
-//
-//			System.out.println("Rozpoczęto wczytywanie pliku");
-//			FileReader fr = null;
-//			try {
-//				fr = new FileReader(fc.getSelectedFile().getPath());
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//				JOptionPane.showMessageDialog(null,"Błąd: Brak dostępu do pliku!");
-//				//return false;
-//				return;
-//			}
-//			filePath = fc.getSelectedFile().getPath();
-//			Scanner sca = new Scanner(fr);
-//
-//			//System.out.println("Rozpocz�to parsowanie pliku");
-//			try {
-//				while (!sca.next().contains("DIMENSION")) {
-//
-//				}
-//				while (!sca.hasNextInt()) {
-//					sca.next();
-//				}
-//				numberOfCitiesInTour = sca.nextInt()-1;
-//				if(numberOfCitiesInTour+1!=numberOfCities){
-//					JOptionPane.showMessageDialog(null,"Błąd: Liczba punktów trasy nie zgadza się z mapą. Trasa ta nie jest przeznaczona dla tej mapy.");
-//					sca.close();
-//					return;
-//				}
-//
-//				citiesIdsInTour = new int[numberOfCitiesInTour];
-//
-//				while (!sca.next().contains("TOUR_SECTION")) {
-//
-//				}
-//				while (!sca.hasNextInt()) {
-//					sca.next();
-//				}
-//			} catch (Exception e) {
-//				JOptionPane.showMessageDialog(null,"Błąd: Nie znaleziono DIMENSION lub TOUR_SECTION w pliku!");
-//				System.out.println("Nie znaleziono DIMENSION lub TOUR_SECTION!");
-//				e.printStackTrace();
-//				sca.close();
-//				return;
-//			}
-//			int i = 0;
-//			while (sca.hasNextInt()) {
-//				try {
-//					int id = sca.nextInt();
-//					if(id!=1 && id!=-1){
-//						citiesIdsInTour[i] = id;
-//						i++;
-//					}
-//
-//				} catch (Exception e) {
-//					System.out.println("Wystąpił błąd przy wczytywaniu identyfikatorów trasy!");
-//					e.printStackTrace();
-//					JOptionPane.showMessageDialog(null,"Błąd: Nie udało się wczytać identyfikatorów trasy!");
-//					sca.close();
-//					return;
-//				}
-//			}
-//			sca.close();
-//			//System.out.println("tour:"+Arrays.toString(cTourIds));
-//			System.out.println("Wczytano " + i + " punktów");
-//
-//
-////			try{
-////				City cTourList[]=new City[numberOfCitiesInTour];
-////				//wyliczanie d�ugo�ci trasy
-////				for(int j=0;j<numberOfCitiesInTour;j++){
-////					int cityId=citiesIdsInTour[j];
-////					double x=citiesCoordinates[cityId-1][0];
-////					double y=citiesCoordinates[cityId-1][1];
-////					cTourList[j]=new City(cityId,x,y);
-////				}
-////				RandomCore testcore=new RandomCore(this);
-////				testcore.startCity= new City(citiesIds[0], citiesCoordinates[0][0], citiesCoordinates[0][1]);
-////				Specimen tester=new Specimen(testcore);
-////				tester.setRoute(cTourList);
-////				double optymalna=tester.getRate();
-////				JOptionPane.showMessageDialog(null,"Długość wczytanej trasy: "+round(optymalna,2));
-////				stats.addLine("============================================================================================================");
-////				stats.addDate();
-////				stats.addLine(">>> Wczytano trasę z pliku: "+fc.getSelectedFile().getPath());
-////				stats.addLine("Interwał wymiany wiertła: "+testcore.interwal_wymiany);
-////				stats.addLine("Długość trasy: "+round(optymalna,2));
-////				stats.addLine("============================================================================================================");
-////			} catch (Exception e){
-////				JOptionPane.showMessageDialog(null,"Błąd: Nie udało się obliczyć długości trasy, być może plik trasy jest wadliwy.");
-////				System.out.println("Wystąpił błąd przy obliczaniu długości trasy, być może błąd w pliku trasy.");
-////				e.printStackTrace();
-////			}
-//		}
-//		return;
-//	}
 
 	public double round(double d,int pos){
 		if(Double.isInfinite(d) || Double.isNaN(d)){
@@ -344,7 +244,7 @@ public class MainPanel extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Failure: File malformed");
 				return false;
 			}
-			
+
 			numberOfCities = fileParser.getNumberOfCities();
 			cities = fileParser.getCityList();
 			System.out.println("Wczytano " + numberOfCities + " punktów");
