@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -236,5 +235,17 @@ public class GAPanel extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
+	}
+
+	public SelectionMethod getSelectedSelectionMethod() {
+		if(srb1.isSelected()){
+			return SelectionMethod.TOURNAMENT;
+		}
+		if(srb2.isSelected()){
+			return SelectionMethod.ROULETTE;
+		} 
+		else {
+			return SelectionMethod.RANKING;
+		}
 	}
 }

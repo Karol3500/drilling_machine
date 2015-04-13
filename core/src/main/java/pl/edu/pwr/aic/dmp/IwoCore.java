@@ -16,10 +16,7 @@ public class IwoCore extends Core {
 	List<City> cities; // lista miast
 	long start; // start licznika
 	long stop; //stop licznika
-	boolean detailedStatsOn,plotOn,mapOn;
-
-	static final int SEL_INWERSJA = 1;
-	static final int SEL_INVEROVER= 2;
+	boolean detailedStatsOn;
 
 	ArrayList<Specimen> populacja;
 	Specimen bestOsobnik;
@@ -32,38 +29,37 @@ public class IwoCore extends Core {
 	int maxIloscOsobnikowWPopulacji;
 	int iloscIteracji;
 	int bestPokolenie;
-	int maksymalnaLiczbaZiaren;//na osobnika
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
 	double crossingProbability = 0.2;
 	String message;
 
-	IwoCore(MainPanel parent) {
+	IwoCore(List<City> cities,
+			boolean detailedStatistics,
+			int numberOfIterations,
+			int minSpecimenInPopulation,
+			int maxSpecimenInPopulation,
+			int minSeedNumber,
+			int maxSeedNumber,
+			double nonLinearCoefficient,
+			int initialStandardDeviation,
+			int finalStandardDeviation) {
 		populacja = new ArrayList<Specimen>();
 
-		iloscIteracji = Integer.parseInt(parent.iwoPanel.iterationCount.getText());
-		iloscOsobnikowWPopulacji = Integer.parseInt(parent.iwoPanel.startWeedCount.getText());
-		maxIloscOsobnikowWPopulacji = Integer.parseInt(parent.iwoPanel.maxWeedCount.getText());
-		maksymalnaLiczbaZiaren = Integer.parseInt(parent.iwoPanel.maxSeedNumber.getText());
-		maxSeed = Math.max(Integer.parseInt(parent.iwoPanel.maxSeedNumber.getText()), 5 );
-		nonLinearCoefficient = Double.parseDouble(parent.iwoPanel.nonLinearCoefficient.getText());
-		initStandardDeviation = Integer.parseInt(parent.iwoPanel.initStandardDeviation.getText());
-		finalStandardDeviation = Integer.parseInt(parent.iwoPanel.finalStandardDeviation.getText());
-		minSeed=maxSeed/5;
+		iloscIteracji = numberOfIterations;
+		iloscOsobnikowWPopulacji = minSpecimenInPopulation;
+		maxIloscOsobnikowWPopulacji = maxSpecimenInPopulation;
+		minSeed = minSeedNumber;
+		maxSeed = maxSeedNumber;
+		this.nonLinearCoefficient = nonLinearCoefficient;
+		initStandardDeviation = initialStandardDeviation;
+		this.finalStandardDeviation = finalStandardDeviation;
 
-		if(parent.iwoPanel.srb1.isSelected()){
-			metoda_selekcji = SEL_INWERSJA;
-		} else if(parent.iwoPanel.srb2.isSelected()){
-			metoda_selekcji = SEL_INVEROVER;
-		}
-
-		detailedStatsOn=parent.iwoPanel.statsOn.isSelected();
-		plotOn=parent.iwoPanel.plotOn.isSelected();
-		mapOn=parent.iwoPanel.mapOn.isSelected();
+		detailedStatsOn=detailedStatistics;
 
 		abort = false;
-		cities = new ArrayList<City>(parent.cities);
+		this.cities = cities;
 
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
@@ -73,6 +69,8 @@ public class IwoCore extends Core {
 	}
 
 	public void run() {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("IWO STARTED");
 		start = System.currentTimeMillis(); // start licznika czasu
 		initOsobniki(); // inicjalizuje poczatkowa populacje losowo
 
@@ -94,16 +92,8 @@ public class IwoCore extends Core {
 				for(int childSpecimenCount = 0;childSpecimenCount<seedNumber;childSpecimenCount++)
 				{
 					Specimen childSpecimen = aktualny.clone();
-					if(metoda_selekcji == SEL_INWERSJA) {
-						for (int distanceCounter = 0; distanceCounter < distance; distanceCounter++) {
-							childSpecimen.Inver();
-						}
-					}
-
-					if(metoda_selekcji == SEL_INVEROVER){
-						for (int distanceCounter = 0; distanceCounter < distance; distanceCounter++) {
-							childSpecimen.InverOver(populacja,distance, crossingProbability);
-						}
+					for (int distanceCounter = 0; distanceCounter < distance; distanceCounter++) {
+						childSpecimen.Inver();
 					}
 
 					newSpecimens.add(childSpecimen);
@@ -136,6 +126,8 @@ public class IwoCore extends Core {
 		}
 		stop = System.currentTimeMillis(); // stop licznika czasu
 		showEffects();
+		System.out.println("IWO FINISHED\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("Długość trasy: " + bestOsobnik.getRate());
 	}
 
 	private int calculateDistance(int aktualnaIteracja, int iloscIteracji) {
@@ -222,7 +214,7 @@ public class IwoCore extends Core {
 		String temp = "";
 		String metoda ="";
 		if (abort == true) {
-			temp = "(z powodu przerwania w) ";
+			temp = "(z powodu przerwania) ";
 		}
 		addLine(">>> Algorytm IWO "+metoda+" zakończył " + temp + "z wynikiem:");
 		addPhrase("Czas pracy algorytmu: " + (stop-start)/1000.0+" s");

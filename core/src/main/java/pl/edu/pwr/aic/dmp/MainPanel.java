@@ -164,11 +164,17 @@ public class MainPanel extends JPanel implements ActionListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(tlo, 0, 0, 808, 720, null);
 	}
-
+	
 	public void runAlg() {
 		try{
 			if(selectedTab==1){
-				alg = new GACore(this);
+				alg = new GACore(new ArrayList<City>(cities),
+						gapanel.statsOn.isSelected(),
+						Integer.parseInt(gapanel.sAmount.getText()),
+						Integer.parseInt(gapanel.genAmount.getText()),
+						Double.parseDouble(gapanel.kMutation.getText())/100.0,
+						Double.parseDouble(gapanel.kHybrid.getText())/100.0,
+						gapanel.getSelectedSelectionMethod());
 			} else if(selectedTab==2){
 				alg = new AntCore(Double.parseDouble(antpanel.alpha.getText()),
 						Double.parseDouble(antpanel.beta.getText()),
@@ -190,7 +196,16 @@ public class MainPanel extends JPanel implements ActionListener {
 			} else if(selectedTab==5) {
 				alg = new BruteCore(new ArrayList<City>(cities));
 			}else if(selectedTab==6){
-				alg = new IwoCore(this);
+				alg = new IwoCore(new ArrayList<City>(cities),
+						iwoPanel.statsOn.isSelected(),
+						Integer.parseInt(iwoPanel.iterationCount.getText()),
+						Integer.parseInt(iwoPanel.startWeedCount.getText()),
+						Integer.parseInt(iwoPanel.maxWeedCount.getText()),
+						Integer.parseInt(iwoPanel.maxSeedNumber.getText())/5,
+						Integer.parseInt(iwoPanel.maxSeedNumber.getText()),
+						Double.parseDouble(iwoPanel.nonLinearCoefficient.getText()),
+						Integer.parseInt(iwoPanel.initStandardDeviation.getText()),
+						Integer.parseInt(iwoPanel.finalStandardDeviation.getText()));
 			}
 			
 			alg.calculateInterval(Double.parseDouble(machinePanel.drillEnduranceTextField.getText()),

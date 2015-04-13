@@ -14,11 +14,6 @@ public class GACore extends Core{
 	long start; // start licznika
 	long stop; //stop licznika
 	boolean detailedStatsOn;
-
-
-	static final int SEL_RULETKA = 1;
-	static final int SEL_TURNIEJ = 2;
-	static final int SEL_RANKING = 3;
 	ArrayList<Specimen> populacja;
 	ArrayList<Specimen> turniej;
 	ArrayList<Specimen> ranking;
@@ -29,35 +24,33 @@ public class GACore extends Core{
 	int ilosc_pokolen;
 	double p_mutacji;
 	double p_krzyzowania;
-	int metoda_selekcji;
+	SelectionMethod metoda_selekcji;
 	int bestPokolenie;
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
 	String message;
 
-	GACore(MainPanel parent) {
+	GACore(List<City> cities,
+			boolean detailedStatsOn,
+			int populationCount,
+			int generationsCount,
+			double mutationProbability,
+			double crossingProbability,
+			SelectionMethod selectionMethod) {
+		
 		populacja = new ArrayList<Specimen>();
 		turniej = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
-
-		ilosc_populacji = Integer.parseInt(parent.gapanel.sAmount.getText());
-		ilosc_pokolen = Integer.parseInt(parent.gapanel.genAmount.getText());
-		p_mutacji = Double.parseDouble(parent.gapanel.kMutation.getText())/100.0;
-		p_krzyzowania =Double.parseDouble(parent.gapanel.kHybrid.getText())/100.0;
-		detailedStatsOn=parent.gapanel.statsOn.isSelected();
-
-		if(parent.gapanel.srb1.isSelected()){
-			metoda_selekcji = SEL_TURNIEJ;
-		} else if(parent.gapanel.srb2.isSelected()){
-			metoda_selekcji = SEL_RULETKA;
-		} else {
-			metoda_selekcji = SEL_RANKING;
-		}
+		this.cities = cities;
+		ilosc_populacji = populationCount;
+		ilosc_pokolen = generationsCount;
+		p_mutacji = mutationProbability;
+		p_krzyzowania = crossingProbability;
+		this.detailedStatsOn = detailedStatsOn;
+		this.metoda_selekcji = selectionMethod;
 
 		abort = false;
-		cities = new ArrayList<City>(parent.cities);
-
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
 		zero.setRoute(cities);
@@ -76,7 +69,7 @@ public class GACore extends Core{
 
 		for (int pok = 0; !abort && pok < ilosc_pokolen; pok++) {
 			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
-			if(metoda_selekcji == SEL_RANKING){
+			if(metoda_selekcji == SelectionMethod.RANKING){
 				ranking = new ArrayList<Specimen>();
 				ranking_iter=0;
 				int minimum=20;
@@ -87,7 +80,7 @@ public class GACore extends Core{
 				ranking_count = minimum + (int)(losowi);
 			}
 
-			if (metoda_selekcji == SEL_RULETKA) {
+			if (metoda_selekcji == SelectionMethod.ROULETTE) {
 				double sumaOdwrotnosciOcen = 0.0;
 				for (Specimen os : populacja) {
 					sumaOdwrotnosciOcen += 1/os.getRate();
@@ -147,10 +140,10 @@ public class GACore extends Core{
 		showEffects();
 	}
 
-	Specimen selekcja(int metoda) {
-		if (metoda == SEL_RULETKA) {
+	Specimen selekcja(SelectionMethod metoda) {
+		if (metoda == SelectionMethod.ROULETTE) {
 			return selekcja_ruletka();
-		} else if (metoda == SEL_TURNIEJ) {
+		} else if (metoda == SelectionMethod.TOURNAMENT) {
 			return selekcja_turniejowa();
 		} else {
 			return selekcja_rankingowa();
@@ -349,9 +342,9 @@ public class GACore extends Core{
 		if (abort == true) {
 			temp = "(z powodu przerwania) ";
 		}
-		if (metoda_selekcji == SEL_RULETKA) {
+		if (metoda_selekcji == SelectionMethod.ROULETTE) {
 			metoda="RULETKOWY";
-		} else if (metoda_selekcji == SEL_TURNIEJ) {
+		} else if (metoda_selekcji == SelectionMethod.TOURNAMENT) {
 			metoda="TURNIEJOWY";
 		} else {
 			metoda="RANKINGOWY";

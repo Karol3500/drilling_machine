@@ -182,35 +182,6 @@ public class Specimen implements Comparable<Specimen> {
         ocena_aktualna=false;
     }
 
-    public void InverOver(ArrayList<Specimen> population, int distance, double crossingProbability) {
-        Random generator = new Random();
-        for(int i=0;i<distance;i++){
-            if(generator.nextDouble()>crossingProbability){
-                this.Inver();
-                continue;
-            }
-            Specimen otherSpecimen = population.get(generator.nextInt(population.size()));
-            int startCityIndex = generator.nextInt(trasa.size()-1);
-            City startCity = trasa.get(startCityIndex);
-            int endCityIndexInOtherSpecimen = otherSpecimen.getRoute().indexOf(startCity)+1;
-            if(endCityIndexInOtherSpecimen==otherSpecimen.getRoute().size())//if selected city was last item in otherspecimen route
-                continue;
-            int endCityIndex = trasa.indexOf(otherSpecimen.getCity(endCityIndexInOtherSpecimen));
-
-            if(endCityIndex<startCityIndex){
-                int x = endCityIndex;
-                endCityIndex = startCityIndex;
-                startCityIndex=x;
-            }
-            for ( int start = startCityIndex, end = endCityIndex ;
-                  start < startCityIndex+((endCityIndex-startCityIndex)/2);
-                  start++, end-- )
-                swapCities(start, end );
-
-        }
-        ocena_aktualna=false;
-    }
-
     public void Inver2(int distance) {
         Random generator = new Random();
         int startCity = generator.nextInt(trasa.size()-1-distance);//i=0...trasa.size-2
