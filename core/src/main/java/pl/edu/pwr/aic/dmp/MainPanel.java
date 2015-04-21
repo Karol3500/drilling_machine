@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -18,11 +17,16 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import pl.wroc.pwr.aic.dmp.mapUtils.FileParser;
-import pl.wroc.pwr.aic.dmp.mapUtils.MapReader;
+import pl.edu.pwr.aic.dmp.alg.City;
+import pl.edu.pwr.aic.dmp.alg.Core;
+import pl.edu.pwr.aic.dmp.alg.GACore;
+import pl.edu.pwr.aic.dmp.alg.IwoCore;
+import pl.edu.pwr.aic.dmp.alg.RandomCore;
+import pl.edu.pwr.aic.dmp.alg.SACore;
+import pl.edu.pwr.aic.dmp.mapUtils.FileParser;
+import pl.edu.pwr.aic.dmp.mapUtils.MapReader;
 
 public class MainPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 3679573816029791253L;
@@ -41,12 +45,10 @@ public class MainPanel extends JPanel implements ActionListener {
 	// referencje okien komunikacyjnych
 	GAPanel gapanel;
 	RandomPanel randpanel;
-	BrutePanel brutepanel;
 	StatsPanel stats;
 	PlotPanel plot;
 	MapPanel map;
 	MachinePanel machinePanel;
-	AntPanel antpanel;
 	SAPanel saPanel;
 	IwoPanel iwoPanel;
 
@@ -60,21 +62,18 @@ public class MainPanel extends JPanel implements ActionListener {
 	JButton buttonRunAlgorithm;
 	JButton buttonInterrupt;
 	JButton buttonReadTour;
-	JProgressBar pb;
 
 	// obraz t�a
 	BufferedImage obraz = null;
 	Image tlo = null;
 
-	public MainPanel(Window parent, MachinePanel machinepanel, GAPanel gapanel, AntPanel antpanel, SAPanel sapanel, RandomPanel randpanel, BrutePanel brutepanel, IwoPanel iwoPanel,
+	public MainPanel(Window parent, MachinePanel machinepanel, GAPanel gapanel, SAPanel sapanel, RandomPanel randpanel, IwoPanel iwoPanel,
 			StatsPanel chart) {
 		running = false;
 		this.parent = parent;
 		this.gapanel = gapanel;
 		this.randpanel = randpanel;
-		this.brutepanel = brutepanel;
 		this.machinePanel=machinepanel;
-		this.antpanel=antpanel;
 		this.saPanel=sapanel;
 		this.iwoPanel = iwoPanel;
 
@@ -87,14 +86,6 @@ public class MainPanel extends JPanel implements ActionListener {
 		}
 		setLayout(null);
 		setBackground(new Color(0xffffff));
-
-		// progress bar
-		pb = new JProgressBar(0, 100);
-		pb.setValue(0);
-		pb.setStringPainted(true);
-		pb.setBounds(435, 95, 365, 25);
-		pb.setVisible(false);
-		add(pb);
 
 		buttonReadMap = new JButton("Wczytaj mapę");
 		buttonReadMap.setBounds(5, 95, 115, 25);
@@ -142,8 +133,6 @@ public class MainPanel extends JPanel implements ActionListener {
 					buttonRunAlgorithm.setEnabled(false);
 					buttonInterrupt.setEnabled(true);
 					buttonReadTour.setEnabled(false);
-					pb.setValue(0);
-					pb.setVisible(true);
 					running = true;
 					runAlg();
 				}
@@ -155,7 +144,6 @@ public class MainPanel extends JPanel implements ActionListener {
 			buttonReadMap.setEnabled(true);
 			buttonRunAlgorithm.setEnabled(true);
 			buttonInterrupt.setEnabled(false);
-			pb.setVisible(false);
 		}
 	}
 
@@ -168,7 +156,7 @@ public class MainPanel extends JPanel implements ActionListener {
 	public void runAlg() {
 		try{
 			if(selectedTab==1){
-				alg = new GACore(new ArrayList<City>(cities),
+				alg = new GACore(cities,
 						gapanel.statsOn.isSelected(),
 						Integer.parseInt(gapanel.sAmount.getText()),
 						Integer.parseInt(gapanel.genAmount.getText()),
@@ -176,27 +164,16 @@ public class MainPanel extends JPanel implements ActionListener {
 						Double.parseDouble(gapanel.kHybrid.getText())/100.0,
 						gapanel.getSelectedSelectionMethod());
 			} else if(selectedTab==2){
-				alg = new AntCore(Double.parseDouble(antpanel.alpha.getText()),
-						Double.parseDouble(antpanel.beta.getText()),
-						Double.parseDouble(antpanel.q.getText()),
-						Double.parseDouble(antpanel.pheromonePersistence.getText()),
-						Double.parseDouble(antpanel.initialPheromones.getText()),
-						Integer.parseInt(antpanel.antCount.getText()),
-						antpanel.statsOn.isSelected(),
-						filePath);
-			} else if(selectedTab==3){
-				alg = new SACore(new ArrayList<City>(cities),
+				alg = new SACore(cities,
 						Integer.parseInt(saPanel.cycles.getText()),
 						Double.parseDouble(saPanel.alpha.getText()),
 						Double.parseDouble(saPanel.tStart.getText()),
 						Integer.parseInt(saPanel.attempts.getText()),
 						saPanel.statsOn.isSelected());
-			} else if(selectedTab==4){
-				alg = new RandomCore(new ArrayList<City>(cities),Integer.parseInt(randpanel.cycles.getText()),randpanel.statsOn.isSelected());
-			} else if(selectedTab==5) {
-				alg = new BruteCore(new ArrayList<City>(cities));
-			}else if(selectedTab==6){
-				alg = new IwoCore(new ArrayList<City>(cities),
+			} else if(selectedTab==3){
+				alg = new RandomCore(cities,Integer.parseInt(randpanel.cycles.getText()),randpanel.statsOn.isSelected());
+			}else if(selectedTab==4){
+				alg = new IwoCore(cities,
 						iwoPanel.statsOn.isSelected(),
 						Integer.parseInt(iwoPanel.iterationCount.getText()),
 						Integer.parseInt(iwoPanel.startWeedCount.getText()),
@@ -207,7 +184,6 @@ public class MainPanel extends JPanel implements ActionListener {
 						Integer.parseInt(iwoPanel.initStandardDeviation.getText()),
 						Integer.parseInt(iwoPanel.finalStandardDeviation.getText()));
 			}
-			
 			alg.calculateInterval(Double.parseDouble(machinePanel.drillEnduranceTextField.getText()),
 					Double.parseDouble(machinePanel.drillDiameterTextField.getText()),
 					Double.parseDouble(machinePanel.movePerRotationTextField.getText()),
@@ -218,17 +194,12 @@ public class MainPanel extends JPanel implements ActionListener {
 			algRun.setPriority(Thread.MAX_PRIORITY);
 			(algRun).start();
 		} catch(Exception e){
-			JOptionPane.showMessageDialog(null,"Próba uruchomienia algorytmu zakończyła się niespodziewanym błędem. Szczegóły w statystykach.");
-			pb.setVisible(false);
-			buttonReadMap.setEnabled(true);
-			buttonRunAlgorithm.setEnabled(true);
-			buttonInterrupt.setEnabled(false);
-			buttonReadTour.setEnabled(true);
+			System.out.println("Unexpected exception occured while trying to perform algorithm. Details can be found in statistics.");
 			running = false;
 			stats.addLine("============================================================================================================");
 			stats.addDate();
-			stats.addLine(">>> Wystąpił wyjątek: "+e.getClass());
-			stats.addLine("Komunikat błędu: "+e.getMessage());
+			stats.addLine(">>> Exception raised: "+e.getClass());
+			stats.addLine("Error message: "+e.getMessage());
 			e.printStackTrace();
 			stats.addLine("============================================================================================================");
 		}

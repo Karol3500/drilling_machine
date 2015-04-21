@@ -2,6 +2,7 @@ package pl.edu.pwr.aic.dmp;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by Karol on 2014-05-25.
  */
+@SuppressWarnings("serial")
 public class IwoPanel extends JPanel implements ActionListener {
     JRadioButton srb3;
     JRadioButton srb2;
@@ -41,7 +43,6 @@ public class IwoPanel extends JPanel implements ActionListener {
         JLabel placeholder = new JLabel("");
         add(placeholder, gbc);
         gbc.weighty = 0.0;
-
 
         // kontener na ustawienia selekcji
         selSettings = new JPanel();

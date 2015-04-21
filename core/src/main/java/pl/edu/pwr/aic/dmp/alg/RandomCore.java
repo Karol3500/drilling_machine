@@ -1,19 +1,13 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 public class RandomCore extends Core{
-	List<City> cities; // lista miast
 	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami
 	double currentLen; // warto�� funkcji oceny najepszego osobnika
 	int bestCycle; // nr cyklu z najlepszym osobnikiem
 	Specimen best; // najlepszy osobnik ze wszystkich
 	Specimen currentSpecimen; // obecny osobnik
-	long start; // start licznika
-	long stop; //stop licznika
-	boolean detailedStatsOn,plotOn,mapOn;
-	String message;
 	int cycles; // liczba cykli
 
 	// zmienne na potrzeby statystyki
@@ -21,9 +15,8 @@ public class RandomCore extends Core{
 	double cycleLen[];
 
 	public RandomCore(List<City> cities, int cycles, boolean detailedStatsOn) {
-		this.cities = cities;
+		super(cities,detailedStatsOn);
 		this.cycles = cycles;
-		this.detailedStatsOn = detailedStatsOn;
 		bestLen = Double.POSITIVE_INFINITY;
 		currentLen = Double.POSITIVE_INFINITY;
 		bestCycle = -1;
@@ -72,41 +65,6 @@ public class RandomCore extends Core{
 			String line = "Los #" + n + " -> długość trasy: " + round(currentLen,2);
 			addLine(line);
 		}
-	}
-
-	public void showEffects() {
-		addLine("============================================================================================================");
-		addDate();
-		String temp = "";
-		addLine(">>> Algorytm LOSOWY zakończył pracę " + temp + "z następującym wynikiem:");
-		addPhrase("Czas pracy algorytmu: " + (stop-start)/1000.0+" s");
-		newLine();
-		addLine("Interwał wymiany wiertła: " + drillChangeInterval);
-		addLine("Długość trasy: " + bestLen);
-		String tempS = "";
-		addLine("Cykl w którym znaleziono najlepszą trasę: " + bestCycle + tempS);
-		addPhrase("Najlepsza trasa: " + best.showRoute());
-		newLine();
-
-		addLine("============================================================================================================");
-		System.gc(); 
-	}
-
-	public void addPhrase(String s){
-		message += s;
-	}
-
-	public void addDate(){
-		message += new Date();
-	}
-
-	public void addLine(String s){
-		addPhrase(s);
-		newLine();
-	}
-
-	public void newLine(){
-		message += "\n";
 	}
 
 	public double round(double d,int pos){

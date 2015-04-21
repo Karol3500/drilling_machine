@@ -1,9 +1,11 @@
-package pl.wroc.pwr.aic.dmp.mapUtils;
+package pl.edu.pwr.aic.dmp.mapUtils;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import pl.edu.pwr.aic.dmp.mapUtils.MapReader;
 
 public class MapReaderTest {
 

@@ -1,4 +1,4 @@
-package pl.wroc.pwr.aic.dmp.mapUtils;
+package pl.edu.pwr.aic.dmp.mapUtils;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

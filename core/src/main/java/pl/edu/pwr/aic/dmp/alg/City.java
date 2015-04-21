@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.alg;
 /**
  *
  * @author Maciej

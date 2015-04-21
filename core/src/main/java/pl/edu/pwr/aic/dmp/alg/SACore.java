@@ -1,10 +1,8 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-class SACore extends Core{
+public class SACore extends Core{
 	Specimen currentSpecimen;
 	Specimen mutatedSpecimen;
 	Specimen bestSpecimen;
@@ -14,25 +12,18 @@ class SACore extends Core{
 	double bestLen;	//dlugosc najlepszej trasy
 	int attempts; 
 	int cAmount;
-	String message;
 	int cycles;
-	List<City> cities; // lista miast
 	int bestCycle; // nr cyklu z bestSpecimenm osobnikiem
-	long start; // start licznika
-	long stop; //stop licznika
-	boolean detailedStatsOn;
-
-	SACore(ArrayList<City> cities,
+	public SACore(List<City> cities,
 			int cycles,
 			double alpha,
 			double tStart,
 			int attempts,
 			boolean detailedStatsOn) {
+		super(cities,detailedStatsOn);
 		currentSpecimen = new Specimen(this);
 		mutatedSpecimen = new Specimen(this);
 		bestSpecimen = new Specimen(this);
-
-		this.cities = cities;
 		cAmount = cities.size()-1;
 
 		// tu wczytuj� wsp�czynniki
@@ -40,7 +31,6 @@ class SACore extends Core{
 		this.alpha = alpha;
 		this.tStart = tStart;
 		this.attempts = attempts;
-		this.detailedStatsOn=detailedStatsOn;
 		bestLen = Double.MAX_VALUE;
 		len = Double.MAX_VALUE;
 		bestCycle = -1;
@@ -163,41 +153,6 @@ class SACore extends Core{
 	}
 
 
-
-	public void showEffects() {
-		addLine("============================================================================================================");
-		addDate();
-		String temp = "";
-		addLine(">>> Algorytm SYMULOWANEGO WYŻARZANIA zakończył pracę " + temp + "z następującym wynikiem:");
-		addPhrase("Czas pracy algorytmu: " + (stop-start)/1000.0+" s");
-		newLine();
-		addLine("Interwał wymiany wiertła: " + drillChangeInterval);
-		addLine("Długość trasy: " + bestLen);
-		String tempS = "";
-		addLine("Cykl w którym znaleziono najlepszą trasę: " + bestCycle + tempS);
-		addPhrase("Najlepsza trasa: " + bestSpecimen.showRoute());
-		newLine();
-
-		addLine("============================================================================================================");
-		System.gc(); 
-	}
-
-	public void addPhrase(String s){
-		message += s;
-	}
-
-	public void addDate(){
-		message += new Date();
-	}
-
-	public void addLine(String s){
-		addPhrase(s);
-		newLine();
-	}
-
-	public void newLine(){
-		message += "\n";
-	}
 
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();

@@ -1,4 +1,4 @@
-package pl.wroc.pwr.aic.dmp.mapUtils;
+package pl.edu.pwr.aic.dmp.mapUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,7 +7,9 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
-import pl.edu.pwr.aic.dmp.City;
+import pl.edu.pwr.aic.dmp.alg.City;
+import pl.edu.pwr.aic.dmp.mapUtils.FileParser;
+import pl.edu.pwr.aic.dmp.mapUtils.MapReader;
 
 public class FileParserTest {
 

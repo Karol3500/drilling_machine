@@ -1,53 +1,42 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.alg;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
 
-	List<City> cities; // lista miast
-	long start; // start licznika
-	long stop; //stop licznika
-	boolean detailedStatsOn;
 	ArrayList<Specimen> populacja;
 	ArrayList<Specimen> turniej;
 	ArrayList<Specimen> ranking;
 	int ranking_iter;
 	int ranking_count;
-	Specimen bestOsobnik;
 	int ilosc_populacji;
 	int ilosc_pokolen;
 	double p_mutacji;
 	double p_krzyzowania;
 	SelectionMethod metoda_selekcji;
-	int bestPokolenie;
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
-	String message;
-
-	GACore(List<City> cities,
+	public GACore(List<City> cities,
 			boolean detailedStatsOn,
 			int populationCount,
 			int generationsCount,
 			double mutationProbability,
 			double crossingProbability,
 			SelectionMethod selectionMethod) {
-		
+		super(cities,detailedStatsOn);
 		populacja = new ArrayList<Specimen>();
 		turniej = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
-		this.cities = cities;
 		ilosc_populacji = populationCount;
 		ilosc_pokolen = generationsCount;
 		p_mutacji = mutationProbability;
 		p_krzyzowania = crossingProbability;
-		this.detailedStatsOn = detailedStatsOn;
 		this.metoda_selekcji = selectionMethod;
 
 		abort = false;
@@ -65,7 +54,7 @@ public class GACore extends Core{
 		Collections.sort(populacja);
 		wynik_max = getMaxTrasa();
 		wynik_min = getMinTrasa();
-		bestOsobnik = populacja.get(0).clone();
+		bestSpecimen = populacja.get(0).clone();
 
 		for (int pok = 0; !abort && pok < ilosc_pokolen; pok++) {
 			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
@@ -124,8 +113,8 @@ public class GACore extends Core{
 			}
 
 			if (wynik_min > getMinTrasa()) {
-				bestPokolenie=pok;
-				bestOsobnik=populacja.get(0).clone();
+				bestGeneration=pok;
+				bestSpecimen=populacja.get(0).clone();
 				wynik_min = getMinTrasa();
 
 			}
@@ -332,52 +321,6 @@ public class GACore extends Core{
 			srednia += os.getRate();
 		}
 		return (srednia / populacja.size());
-	}
-
-	public void showEffects() {
-		addLine("============================================================================================================");
-		addDate();
-		String temp = "";
-		String metoda ="";
-		if (abort == true) {
-			temp = "(z powodu przerwania) ";
-		}
-		if (metoda_selekcji == SelectionMethod.ROULETTE) {
-			metoda="RULETKOWY";
-		} else if (metoda_selekcji == SelectionMethod.TOURNAMENT) {
-			metoda="TURNIEJOWY";
-		} else {
-			metoda="RANKINGOWY";
-		}
-		addLine(">>> Algorytm GENETYCZNY "+metoda+" zakończył " + temp + "z wynikiem:");
-		addPhrase("Czas pracy algorytmu: " + (stop-start)/1000.0+" s");
-		newLine();
-		addLine("Interwał wymiany wiertła: " + drillChangeInterval);
-		addLine("Długość trasy: " + bestOsobnik.getRate());
-		String tempS = "";
-		addLine("Pokolenie w którym znaleziono najlepszego osobnika: " + bestPokolenie + tempS);
-		addPhrase("Najlepsza trasa: " + bestOsobnik.showRoute());
-		newLine();
-
-		addLine("============================================================================================================");
-		System.gc(); 
-	}
-
-	public void addPhrase(String s){
-		message += s;
-	}
-
-	public void addDate(){
-		message += new Date();
-	}
-
-	public void addLine(String s){
-		addPhrase(s);
-		newLine();
-	}
-
-	public void newLine(){
-		message += "\n";
 	}
 
 	public double round(double d,int pos){

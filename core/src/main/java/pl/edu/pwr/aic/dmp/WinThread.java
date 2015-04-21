@@ -38,10 +38,8 @@ class Window extends JFrame {
 	JTabbedPane tabbedP;
 	MachinePanel machinepanel;
 	GAPanel gapanel;
-	AntPanel antpanel;
 	SAPanel sapanel;
 	RandomPanel randpanel;
-	BrutePanel brutepanel;
 	IwoPanel iwopanel;
 	StatsPanel stats;
 	MainPanel main;
@@ -53,20 +51,16 @@ class Window extends JFrame {
 		tabbedP.addTab("Maszyna", machinepanel);
 		gapanel = new GAPanel();
 		tabbedP.addTab("Alg genetyczny", gapanel);
-		antpanel = new AntPanel();
-		tabbedP.addTab("Alg mrówkowy", antpanel);
 		sapanel = new SAPanel();
 		tabbedP.addTab("Alg sym. wyżarzania", sapanel);
 		randpanel= new RandomPanel();
 		tabbedP.addTab("Alg losowy", randpanel);
-		brutepanel= new BrutePanel();
-		tabbedP.addTab("Alg brutalny", brutepanel);
 		iwopanel = new IwoPanel();
 		tabbedP.addTab("Alg IWO", iwopanel);
 		stats = new StatsPanel();
 		tabbedP.addTab("Statystyki", stats);
 		contents.add(tabbedP);
-		main = new MainPanel(this,machinepanel, gapanel,antpanel,sapanel, randpanel, brutepanel, iwopanel, stats);
+		main = new MainPanel(this,machinepanel, gapanel,sapanel, randpanel, iwopanel, stats);
 		contents.add(main);
 		tabbedP.setBounds(2, 125, 798, 495);
 	}

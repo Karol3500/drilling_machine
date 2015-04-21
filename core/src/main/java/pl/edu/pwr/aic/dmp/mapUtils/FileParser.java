@@ -1,11 +1,11 @@
-package pl.wroc.pwr.aic.dmp.mapUtils;
+package pl.edu.pwr.aic.dmp.mapUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import pl.edu.pwr.aic.dmp.City;
+import pl.edu.pwr.aic.dmp.alg.City;
 
 public class FileParser {
 	int numberOfCities;

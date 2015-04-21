@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.alg;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

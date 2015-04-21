@@ -17,6 +17,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import pl.edu.pwr.aic.dmp.alg.SelectionMethod;
+
 public class GAPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -2385801152153763104L;
 
