@@ -180,8 +180,4 @@ public class IwoCore extends Core {
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
-	
-	public String getMessage(){
-		return message;
-	}
 }

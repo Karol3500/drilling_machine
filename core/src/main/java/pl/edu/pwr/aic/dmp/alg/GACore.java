@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 
 
@@ -14,34 +15,23 @@ public class GACore extends Core{
 	ArrayList<Specimen> populacja;
 	ArrayList<Specimen> turniej;
 	ArrayList<Specimen> ranking;
+	
+	GAParameters params;
+	
 	int ranking_iter;
 	int ranking_count;
-	int ilosc_populacji;
-	int ilosc_pokolen;
-	double p_mutacji;
-	double p_krzyzowania;
-	SelectionMethod metoda_selekcji;
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
 	public GACore(List<City> cities,
 			boolean detailedStatsOn,
-			int populationCount,
-			int generationsCount,
-			double mutationProbability,
-			double crossingProbability,
-			SelectionMethod selectionMethod,
+			GAParameters params,
 			Machine m) {
 		super(cities,detailedStatsOn,m);
 		populacja = new ArrayList<Specimen>();
 		turniej = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
-		ilosc_populacji = populationCount;
-		ilosc_pokolen = generationsCount;
-		p_mutacji = mutationProbability;
-		p_krzyzowania = crossingProbability;
-		this.metoda_selekcji = selectionMethod;
-
+		this.params = params;
 		abort = false;
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
@@ -59,20 +49,20 @@ public class GACore extends Core{
 		wynik_min = getMinTrasa();
 		bestSpecimen = populacja.get(0).clone();
 
-		for (int pok = 0; !abort && pok < ilosc_pokolen; pok++) {
+		for (int pok = 0; !abort && pok < params.getGenerationsCount(); pok++) {
 			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
-			if(metoda_selekcji == SelectionMethod.RANKING){
+			if(params.getSelectionMethod() == SelectionMethod.RANKING){
 				ranking = new ArrayList<Specimen>();
 				ranking_iter=0;
 				int minimum=20;
-				if(ilosc_populacji<minimum){
-					minimum=ilosc_populacji;
+				if(params.getPopulationCount()<minimum){
+					minimum=params.getPopulationCount();
 				}
-				double losowi=Math.random()*ilosc_populacji/2;
+				double losowi=Math.random()*params.getPopulationCount()/2;
 				ranking_count = minimum + (int)(losowi);
 			}
 
-			if (metoda_selekcji == SelectionMethod.ROULETTE) {
+			if (params.getSelectionMethod() == SelectionMethod.ROULETTE) {
 				double sumaOdwrotnosciOcen = 0.0;
 				for (Specimen os : populacja) {
 					sumaOdwrotnosciOcen += 1/os.getRate();
@@ -84,22 +74,22 @@ public class GACore extends Core{
 			}
 
 			while (populacja_kolejna.size() < populacja.size()) {
-				Specimen k1 = selekcja(metoda_selekcji);
+				Specimen k1 = selekcja(params.getSelectionMethod());
 				Specimen k2 = null;
 
-				if (ilosc_populacji > (populacja_kolejna.size() + 1) && Math.random() < p_krzyzowania) {  
-					k2 = selekcja(metoda_selekcji);
+				if (params.getPopulationCount() > (populacja_kolejna.size() + 1) && Math.random() < params.getCrossingProbability()) {  
+					k2 = selekcja(params.getSelectionMethod());
 					krzyzowanie(k1, k2);
 				}
 
-				if (Math.random() < p_mutacji) {
+				if (Math.random() < params.getMutationProbability()) {
 					mutacja(k1);
 					populacja_kolejna.add(k1);
 				} else {
 					populacja_kolejna.add(k1);
 				}
 
-				if (k2 != null && Math.random() < p_mutacji) {
+				if (k2 != null && Math.random() < params.getMutationProbability()) {
 					mutacja(k2);
 					populacja_kolejna.add(k2);
 				} else if (k2 != null) {
@@ -290,7 +280,7 @@ public class GACore extends Core{
 		zero.shuffleRoute();
 		populacja=new ArrayList<Specimen>();
 		populacja.add(zero);
-		for (int i = 0; i < ilosc_populacji; i++) {
+		for (int i = 0; i < params.getPopulationCount(); i++) {
 			Specimen nowy = populacja.get(0).clone();
 			nowy.shuffleRoute();
 			populacja.add(nowy);

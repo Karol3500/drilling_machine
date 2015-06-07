@@ -52,6 +52,7 @@ public abstract class Core extends Thread {
 		newLine();
 	
 		addLine("============================================================================================================");
+		System.out.println(message);
 	}
 
 	public void addPhrase(String s) {
