@@ -2,6 +2,8 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.utils.Machine;
+
 public class RandomCore extends Core{
 	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami
 	double currentLen; // warto�� funkcji oceny najepszego osobnika
@@ -14,8 +16,8 @@ public class RandomCore extends Core{
 	double bestLen;
 	double cycleLen[];
 
-	public RandomCore(List<City> cities, int cycles, boolean detailedStatsOn) {
-		super(cities,detailedStatsOn);
+	public RandomCore(List<City> cities, int cycles, boolean detailedStatsOn, Machine m) {
+		super(cities,detailedStatsOn,m);
 		this.cycles = cycles;
 		bestLen = Double.POSITIVE_INFINITY;
 		currentLen = Double.POSITIVE_INFINITY;

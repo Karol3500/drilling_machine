@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.utils.Machine;
+
 public abstract class Core extends Thread {
 	boolean abort;
-	Integer drillChangeInterval;
 	City startCity;
+	protected Machine machine;
 	protected List<City> cities;
 	protected long start;
 	protected long stop;
@@ -16,28 +18,14 @@ public abstract class Core extends Thread {
 	protected String message;
 	protected boolean detailedStatsOn;
 	
-	public void calculateInterval(
-			double drillDurabilityInM,
-			double drillDiameterInMm,
-			double movePerRotation,
-			double holeDeepnessInMm,
-			double spindleSpeedInRotPerMin){
-		
-		double vc = (Math.PI * drillDiameterInMm * spindleSpeedInRotPerMin) / 1000d;
-		drillChangeInterval=(int)Math.floor(drillDurabilityInM * (vc/movePerRotation) / holeDeepnessInMm);
-	}
-	
-	protected Core(List<City> cities, boolean detailedStatsOn){
+	protected Core(List<City> cities, boolean detailedStatsOn, Machine m){
 		this.cities = new ArrayList<City>(cities);
 		this.detailedStatsOn = detailedStatsOn;
+		this.machine = m;
 	}
 	
 	public void abort() {
 		abort = true;
-	}
-	
-	public int getInterwal(){
-		return drillChangeInterval;
 	}
 	
 	public City getstartCity(){
@@ -56,7 +44,7 @@ public abstract class Core extends Thread {
 		addLine(">>> Algorithm "+algorithm+" finished " + temp + "with result:");
 		addPhrase("Algorithm working time: " + (stop-start)/1000.0+" s");
 		newLine();
-		addLine("Drill change interval: " + drillChangeInterval);
+		addLine("Drill change interval: " + machine.getDrillChangeInterval());
 		addLine("Route length: " + bestSpecimen.getRate());
 		String tempS = "";
 		addLine("Generation with best specimen found: " + bestGeneration + tempS);
@@ -64,7 +52,6 @@ public abstract class Core extends Thread {
 		newLine();
 	
 		addLine("============================================================================================================");
-		System.gc();
 	}
 
 	public void addPhrase(String s) {
@@ -83,5 +70,12 @@ public abstract class Core extends Thread {
 	public void newLine() {
 		message += "\n";
 	}
-	
+
+	public Machine getMachine() {
+		return machine;
+	}
+
+	public void setMachine(Machine machine) {
+		this.machine = machine;
+	}
 }

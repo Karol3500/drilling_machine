@@ -29,7 +29,7 @@ public class Specimen implements Comparable<Specimen> {
         //start ze startowego
        s+="("+alg.startCity.getNumber()+") ";
         for(int i=0;i<trasa.size();i++) {
-        	if(((i+1) % alg.drillChangeInterval)==0){
+        	if(((i+1) % alg.getMachine().getDrillChangeInterval())==0){
         		//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
         		  s+="<<"+alg.startCity.getNumber()+">> ";
         		  s+=trasa.get(i).getNumber()+" ";
@@ -106,7 +106,7 @@ public class Specimen implements Comparable<Specimen> {
         odleglosc+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-trasa.get(0).getX()),2)+Math.pow((double)(alg.startCity.getY()-trasa.get(0).getY()),2));
         
         for(i=0;i<trasa.size()-1;i++) {
-        	if(((i+1) % alg.drillChangeInterval)==0){
+        	if(((i+1) % alg.getMachine().getDrillChangeInterval())==0){
         		//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
         		odleglosc+=Math.sqrt(Math.pow((double)(trasa.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(trasa.get(i).getY()-alg.startCity.getY()),2));
         		odleglosc+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-trasa.get(i+1).getX()),2)+Math.pow((double)(alg.startCity.getY()-trasa.get(i+1).getY()),2));

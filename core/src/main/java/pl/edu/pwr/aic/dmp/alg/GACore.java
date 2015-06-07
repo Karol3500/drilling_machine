@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.utils.Machine;
+
 
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
@@ -28,8 +30,9 @@ public class GACore extends Core{
 			int generationsCount,
 			double mutationProbability,
 			double crossingProbability,
-			SelectionMethod selectionMethod) {
-		super(cities,detailedStatsOn);
+			SelectionMethod selectionMethod,
+			Machine m) {
+		super(cities,detailedStatsOn,m);
 		populacja = new ArrayList<Specimen>();
 		turniej = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();

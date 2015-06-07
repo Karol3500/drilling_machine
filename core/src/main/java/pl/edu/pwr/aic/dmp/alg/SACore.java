@@ -2,6 +2,8 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.utils.Machine;
+
 public class SACore extends Core{
 	Specimen currentSpecimen;
 	Specimen mutatedSpecimen;
@@ -19,8 +21,9 @@ public class SACore extends Core{
 			double alpha,
 			double tStart,
 			int attempts,
-			boolean detailedStatsOn) {
-		super(cities,detailedStatsOn);
+			boolean detailedStatsOn,
+			Machine m) {
+		super(cities,detailedStatsOn,m);
 		currentSpecimen = new Specimen(this);
 		mutatedSpecimen = new Specimen(this);
 		bestSpecimen = new Specimen(this);

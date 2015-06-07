@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
+import pl.edu.pwr.aic.dmp.utils.Machine;
+
 
 /**
  * Created by Karol on 2014-05-25.
@@ -12,39 +15,15 @@ import java.util.List;
 public class IwoCore extends Core {
 
 	List<Specimen> population;
-	double nonLinearCoefficient;
-	double initStandardDeviation;
-	double finalStandardDeviation;
-	int minSeed;
-	int maxSeed;
-	int iloscOsobnikowWPopulacji;
-	int maxIloscOsobnikowWPopulacji;
-	int iloscIteracji;
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
-	double crossingProbability = 0.2;
-	public IwoCore(List<City> cities,
-			boolean detailedStatistics,
-			int numberOfIterations,
-			int minSpecimenInPopulation,
-			int maxSpecimenInPopulation,
-			int minSeedNumber,
-			int maxSeedNumber,
-			double nonLinearCoefficient,
-			int initialStandardDeviation,
-			int finalStandardDeviation) {
-		super(cities,detailedStatistics);
-		population = new ArrayList<Specimen>();
+	IwoParameters params;
 
-		iloscIteracji = numberOfIterations;
-		iloscOsobnikowWPopulacji = minSpecimenInPopulation;
-		maxIloscOsobnikowWPopulacji = maxSpecimenInPopulation;
-		minSeed = minSeedNumber;
-		maxSeed = maxSeedNumber;
-		this.nonLinearCoefficient = nonLinearCoefficient;
-		initStandardDeviation = initialStandardDeviation;
-		this.finalStandardDeviation = finalStandardDeviation;
+	public IwoCore(List<City> cities, boolean detailedStatistics, IwoParameters params, Machine m) {
+		super(cities,detailedStatistics,m);
+		setupParameters(params);
+		population = new ArrayList<Specimen>();
 		abort = false;
 
 		Specimen zero=new Specimen(this);
@@ -52,6 +31,15 @@ public class IwoCore extends Core {
 		zero.setRoute(cities);
 		zero.shuffleRoute();
 		population.add(zero);
+	}
+
+	private void setupParameters(IwoParameters params) {
+		if(params == null){
+			this.params.setSaneDefaults();
+		}
+		else{
+			this.params = params;
+		}
 	}
 
 	public void run() {
@@ -64,16 +52,14 @@ public class IwoCore extends Core {
 		wynik_max = getMaxTrasa();
 		wynik_min = getMinTrasa();
 		bestSpecimen = population.get(0).clone();
-		for (int pok = 0; !abort && pok < iloscIteracji; pok++) {//dopoki nie wykonano zadanej ilosci iteracji
-			int distance = calculateDistance(pok,iloscIteracji);
+		for (int pok = 0; !abort && pok < params.getNumberOfIterations(); pok++) {
+			int distance = calculateDistance(pok,params.getNumberOfIterations());
 			ArrayList<Specimen> newSpecimens = new ArrayList<>();
-			for(int specIndex = 0; specIndex < population.size();specIndex++)//Dla kazdego osobnika w populacji
+			for(int specIndex = 0; specIndex < population.size();specIndex++)
 			{
 				Specimen aktualny = population.get(specIndex);
-				int seedNumber = calculateSeedNumber(specIndex,population);//oblicz  ilosc ziaren
-
-				if(seedNumber> maxSeed)
-					seedNumber = maxSeed;
+				int seedNumber = calculateSeedNumber(specIndex,population);
+				seedNumber = seedNumber> params.getMaxSeedNumber() ? params.getMaxSeedNumber() : seedNumber;
 
 				for(int childSpecimenCount = 0;childSpecimenCount<seedNumber;childSpecimenCount++)
 				{
@@ -88,9 +74,9 @@ public class IwoCore extends Core {
 			population.addAll(newSpecimens);
 			newSpecimens.clear();
 			Collections.sort(population);
-			if(population.size()>maxIloscOsobnikowWPopulacji)
+			if(population.size()>params.getMaxSpecimenInPopulation())
 			{
-				while(population.size()!=maxIloscOsobnikowWPopulacji)
+				while(population.size()!=params.getMaxSpecimenInPopulation())
 				{
 					population.remove(population.size()-1);
 				}
@@ -117,7 +103,10 @@ public class IwoCore extends Core {
 	}
 
 	private int calculateDistance(int aktualnaIteracja, int iloscIteracji) {
-		return (int)Math.round(Math.pow((iloscIteracji - aktualnaIteracja)/iloscIteracji,nonLinearCoefficient)*(initStandardDeviation-finalStandardDeviation)+finalStandardDeviation);
+		return (int)Math.round(Math.pow((iloscIteracji - aktualnaIteracja)
+				/iloscIteracji,params.getNonLinearCoefficient())
+				*(params.getInitialStandardDeviation()-params.getFinalStandardDeviation())
+				+params.getFinalStandardDeviation());
 	}
 
 	ArrayList<Double> calculateFitnessValue(ArrayList<Specimen> populacja)
@@ -134,7 +123,8 @@ public class IwoCore extends Core {
 		double specRate = (populacja.get(specimenIndex)).getRate();
 		double minRate  = populacja.get(populacja.size()-1).getRate();
 		double maxRate  = populacja.get(0).getRate();
-		return (minSeed + (int)java.lang.Math.floor((minRate - specRate) * ((maxSeed - minSeed) / (minRate - maxRate))));
+		return (params.getMinSeedNumber() + (int)java.lang.Math.floor((minRate - specRate) * 
+				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate))));
 	}
 
 	ArrayList<Specimen> clonePopulacja(){
@@ -150,7 +140,7 @@ public class IwoCore extends Core {
 		zero.shuffleRoute();
 		population=new ArrayList<Specimen>();
 		population.add(zero);
-		for (int i = 0; i < iloscOsobnikowWPopulacji; i++) {
+		for (int i = 0; i < params.getMinSpecimenInPopulation(); i++) {
 			Specimen nowy = population.get(0).clone();
 			nowy.shuffleRoute();
 			population.add(nowy);
@@ -189,5 +179,9 @@ public class IwoCore extends Core {
 
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+	
+	public String getMessage(){
+		return message;
 	}
 }

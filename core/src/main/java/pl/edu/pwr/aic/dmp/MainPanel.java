@@ -154,55 +154,55 @@ public class MainPanel extends JPanel implements ActionListener {
 	}
 	
 	public void runAlg() {
-		try{
-			if(selectedTab==1){
-				alg = new GACore(cities,
-						gapanel.statsOn.isSelected(),
-						Integer.parseInt(gapanel.sAmount.getText()),
-						Integer.parseInt(gapanel.genAmount.getText()),
-						Double.parseDouble(gapanel.kMutation.getText())/100.0,
-						Double.parseDouble(gapanel.kHybrid.getText())/100.0,
-						gapanel.getSelectedSelectionMethod());
-			} else if(selectedTab==2){
-				alg = new SACore(cities,
-						Integer.parseInt(saPanel.cycles.getText()),
-						Double.parseDouble(saPanel.alpha.getText()),
-						Double.parseDouble(saPanel.tStart.getText()),
-						Integer.parseInt(saPanel.attempts.getText()),
-						saPanel.statsOn.isSelected());
-			} else if(selectedTab==3){
-				alg = new RandomCore(cities,Integer.parseInt(randpanel.cycles.getText()),randpanel.statsOn.isSelected());
-			}else if(selectedTab==4){
-				alg = new IwoCore(cities,
-						iwoPanel.statsOn.isSelected(),
-						Integer.parseInt(iwoPanel.iterationCount.getText()),
-						Integer.parseInt(iwoPanel.startWeedCount.getText()),
-						Integer.parseInt(iwoPanel.maxWeedCount.getText()),
-						Integer.parseInt(iwoPanel.maxSeedNumber.getText())/5,
-						Integer.parseInt(iwoPanel.maxSeedNumber.getText()),
-						Double.parseDouble(iwoPanel.nonLinearCoefficient.getText()),
-						Integer.parseInt(iwoPanel.initStandardDeviation.getText()),
-						Integer.parseInt(iwoPanel.finalStandardDeviation.getText()));
-			}
-			alg.calculateInterval(Double.parseDouble(machinePanel.drillEnduranceTextField.getText()),
-					Double.parseDouble(machinePanel.drillDiameterTextField.getText()),
-					Double.parseDouble(machinePanel.movePerRotationTextField.getText()),
-					Double.parseDouble(machinePanel.holeDeepnessTextField.getText()),
-					Double.parseDouble(machinePanel.spindleSpeedTextField.getText()));
-			
-			algRun = new Thread(alg);
-			algRun.setPriority(Thread.MAX_PRIORITY);
-			(algRun).start();
-		} catch(Exception e){
-			System.out.println("Unexpected exception occured while trying to perform algorithm. Details can be found in statistics.");
-			running = false;
-			stats.addLine("============================================================================================================");
-			stats.addDate();
-			stats.addLine(">>> Exception raised: "+e.getClass());
-			stats.addLine("Error message: "+e.getMessage());
-			e.printStackTrace();
-			stats.addLine("============================================================================================================");
-		}
+//		try{
+//			if(selectedTab==1){
+//				alg = new GACore(cities,
+//						gapanel.statsOn.isSelected(),
+//						Integer.parseInt(gapanel.sAmount.getText()),
+//						Integer.parseInt(gapanel.genAmount.getText()),
+//						Double.parseDouble(gapanel.kMutation.getText())/100.0,
+//						Double.parseDouble(gapanel.kHybrid.getText())/100.0,
+//						gapanel.getSelectedSelectionMethod());
+//			} else if(selectedTab==2){
+//				alg = new SACore(cities,
+//						Integer.parseInt(saPanel.cycles.getText()),
+//						Double.parseDouble(saPanel.alpha.getText()),
+//						Double.parseDouble(saPanel.tStart.getText()),
+//						Integer.parseInt(saPanel.attempts.getText()),
+//						saPanel.statsOn.isSelected());
+//			} else if(selectedTab==3){
+//				alg = new RandomCore(cities,Integer.parseInt(randpanel.cycles.getText()),randpanel.statsOn.isSelected());
+//			}else if(selectedTab==4){
+//				alg = new IwoCore(cities,
+//						iwoPanel.statsOn.isSelected(),
+//						Integer.parseInt(iwoPanel.iterationCount.getText()),
+//						Integer.parseInt(iwoPanel.startWeedCount.getText()),
+//						Integer.parseInt(iwoPanel.maxWeedCount.getText()),
+//						Integer.parseInt(iwoPanel.maxSeedNumber.getText())/5,
+//						Integer.parseInt(iwoPanel.maxSeedNumber.getText()),
+//						Double.parseDouble(iwoPanel.nonLinearCoefficient.getText()),
+//						Integer.parseInt(iwoPanel.initStandardDeviation.getText()),
+//						Integer.parseInt(iwoPanel.finalStandardDeviation.getText()));
+//			}
+//			alg.calculateInterval(Double.parseDouble(machinePanel.drillEnduranceTextField.getText()),
+//					Double.parseDouble(machinePanel.drillDiameterTextField.getText()),
+//					Double.parseDouble(machinePanel.movePerRotationTextField.getText()),
+//					Double.parseDouble(machinePanel.holeDeepnessTextField.getText()),
+//					Double.parseDouble(machinePanel.spindleSpeedTextField.getText()));
+//			
+//			algRun = new Thread(alg);
+//			algRun.setPriority(Thread.MAX_PRIORITY);
+//			(algRun).start();
+//		} catch(Exception e){
+//			System.out.println("Unexpected exception occured while trying to perform algorithm. Details can be found in statistics.");
+//			running = false;
+//			stats.addLine("============================================================================================================");
+//			stats.addDate();
+//			stats.addLine(">>> Exception raised: "+e.getClass());
+//			stats.addLine("Error message: "+e.getMessage());
+//			e.printStackTrace();
+//			stats.addLine("============================================================================================================");
+//		}
 	}
 
 	public double round(double d,int pos){
