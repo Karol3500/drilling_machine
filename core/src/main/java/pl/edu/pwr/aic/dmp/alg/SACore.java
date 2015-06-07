@@ -2,38 +2,27 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 
 public class SACore extends Core{
 	Specimen currentSpecimen;
 	Specimen mutatedSpecimen;
-	Specimen bestSpecimen;
-	double alpha; //wsp�czynnik ch�odzenia
-	double tStart; //temp pocz�tkowa
+	SAParameters params;
 	double len;		//dlugosc aktualnej trasy
 	double bestLen;	//dlugosc najlepszej trasy
-	int attempts; 
 	int cAmount;
-	int cycles;
 	int bestCycle; // nr cyklu z bestSpecimenm osobnikiem
 	public SACore(List<City> cities,
-			int cycles,
-			double alpha,
-			double tStart,
-			int attempts,
+			SAParameters params,
 			boolean detailedStatsOn,
 			Machine m) {
 		super(cities,detailedStatsOn,m);
+		this.params = params;
 		currentSpecimen = new Specimen(this);
 		mutatedSpecimen = new Specimen(this);
 		bestSpecimen = new Specimen(this);
 		cAmount = cities.size()-1;
-
-		// tu wczytuj� wsp�czynniki
-		this.cycles = cycles;
-		this.alpha = alpha;
-		this.tStart = tStart;
-		this.attempts = attempts;
 		bestLen = Double.MAX_VALUE;
 		len = Double.MAX_VALUE;
 		bestCycle = -1;
@@ -42,7 +31,7 @@ public class SACore extends Core{
 	public void run() {
 		startCity= cities.get(0).clone();
 		start=System.currentTimeMillis(); // start licznika czasu
-		for (int ep=0; !abort && ep<cycles; ep++) {
+		for (int ep=0; !abort && ep<params.getCyclesNumber(); ep++) {
 			simulate(ep);
 		}
 		stop=System.currentTimeMillis(); // stop licznika czasu
@@ -98,8 +87,13 @@ public class SACore extends Core{
 		int i=0;
 
 		double tempLen; //dlugosc mutanta;
-		double t=tStart;
+		double T=params.getStartTemperature();
+
+
+		//wyznaczam startowa trase
 		makeTour();
+
+
 		boolean success = false;
 		boolean found   = false;
 		boolean done    = false;
@@ -112,7 +106,7 @@ public class SACore extends Core{
 			found = false;
 			while (!success) {
 				tempLen = mutacja1(len);
-				if (accept(tempLen, len,t)) {
+				if (accept(tempLen, len,T)) {
 					currentSpecimen=mutatedSpecimen.clone();
 					//trasa = copy(neigh);
 					len = tempLen;
@@ -129,15 +123,19 @@ public class SACore extends Core{
 
 				success = (i>100*cAmount||succ>10*cAmount);
 			}
-			t = t*alpha;
+			T = T*params.getCoolingCoefficient();
 			if (found) {
 				fail = 0;
 			} else fail++;
-			done = (fail==attempts);
+			done = (fail==params.getPermutationAttempts());
 		}
 
+		double time=System.currentTimeMillis(); //1367415958031
+		double miliseconds= time % 100000;
+		int seconds = (int)(miliseconds / 1000);
+
 		if(detailedStatsOn){
-			String line = "Cykl #" + ep + " -> długość trasy: " + round(bestLen,2) + " Temperatura końcowa: "+round(t,2);
+			String line = "Cykl #" + ep + " -> długość trasy: " + round(bestLen,2) + " Temperatura końcowa: "+round(T,2);
 			addLine(line);
 		}
 		return bestLen;
