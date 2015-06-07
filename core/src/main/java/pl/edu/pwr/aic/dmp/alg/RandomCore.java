@@ -2,27 +2,25 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.utils.RandomParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 
 public class RandomCore extends Core{
 	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami
 	double currentLen; // warto�� funkcji oceny najepszego osobnika
 	int bestCycle; // nr cyklu z najlepszym osobnikiem
-	Specimen best; // najlepszy osobnik ze wszystkich
 	Specimen currentSpecimen; // obecny osobnik
-	int cycles; // liczba cykli
-
-	// zmienne na potrzeby statystyki
+	RandomParameters params;
 	double bestLen;
 	double cycleLen[];
 
-	public RandomCore(List<City> cities, int cycles, boolean detailedStatsOn, Machine m) {
+	public RandomCore(List<City> cities, RandomParameters params, boolean detailedStatsOn, Machine m) {
 		super(cities,detailedStatsOn,m);
-		this.cycles = cycles;
 		bestLen = Double.POSITIVE_INFINITY;
 		currentLen = Double.POSITIVE_INFINITY;
 		bestCycle = -1;
-		cycleLen = new double[cycles + 1];
+		this.params = params;
+		cycleLen = new double[params.getCyclesNumber() + 1];
 	}
 
 	public void run() {
@@ -32,33 +30,20 @@ public class RandomCore extends Core{
 		start=System.currentTimeMillis(); // start licznika czasu
 		// rozpoczynamy obliczenia
 		int i = 0;
-		try{
-			while (!abort && i <= cycles) {
-				generateSpecimen(i); // budowa i-tej populacji
-				i++;
-			}
-			stop=System.currentTimeMillis(); // stop licznika czasu
-			showEffects();
-
-		}catch(Exception e){
-			System.out.println("Wystąpił następujący błąd:");
-			System.out.println(e.getClass().getName());
-			System.out.println(e.getMessage());
-			addLine("============================================================================================================");
-			addLine("Wystąpił następujący błąd:");
-			addLine(e.getClass().getName());
-			addLine(e.getMessage());
-			addLine("============================================================================================================");
-			e.printStackTrace();
-		}		
+		while (!abort && i <= params.getCyclesNumber()) {
+			generateSpecimen(i); // budowa i-tej populacji
+			i++;
+		}
+		stop=System.currentTimeMillis(); // stop licznika czasu
+		showEffects();
 	}
 
 	public void generateSpecimen(int n) {
 		currentSpecimen.shuffleRoute();
 		currentLen=currentSpecimen.getRate();
-		
+
 		if(currentLen<bestLen){
-			best=currentSpecimen;
+			bestSpecimen=currentSpecimen;
 			bestLen=currentLen;
 			bestCycle=n;
 		}
