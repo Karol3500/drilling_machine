@@ -51,7 +51,7 @@ public abstract class Core extends Thread {
 		addLine("Route length: " + result.getBestRouteLength());
 		String tempS = "";
 		addLine("Generation with best specimen found: " + bestGeneration + tempS);
-		addPhrase("Best found route: " + bestSpecimen.showRoute());
+		addPhrase("Best found route: " + result.getPermutation());
 		newLine();
 	
 		addLine("============================================================================================================");

@@ -99,6 +99,7 @@ public class IwoCore extends Core {
 		stop = System.currentTimeMillis(); // stop licznika czasu
 		result.setExecutionTimeInSeconds((stop-start)/1000d);
 		result.setBestRouteLength(bestSpecimen.getRate());
+		result.setPermutation(bestSpecimen.getBestRoute());
 		showEffects();
 		System.out.println("IWO FINISHED\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("Długość trasy: " + bestSpecimen.getRate());
@@ -161,9 +162,6 @@ public class IwoCore extends Core {
 	}
 
 	double getMinTrasa() {
-		if(population.get(0).getRate()<1){
-			System.out.println("ZERO ROUTE:"+population.get(0).showRoute());
-		}
 		return population.get(0).getRate();
 	}
 

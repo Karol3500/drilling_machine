@@ -37,6 +37,7 @@ public class SACore extends Core{
 		stop=System.currentTimeMillis(); // stop licznika czasu
 		result.setExecutionTimeInSeconds((stop-start)/1000d);
 		result.setBestRouteLength(bestSpecimen.getRate());
+		result.setPermutation(bestSpecimen.getBestRoute());
 		showEffects();
 	}
 

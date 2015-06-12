@@ -121,6 +121,7 @@ public class GACore extends Core{
 		stop=System.currentTimeMillis(); // stop licznika czasu
 		result.setExecutionTimeInSeconds((stop-start)/1000d);
 		result.setBestRouteLength(bestSpecimen.getRate());
+		result.setPermutation(bestSpecimen.getBestRoute());
 		showEffects();
 	}
 
@@ -300,9 +301,6 @@ public class GACore extends Core{
 	}
 
 	double getMinTrasa() {
-		if(populacja.get(0).getRate()<1){
-			System.out.println("ZERO TRASA:"+populacja.get(0).showRoute());
-		}
 		return populacja.get(0).getRate();
 	}
 

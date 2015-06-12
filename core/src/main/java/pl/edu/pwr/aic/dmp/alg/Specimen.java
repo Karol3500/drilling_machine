@@ -21,25 +21,19 @@ public class Specimen implements Comparable<Specimen> {
         this.alg=alg;
     }
     
-    
-    public String showRoute(){
-        String s="";
-
-       
-        //start ze startowego
-       s+="("+alg.startCity.getNumber()+") ";
+    public List<Integer> getBestRoute(){
+    	List<Integer> route = new ArrayList<Integer>();
+    	route.add(alg.startCity.getNumber());
         for(int i=0;i<trasa.size();i++) {
         	if(((i+1) % alg.getMachine().getDrillChangeInterval())==0){
-        		//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
-        		  s+="<<"+alg.startCity.getNumber()+">> ";
-        		  s+=trasa.get(i).getNumber()+" ";
-        	} else { 
-        		s+=trasa.get(i).getNumber()+" ";
+        		  route.add(alg.startCity.getNumber());
+        		  route.add(trasa.get(i).getNumber());
+        	} else {
+        		route.add(trasa.get(i).getNumber());
         	}
         }
-        //na koniec wracamy do punktu startowego
-        s+="("+alg.startCity.getNumber()+")";
-        return s;
+        route.add(alg.startCity.getNumber());
+        return route;
     }
     
     public void setRoute(City[] cArray){
