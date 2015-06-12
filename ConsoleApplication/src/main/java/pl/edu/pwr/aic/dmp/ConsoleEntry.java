@@ -39,8 +39,8 @@ public class ConsoleEntry {
 			p.setCyclesNumber(1000);
 			RandomCore rc = new RandomCore(cr.getMapClone(), p, false, m);
 			
-			//runAlg(iwo);
-			//runAlg(ga);
+			runAlg(iwo);
+			runAlg(ga);
 			//runAlg(sa);
 			runAlg(rc);
 		}

@@ -48,7 +48,7 @@ public abstract class Core extends Thread {
 		addPhrase("Algorithm working time: " + result.getExecutionTimeInSeconds() + " s");
 		newLine();
 		addLine("Drill change interval: " + machine.getDrillChangeInterval());
-		addLine("Route length: " + bestSpecimen.getRate());
+		addLine("Route length: " + result.getBestRouteLength());
 		String tempS = "";
 		addLine("Generation with best specimen found: " + bestGeneration + tempS);
 		addPhrase("Best found route: " + bestSpecimen.showRoute());

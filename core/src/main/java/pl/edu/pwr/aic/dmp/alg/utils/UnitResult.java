@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UnitResult {
 	private double executionTimeInSeconds;
-	private long bestRouteLength;
+	private double bestRouteLength;
 	List<Integer> bestPermutation;
 	
 	public UnitResult(){
@@ -20,12 +20,12 @@ public class UnitResult {
 		this.executionTimeInSeconds = executionTimeInSeconds;
 	}
 
-	public long getBestSolutionLength() {
+	public double getBestRouteLength() {
 		return bestRouteLength;
 	}
 
-	public void setBestSolutionLength(long bestSolutionLength) {
-		this.bestRouteLength = bestSolutionLength;
+	public void setBestRouteLength(double d) {
+		this.bestRouteLength = d;
 	}
 
 	public List<Integer> getPermutation() {
