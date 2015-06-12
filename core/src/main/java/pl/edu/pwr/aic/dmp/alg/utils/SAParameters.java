@@ -11,7 +11,7 @@ public class SAParameters implements Parameters {
 	
 	@Override
 	public void setSaneDefaults() {
-		cyclesNumber = 50;
+		cyclesNumber = 2;
 		startTemperature = 300;
 		coolingCoefficient = 0.95;
 		permutationAttempts = 10;

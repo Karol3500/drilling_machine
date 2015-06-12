@@ -35,6 +35,7 @@ public class RandomCore extends Core{
 			i++;
 		}
 		stop=System.currentTimeMillis(); // stop licznika czasu
+		result.setExecutionTimeInSeconds((stop-start)/1000d);
 		showEffects();
 	}
 

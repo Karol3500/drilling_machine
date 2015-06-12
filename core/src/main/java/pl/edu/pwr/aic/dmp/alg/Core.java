@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.utils.UnitResult;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 
 public abstract class Core extends Thread {
@@ -17,11 +18,13 @@ public abstract class Core extends Thread {
 	protected int bestGeneration;
 	protected String message;
 	protected boolean detailedStatsOn;
+	protected UnitResult result;
 	
 	protected Core(List<City> cities, boolean detailedStatsOn, Machine m){
 		this.cities = new ArrayList<City>(cities);
 		this.detailedStatsOn = detailedStatsOn;
 		this.machine = m;
+		result = new UnitResult();
 	}
 	
 	public void abort() {
@@ -42,7 +45,7 @@ public abstract class Core extends Thread {
 			temp = "(because of abort) ";
 		}
 		addLine(">>> Algorithm "+algorithm+" finished " + temp + "with result:");
-		addPhrase("Algorithm working time: " + (stop-start)/1000.0+" s");
+		addPhrase("Algorithm working time: " + result.getExecutionTimeInSeconds() + " s");
 		newLine();
 		addLine("Drill change interval: " + machine.getDrillChangeInterval());
 		addLine("Route length: " + bestSpecimen.getRate());

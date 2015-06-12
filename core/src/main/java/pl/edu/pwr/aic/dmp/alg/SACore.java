@@ -35,6 +35,7 @@ public class SACore extends Core{
 			simulate(ep);
 		}
 		stop=System.currentTimeMillis(); // stop licznika czasu
+		result.setExecutionTimeInSeconds((stop-start)/1000d);
 		showEffects();
 	}
 
@@ -129,10 +130,6 @@ public class SACore extends Core{
 			} else fail++;
 			done = (fail==params.getPermutationAttempts());
 		}
-
-		double time=System.currentTimeMillis(); //1367415958031
-		double miliseconds= time % 100000;
-		int seconds = (int)(miliseconds / 1000);
 
 		if(detailedStatsOn){
 			String line = "Cykl #" + ep + " -> długość trasy: " + round(bestLen,2) + " Temperatura końcowa: "+round(T,2);
