@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
-import pl.edu.pwr.aic.dmp.utils.Machine;
 
 
 /**
@@ -20,33 +19,21 @@ public class IwoCore extends Core {
 	double wynik_min;
 	IwoParameters params;
 
-	public IwoCore(List<City> cities, boolean detailedStatistics, IwoParameters params, Machine m) {
-		super(cities,detailedStatistics,m);
-		setupParameters(params);
+	public IwoCore() {
+		algorithmName = "IWO Algorithm";
 		population = new ArrayList<Specimen>();
 		abort = false;
+	}
 
+	@Override
+	void runAlg() {
+		params = (IwoParameters) algorithmParameters;
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
 		zero.setRoute(cities);
 		zero.shuffleRoute();
 		population.add(zero);
-	}
-
-	private void setupParameters(IwoParameters params) {
-		if(params == null){
-			this.params.setSaneDefaults();
-		}
-		else{
-			this.params = params;
-		}
-	}
-
-	public void run() {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("IWO STARTED");
-		start = System.currentTimeMillis(); // start licznika czasu
-		initOsobniki(); // inicjalizuje poczatkowa populacje losowo
+		initSpecimen();
 
 		Collections.sort(population);
 		wynik_max = getMaxTrasa();
@@ -90,19 +77,7 @@ public class IwoCore extends Core {
 				wynik_min = getMinTrasa();
 
 			}
-
-			if (detailedStatsOn) {
-				String line = "Pokolenie #" + pok + " -> najlepsza: " + round(getMinTrasa(), 2) + " średnia: " + round(getAvgTrasa(), 2) + " najgorsza: " + round(getMaxTrasa(), 2);
-				message += line;
-			}
 		}
-		stop = System.currentTimeMillis(); // stop licznika czasu
-		result.setExecutionTimeInSeconds((stop-start)/1000d);
-		result.setBestRouteLength(bestSpecimen.getRate());
-		result.setPermutation(bestSpecimen.getBestRoute());
-		showEffects();
-		System.out.println("IWO FINISHED\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("Długość trasy: " + bestSpecimen.getRate());
 	}
 
 	private int calculateDistance(int aktualnaIteracja, int iloscIteracji) {
@@ -138,7 +113,7 @@ public class IwoCore extends Core {
 		return wynik;
 	}
 
-	void initOsobniki() {
+	void initSpecimen() {
 		Specimen zero=population.get(0);
 		zero.shuffleRoute();
 		population=new ArrayList<Specimen>();
@@ -179,5 +154,12 @@ public class IwoCore extends Core {
 
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+
+	@Override
+	protected boolean areProperParametersGiven() {
+		if (algorithmParameters != null && algorithmParameters instanceof IwoParameters)
+			return true;
+		return false;
 	}
 }

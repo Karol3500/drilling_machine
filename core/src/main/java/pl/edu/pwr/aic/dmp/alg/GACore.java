@@ -3,19 +3,16 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
-import pl.edu.pwr.aic.dmp.utils.Machine;
 
 
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
 
-	ArrayList<Specimen> populacja;
+	ArrayList<Specimen> population;
 	ArrayList<Specimen> turniej;
 	ArrayList<Specimen> ranking;
-	
 	GAParameters params;
 	
 	int ranking_iter;
@@ -23,31 +20,28 @@ public class GACore extends Core{
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
-	public GACore(List<City> cities,
-			boolean detailedStatsOn,
-			GAParameters params,
-			Machine m) {
-		super(cities,detailedStatsOn,m);
-		populacja = new ArrayList<Specimen>();
+	public GACore() {
+		algorithmName = "Genetic Algorthm";
+		population = new ArrayList<Specimen>();
 		turniej = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
-		this.params = params;
 		abort = false;
+	}
+
+	@Override
+	void runAlg() {
+		params = (GAParameters)algorithmParameters;
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
 		zero.setRoute(cities);
 		zero.shuffleRoute();
-		populacja.add(zero);
-	}
+		population.add(zero);
+		initSpecimen();
 
-	public void run() {
-		start=System.currentTimeMillis(); // start licznika czasu
-		initOsobniki();
-
-		Collections.sort(populacja);
-		wynik_max = getMaxTrasa();
-		wynik_min = getMinTrasa();
-		bestSpecimen = populacja.get(0).clone();
+		Collections.sort(population);
+		wynik_max = getMaxRoute();
+		wynik_min = getMinRoute();
+		bestSpecimen = population.get(0).clone();
 
 		for (int pok = 0; !abort && pok < params.getGenerationsCount(); pok++) {
 			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
@@ -64,16 +58,16 @@ public class GACore extends Core{
 
 			if (params.getSelectionMethod() == SelectionMethod.ROULETTE) {
 				double sumaOdwrotnosciOcen = 0.0;
-				for (Specimen os : populacja) {
+				for (Specimen os : population) {
 					sumaOdwrotnosciOcen += 1/os.getRate();
 				}
 
-				for (Specimen os : populacja) {
+				for (Specimen os : population) {
 					os.setP_Roulette((1/os.getRate()) / sumaOdwrotnosciOcen);
 				}
 			}
 
-			while (populacja_kolejna.size() < populacja.size()) {
+			while (populacja_kolejna.size() < population.size()) {
 				Specimen k1 = selekcja(params.getSelectionMethod());
 				Specimen k2 = null;
 
@@ -97,32 +91,21 @@ public class GACore extends Core{
 				}
 			}
 
-			populacja = populacja_kolejna;
-			Collections.sort(populacja);
+			population = populacja_kolejna;
+			Collections.sort(population);
 			populacja_kolejna = new ArrayList<Specimen>();
 
-			if (wynik_max < getMaxTrasa()) {
-				wynik_max = getMaxTrasa();
+			if (wynik_max < getMaxRoute()) {
+				wynik_max = getMaxRoute();
 			}
 
-			if (wynik_min > getMinTrasa()) {
+			if (wynik_min > getMinRoute()) {
 				bestGeneration=pok;
-				bestSpecimen=populacja.get(0).clone();
-				wynik_min = getMinTrasa();
+				bestSpecimen=population.get(0).clone();
+				wynik_min = getMinRoute();
 
-			}
-
-			if(detailedStatsOn){
-				String line = "Pokolenie #" + pok + " -> najlepsza: " + round(getMinTrasa(),2)+ " średnia: "+round(getAvgTrasa(),2)+" najgorsza: "+round(getMaxTrasa(),2);
-				message += line;
 			}
 		}
-
-		stop=System.currentTimeMillis(); // stop licznika czasu
-		result.setExecutionTimeInSeconds((stop-start)/1000d);
-		result.setBestRouteLength(bestSpecimen.getRate());
-		result.setPermutation(bestSpecimen.getBestRoute());
-		showEffects();
 	}
 
 	Specimen selekcja(SelectionMethod metoda) {
@@ -140,13 +123,13 @@ public class GACore extends Core{
 		double los = Math.random();
 		double currentSumaP = 0.0;
 		int j;
-		for (j = 0; j < populacja.size()-1; j++) {
-			currentSumaP += populacja.get(j).getP_Roulette();
+		for (j = 0; j < population.size()-1; j++) {
+			currentSumaP += population.get(j).getP_Roulette();
 			if (los <= currentSumaP) {
 				break;
 			}
 		}
-		return populacja.get(j);
+		return population.get(j);
 	}
 
 	Specimen selekcja_turniejowa() {
@@ -156,7 +139,7 @@ public class GACore extends Core{
 			return os;
 		}
 
-		int przedzial=2+(int)(Math.random()*((populacja.size()/2)-1));
+		int przedzial=2+(int)(Math.random()*((population.size()/2)-1));
 		ArrayList<ArrayList<Specimen>> turnieje=new ArrayList<ArrayList<Specimen>>();
 		turnieje.add(new ArrayList<Specimen>());
 
@@ -265,58 +248,59 @@ public class GACore extends Core{
 	ArrayList<Specimen> createRanking(){
 		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
 		for(int i=0;i<ranking_count;i++){
-			wynik.add(populacja.get(i).clone());
+			wynik.add(population.get(i).clone());
 		}
 		return wynik;
 	}
 
 	ArrayList<Specimen> clonePopulacja(){
 		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
-		for(Specimen os:populacja){
+		for(Specimen os:population){
 			wynik.add(os.clone());
 		}
 		return wynik;
 	}
 
-	void initOsobniki() {
-		Specimen zero=populacja.get(0);
+	void initSpecimen() {
+		Specimen zero=population.get(0);
 		zero.shuffleRoute();
-		populacja=new ArrayList<Specimen>();
-		populacja.add(zero);
+		population=new ArrayList<Specimen>();
+		population.add(zero);
 		for (int i = 0; i < params.getPopulationCount(); i++) {
-			Specimen nowy = populacja.get(0).clone();
-			nowy.shuffleRoute();
-			populacja.add(nowy);
+			Specimen newSpecimen = population.get(0).clone();
+			newSpecimen.shuffleRoute();
+			population.add(newSpecimen);
 		}
 	}
 
 	protected void finish() {
-		populacja = new ArrayList<Specimen>();
+		population = new ArrayList<Specimen>();
 	}
 
-	void printPopulacja() {
-		for (int i = 0; i < populacja.size(); i++) {
-			System.out.println("OSOBNIK " + i + "=" +" OCENA: "+round(populacja.get(i).getRate(),3)+ " PRAWD RULETKI: "+populacja.get(i).getP_Roulette());
-		}
+	double getMinRoute() {
+		return population.get(0).getRate();
 	}
 
-	double getMinTrasa() {
-		return populacja.get(0).getRate();
+	double getMaxRoute() {
+		return population.get(population.size() - 1).getRate();
 	}
 
-	double getMaxTrasa() {
-		return populacja.get(populacja.size() - 1).getRate();
-	}
-
-	double getAvgTrasa() {
+	double getAvgRoute() {
 		double srednia = 0;
-		for (Specimen os : populacja) {
+		for (Specimen os : population) {
 			srednia += os.getRate();
 		}
-		return (srednia / populacja.size());
+		return (srednia / population.size());
 	}
 
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+	
+	@Override
+	protected boolean areProperParametersGiven() {
+		if (algorithmParameters != null && algorithmParameters instanceof GAParameters)
+			return true;
+		return false;
 	}
 }

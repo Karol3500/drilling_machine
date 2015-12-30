@@ -7,9 +7,10 @@ public class Machine {
 	
 	public Machine(MachineParameters p){
 		this.machineParameters = p;
+		recalculateDrillChangeInterval();
 	}
 	
-	protected void calculateDrillChangeInterval(){
+	protected void recalculateDrillChangeInterval(){
 		
 		double vc = (Math.PI * machineParameters.getDrillDiameterInMm() 
 				* machineParameters.getSpindleSpeedInRotPerMin()) / 1000d;
@@ -18,7 +19,6 @@ public class Machine {
 	}
 
 	public int getDrillChangeInterval() {
-		calculateDrillChangeInterval();
 		return drillChangeInterval;
 	}
 
@@ -28,6 +28,7 @@ public class Machine {
 
 	public void setMachineParameters(MachineParameters machineParameters) {
 		this.machineParameters = machineParameters;
+		recalculateDrillChangeInterval();
 	}
 	
 }

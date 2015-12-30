@@ -10,35 +10,29 @@ public class RandomCore extends Core{
 	double currentLen; // warto�� funkcji oceny najepszego osobnika
 	int bestCycle; // nr cyklu z najlepszym osobnikiem
 	Specimen currentSpecimen; // obecny osobnik
-	RandomParameters params;
 	double bestLen;
 	double cycleLen[];
+	RandomParameters params;
 
-	public RandomCore(List<City> cities, RandomParameters params, boolean detailedStatsOn, Machine m) {
-		super(cities,detailedStatsOn,m);
+	public RandomCore() {
+		algorithmName = "Random";
 		bestLen = Double.POSITIVE_INFINITY;
 		currentLen = Double.POSITIVE_INFINITY;
 		bestCycle = -1;
-		this.params = params;
-		cycleLen = new double[params.getCyclesNumber() + 1];
 	}
 
-	public void run() {
+	@Override
+	void runAlg() {
+		params = (RandomParameters) algorithmParameters;
+		cycleLen = new double[params.getCyclesNumber() + 1];
 		startCity= cities.get(0).clone();
 		currentSpecimen = new Specimen(this);
 		currentSpecimen.setRoute(cities);
-		start=System.currentTimeMillis(); // start licznika czasu
-		// rozpoczynamy obliczenia
 		int i = 0;
 		while (!abort && i <= params.getCyclesNumber()) {
-			generateSpecimen(i); // budowa i-tej populacji
+			generateSpecimen(i);
 			i++;
 		}
-		stop=System.currentTimeMillis(); // stop licznika czasu
-		result.setExecutionTimeInSeconds((stop-start)/1000d);
-		result.setBestRouteLength(bestSpecimen.getRate());
-		result.setPermutation(bestSpecimen.getBestRoute());
-		showEffects();
 	}
 
 	public void generateSpecimen(int n) {
@@ -50,11 +44,6 @@ public class RandomCore extends Core{
 			bestLen=currentLen;
 			bestCycle=n;
 		}
-
-		if(detailedStatsOn){
-			String line = "Los #" + n + " -> długość trasy: " + round(currentLen,2);
-			addLine(line);
-		}
 	}
 
 	public double round(double d,int pos){
@@ -63,5 +52,12 @@ public class RandomCore extends Core{
 		} else {
 			return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 		}
+	}
+	
+	@Override
+	protected boolean areProperParametersGiven() {
+		if (algorithmParameters != null && algorithmParameters instanceof RandomParameters)
+			return true;
+		return false;
 	}
 }

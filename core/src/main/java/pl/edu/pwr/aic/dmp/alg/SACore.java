@@ -13,32 +13,24 @@ public class SACore extends Core{
 	double bestLen;	//dlugosc najlepszej trasy
 	int cAmount;
 	int bestCycle; // nr cyklu z bestSpecimenm osobnikiem
-	public SACore(List<City> cities,
-			SAParameters params,
-			boolean detailedStatsOn,
-			Machine m) {
-		super(cities,detailedStatsOn,m);
-		this.params = params;
+	public SACore() {
+		algorithmName = "Simulated Annealing";
 		currentSpecimen = new Specimen(this);
 		mutatedSpecimen = new Specimen(this);
 		bestSpecimen = new Specimen(this);
-		cAmount = cities.size()-1;
 		bestLen = Double.MAX_VALUE;
 		len = Double.MAX_VALUE;
 		bestCycle = -1;
 	}
 
-	public void run() {
+	@Override
+	void runAlg() {
+		params = (SAParameters) algorithmParameters;
+		cAmount = cities.size()-1;
 		startCity= cities.get(0).clone();
-		start=System.currentTimeMillis(); // start licznika czasu
 		for (int ep=0; !abort && ep<params.getCyclesNumber(); ep++) {
 			simulate(ep);
 		}
-		stop=System.currentTimeMillis(); // stop licznika czasu
-		result.setExecutionTimeInSeconds((stop-start)/1000d);
-		result.setBestRouteLength(bestSpecimen.getRate());
-		result.setPermutation(bestSpecimen.getBestRoute());
-		showEffects();
 	}
 
 	//losowa inicjalizacja trasy
@@ -132,11 +124,6 @@ public class SACore extends Core{
 			} else fail++;
 			done = (fail==params.getPermutationAttempts());
 		}
-
-		if(detailedStatsOn){
-			String line = "Cykl #" + ep + " -> długość trasy: " + round(bestLen,2) + " Temperatura końcowa: "+round(T,2);
-			addLine(line);
-		}
 		return bestLen;
 	}
 
@@ -157,5 +144,11 @@ public class SACore extends Core{
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
-
+	
+	@Override
+	protected boolean areProperParametersGiven() {
+		if (algorithmParameters != null && algorithmParameters instanceof SAParameters)
+			return true;
+		return false;
+	}
 }

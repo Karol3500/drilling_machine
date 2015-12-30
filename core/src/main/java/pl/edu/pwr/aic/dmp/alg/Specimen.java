@@ -5,187 +5,178 @@ import java.util.List;
 import java.util.Random;
 
 public class Specimen implements Comparable<Specimen> {
+	List<City> route;
 
-    
-    List<City> trasa;
+	double rate;
+	double rouletteProbablity;
+	boolean isRateActual;
+	Core alg;
 
-    double ocena;
-    double p_ruletka;
-    boolean ocena_aktualna;
-    Core alg;
+	public Specimen(Core alg){
+		route = new ArrayList<City>();
+		isRateActual=false;
+		this.alg=alg;
+	}
 
+	public List<Integer> getBestRoute(){
+		List<Integer> bestRoute = new ArrayList<Integer>();
+		bestRoute.add(alg.startCity.getNumber());
+		for(int i=0;i<route.size();i++) {
+			if(((i+1) % alg.getDrillChangeInterval())==0){
+				bestRoute.add(alg.startCity.getNumber());
+				bestRoute.add(route.get(i).getNumber());
+			} else {
+				bestRoute.add(route.get(i).getNumber());
+			}
+		}
+		bestRoute.add(alg.startCity.getNumber());
+		return bestRoute;
+	}
 
-    public Specimen(Core alg){
-        trasa = new ArrayList<City>();
-        ocena_aktualna=false;
-        this.alg=alg;
-    }
-    
-    public List<Integer> getBestRoute(){
-    	List<Integer> route = new ArrayList<Integer>();
-    	route.add(alg.startCity.getNumber());
-        for(int i=0;i<trasa.size();i++) {
-        	if(((i+1) % alg.getMachine().getDrillChangeInterval())==0){
-        		  route.add(alg.startCity.getNumber());
-        		  route.add(trasa.get(i).getNumber());
-        	} else {
-        		route.add(trasa.get(i).getNumber());
-        	}
-        }
-        route.add(alg.startCity.getNumber());
-        return route;
-    }
-    
-    public void setRoute(City[] cArray){
-        for(City c:cArray){
-        	trasa.add(c);
-        }
-    }
-    
-    public void setRoute(List<City> cArray){
-    	trasa=cArray;
-    }
-    
-    public List<City> getRoute(){
-        return trasa;
-    }
-    
-    public void swapCities(int i, int j){
-    	City c1=trasa.get(i).clone();
-    	City c2=trasa.get(j).clone();
-    	trasa.set(i, c2);
-    	trasa.set(j, c1);
-    }
+	public void setRoute(City[] cArray){
+		for(City c:cArray){
+			route.add(c);
+		}
+	}
 
+	public void setRoute(List<City> cArray){
+		route=cArray;
+	}
 
-    public void shuffleRoute(){
-    Collections.shuffle(trasa);   
-    ocena_aktualna=false;
-}
+	public List<City> getRoute(){
+		return route;
+	}
 
-    public void addCity(City m){
-        trasa.add(m);
-        ocena_aktualna=false;
-    }
-    public void deleteCity(int x){
-        trasa.remove(x);
-        ocena_aktualna=false;
-    }
-    public void deleteCity(City m){
-        for(int i=0;i<trasa.size();i++){
-            if(trasa.get(i).getNumber()==m.getNumber()){
-                trasa.remove(i);
-                break;
-            }
-        }
-        ocena_aktualna=false;
-    }
-    
-    public void setCity(int x, City t){
-        trasa.set(x, t);
-        ocena_aktualna=false;
-    }
-    public City getCity(int x){
-        return trasa.get(x);
-    }
-    
-    public double getRate(){
-        if(ocena_aktualna){
-            return ocena;
-        }
-        double odleglosc=0.0;
-        int i;
-        
-        //przechodzimy z punktu startowego do pierwszego punktu wiercenia
-        odleglosc+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-trasa.get(0).getX()),2)+Math.pow((double)(alg.startCity.getY()-trasa.get(0).getY()),2));
-        
-        for(i=0;i<trasa.size()-1;i++) {
-        	if(((i+1) % alg.getMachine().getDrillChangeInterval())==0){
-        		//wykonaj powr�t do punktu startowego oraz przejdz do nast�pnego punktu z punktu startowego
-        		odleglosc+=Math.sqrt(Math.pow((double)(trasa.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(trasa.get(i).getY()-alg.startCity.getY()),2));
-        		odleglosc+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-trasa.get(i+1).getX()),2)+Math.pow((double)(alg.startCity.getY()-trasa.get(i+1).getY()),2));
-        	} else {
-            odleglosc+=Math.sqrt(Math.pow((double)(trasa.get(i).getX()-trasa.get(i+1).getX()),2)+Math.pow((double)(trasa.get(i).getY()-trasa.get(i+1).getY()),2));
-        	}
-        }
-        //na koniec wracamy do punktu startowego
-        odleglosc+=Math.sqrt(Math.pow((double)(trasa.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(trasa.get(i).getY()-alg.startCity.getY()),2));
-        
-        ocena_aktualna=true;
-        ocena=odleglosc;
-        return ocena;
-    }
-    
-    public int cityRepeats(City miastoZliczane){
-        int powtorzenia=0;
-        for(City m:trasa){
-            if(miastoZliczane.cequals(m)){
-                powtorzenia++;
-            }
-        }
-        return powtorzenia;
-    }
-    
-    public double getP_Roulette(){
-        return p_ruletka;
-    }
-    
-    public void setP_Roulette(double p){
-        p_ruletka=p;
-    }
+	public void swapCities(int i, int j){
+		City c1=route.get(i).clone();
+		City c2=route.get(j).clone();
+		route.set(i, c2);
+		route.set(j, c1);
+	}
 
+	public void shuffleRoute(){
+		Collections.shuffle(route);   
+		isRateActual=false;
+	}
 
+	public void addCity(City m){
+		route.add(m);
+		isRateActual=false;
+	}
+	public void deleteCity(int x){
+		route.remove(x);
+		isRateActual=false;
+	}
+	public void deleteCity(City m){
+		for(int i=0;i<route.size();i++){
+			if(route.get(i).getNumber()==m.getNumber()){
+				route.remove(i);
+				break;
+			}
+		}
+		isRateActual=false;
+	}
 
-    public Specimen clone(){
-        
-        Specimen o = new Specimen(alg);
-        for(int i = 0; i < trasa.size(); i++){
-            o.addCity(new City(getCity(i).getNumber(),getCity(i).getX(), getCity(i).getY()));
-        }
-        o.ocena=ocena;
-        o.ocena_aktualna=ocena_aktualna;
-        o.p_ruletka=p_ruletka;
+	public void setCity(int x, City t){
+		route.set(x, t);
+		isRateActual=false;
+	}
+	public City getCity(int x){
+		return route.get(x);
+	}
 
-        return o;
-    }
+	public double getRate(){
+		if(isRateActual){
+			return rate;
+		}
+		double routeLength=0.0;
+		int i;
 
-    @Override
-    public int compareTo(Specimen t) {
-        double diff=getRate()-t.getRate();
-        int comp;
-        if(diff>0){
-            comp=1;
-        } else if(diff<0){
-            comp=-1;
-        } else {
-            comp=0;
-        }
-        return comp;
-    }
+		routeLength+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-route.get(0).getX()),2)+Math.pow((double)(alg.startCity.getY()-route.get(0).getY()),2));
 
-    public void Inver() {
-        Random generator = new Random();
-        int startCity = generator.nextInt(trasa.size()-1);//i=0...trasa.size-2
-        int endCity = generator.nextInt(trasa.size()-startCity)+startCity;//j=startCity...trasa.size()-1
-        for ( int start = startCity, end = endCity ;
-              start < startCity+((endCity-startCity)/2);
-              start++, end-- )
-        {
-            swapCities(start, end );
-        }
-        ocena_aktualna=false;
-    }
+		for(i=0;i<route.size()-1;i++) {
+			if(((i+1) % alg.getDrillChangeInterval())==0){
+				routeLength+=Math.sqrt(Math.pow((double)(route.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(route.get(i).getY()-alg.startCity.getY()),2));
+				routeLength+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-route.get(i+1).getX()),2)+Math.pow((double)(alg.startCity.getY()-route.get(i+1).getY()),2));
+			} else {
+				routeLength+=Math.sqrt(Math.pow((double)(route.get(i).getX()-route.get(i+1).getX()),2)+Math.pow((double)(route.get(i).getY()-route.get(i+1).getY()),2));
+			}
+		}
+		routeLength+=Math.sqrt(Math.pow((double)(route.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(route.get(i).getY()-alg.startCity.getY()),2));
 
-    public void Inver2(int distance) {
-        Random generator = new Random();
-        int startCity = generator.nextInt(trasa.size()-1-distance);//i=0...trasa.size-2
-        int endCity = startCity+distance;
-        for ( int start = startCity, end = endCity ;
-              start < startCity+((endCity-startCity)/2);
-              start++, end-- )
-        {
-            swapCities(start, end );
-        }
-        ocena_aktualna=false;
-    }
+		isRateActual=true;
+		rate=routeLength;
+		return rate;
+	}
+
+	public int cityRepeats(City countedCity){
+		int repetitions=0;
+		for(City m:route){
+			if(countedCity.cequals(m)){
+				repetitions++;
+			}
+		}
+		return repetitions;
+	}
+
+	public double getP_Roulette(){
+		return rouletteProbablity;
+	}
+
+	public void setP_Roulette(double p){
+		rouletteProbablity=p;
+	}
+
+	public Specimen clone(){
+
+		Specimen o = new Specimen(alg);
+		for(int i = 0; i < route.size(); i++){
+			o.addCity(new City(getCity(i).getNumber(),getCity(i).getX(), getCity(i).getY()));
+		}
+		o.rate=rate;
+		o.isRateActual=isRateActual;
+		o.rouletteProbablity=rouletteProbablity;
+
+		return o;
+	}
+
+	@Override
+	public int compareTo(Specimen t) {
+		double diff=getRate()-t.getRate();
+		int comp;
+		if(diff>0){
+			comp=1;
+		} else if(diff<0){
+			comp=-1;
+		} else {
+			comp=0;
+		}
+		return comp;
+	}
+
+	public void Inver() {
+		Random generator = new Random();
+		int startCity = generator.nextInt(route.size()-1);//i=0...trasa.size-2
+				int endCity = generator.nextInt(route.size()-startCity)+startCity;//j=startCity...trasa.size()-1
+				for ( int start = startCity, end = endCity ;
+						start < startCity+((endCity-startCity)/2);
+						start++, end-- )
+				{
+					swapCities(start, end );
+				}
+				isRateActual=false;
+	}
+
+	public void Inver2(int distance) {
+		Random generator = new Random();
+		int startCity = generator.nextInt(route.size()-1-distance);//i=0...trasa.size-2
+				int endCity = startCity+distance;
+		for ( int start = startCity, end = endCity ;
+				start < startCity+((endCity-startCity)/2);
+				start++, end-- )
+		{
+			swapCities(start, end );
+		}
+		isRateActual=false;
+	}
 }

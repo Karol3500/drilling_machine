@@ -1,31 +1,47 @@
 package pl.edu.pwr.aic.dmp.alg;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.UnitResult;
-import pl.edu.pwr.aic.dmp.utils.Machine;
+import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public abstract class Core extends Thread {
 	boolean abort;
 	City startCity;
-	protected Machine machine;
+	int drillChangeInterval;
 	protected List<City> cities;
-	protected long start;
-	protected long stop;
+	protected long startTime;
+	protected long stopTime;
 	protected Specimen bestSpecimen;
 	protected int bestGeneration;
 	protected String message;
-	protected boolean detailedStatsOn;
 	protected UnitResult result;
+	protected String algorithmName;
+	protected Parameters algorithmParameters;
 	
-	protected Core(List<City> cities, boolean detailedStatsOn, Machine m){
-		this.cities = new ArrayList<City>(cities);
-		this.detailedStatsOn = detailedStatsOn;
-		this.machine = m;
+	protected Core(){
 		result = new UnitResult();
 	}
+	
+	public void setParameters(Parameters algorithmParameters){
+		this.algorithmParameters = algorithmParameters;
+	}
+	
+	@Override
+	public void run(){
+		startTime=System.currentTimeMillis();
+		setupSaneParametersIfNotGiven();
+		runAlg();
+		stopTime=System.currentTimeMillis();
+		result.setExecutionTimeInSeconds((stopTime-startTime)/1000d);
+		result.setBestRouteLength(bestSpecimen.getRate());
+		result.setPermutation(bestSpecimen.getBestRoute());
+		
+		showEffects();
+	}
+	
+	abstract void runAlg();
 	
 	public void abort() {
 		abort = true;
@@ -36,18 +52,17 @@ public abstract class Core extends Thread {
 	}
 
 	public void showEffects() {
-		// zapis wynik�w do logu i przebiegu
+		message="";
 		addLine("============================================================================================================");
 		addDate();
 		String temp = "";
-		String algorithm ="";
 		if (abort == true) {
 			temp = "(because of abort) ";
 		}
-		addLine(">>> Algorithm "+algorithm+" finished " + temp + "with result:");
+		addLine(">>>"+algorithmName+" finished " + temp + "with result:");
 		addPhrase("Algorithm working time: " + result.getExecutionTimeInSeconds() + " s");
 		newLine();
-		addLine("Drill change interval: " + machine.getDrillChangeInterval());
+		addLine("Drill change interval: " + drillChangeInterval);
 		addLine("Route length: " + result.getBestRouteLength());
 		String tempS = "";
 		addLine("Generation with best specimen found: " + bestGeneration + tempS);
@@ -75,11 +90,31 @@ public abstract class Core extends Thread {
 		message += "\n";
 	}
 
-	public Machine getMachine() {
-		return machine;
+	public List<City> getCities() {
+		return cities;
 	}
 
-	public void setMachine(Machine machine) {
-		this.machine = machine;
+	public void setCities(List<City> cities) {
+		this.cities = cities;
 	}
+
+	public UnitResult getResult() {
+		return result;
+	}
+	
+	private void setupSaneParametersIfNotGiven() {
+		if(!areProperParametersGiven()){
+			this.algorithmParameters.setSaneDefaults();
+		}
+	}
+
+	public int getDrillChangeInterval() {
+		return drillChangeInterval;
+	}
+
+	public void setDrillChangeInterval(int drillChangeInterval) {
+		this.drillChangeInterval = drillChangeInterval;
+	}
+
+	protected abstract boolean areProperParametersGiven() ;
 }

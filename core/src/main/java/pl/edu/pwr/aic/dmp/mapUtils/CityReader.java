@@ -11,9 +11,6 @@ public class CityReader {
 
 	protected List<City> map;
 	private int numberOfCities = 0;
-	
-	public CityReader(){
-	}
 
 	public void loadFile(String filePath) throws InputMismatchException {
 		FileParser fileParser = new FileParser();
@@ -27,7 +24,7 @@ public class CityReader {
 
 		numberOfCities = fileParser.getNumberOfCities();
 		map = fileParser.getCityList();
-		System.out.println("Wczytano " + numberOfCities + " punktów");
+		System.out.println("Read " + numberOfCities + " points");
 	}
 
 	public boolean isMapLoaded(){
