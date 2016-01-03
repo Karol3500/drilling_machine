@@ -5,15 +5,15 @@ package pl.edu.pwr.aic.dmp.alg;
  */
 public class City {
 
-    private int _numer;
-    private double _x;
-    private double _y;
+    private int number;
+    private double x;
+    private double y;
 
 
     public City(int numer,double x, double y){
-        _x = x;
-        _y = y;
-        _numer=numer;
+        this.x = x;
+        this.y = y;
+        number=numer;
     }
 
 
@@ -22,37 +22,37 @@ public class City {
     }
 
     public double getX(){
-        return _x;
+        return x;
     }
 
     public double getY(){
-        return _y;
+        return y;
     }
     
     public int getNumber(){
-        return _numer;
+        return number;
     }
     
     public void setNumber(int numer){
-        _numer=numer;
+        number=numer;
     }
     
     public boolean cequals(City m){
-        return _numer==m.getNumber();
+        return number==m.getNumber();
     }
 
     @Override
     public boolean equals(Object m){
         City c = (City) m;
-        return _numer==c.getNumber();
+        return number==c.getNumber();
     }
 
     public City clone(){
-        return new City(_numer,_x,_y);
+        return new City(number,x,y);
     }
     
     public String toString(){
-    	return _numer+","+_x+","+_y;
+    	return number+","+x+","+y;
     }
 
     

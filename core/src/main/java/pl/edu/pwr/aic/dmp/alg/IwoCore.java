@@ -36,8 +36,8 @@ public class IwoCore extends Core {
 		initSpecimen();
 
 		Collections.sort(population);
-		wynik_max = getMaxTrasa();
-		wynik_min = getMinTrasa();
+		wynik_max = getMaxRoute();
+		wynik_min = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 		for (int pok = 0; !abort && pok < params.getNumberOfIterations(); pok++) {
 			int distance = calculateDistance(pok,params.getNumberOfIterations());
@@ -52,7 +52,7 @@ public class IwoCore extends Core {
 				{
 					Specimen childSpecimen = aktualny.clone();
 					for (int distanceCounter = 0; distanceCounter < distance; distanceCounter++) {
-						childSpecimen.Inver();
+						childSpecimen.inver(childSpecimen);
 					}
 
 					newSpecimens.add(childSpecimen);
@@ -68,13 +68,13 @@ public class IwoCore extends Core {
 					population.remove(population.size()-1);
 				}
 			}
-			if (wynik_max < getMaxTrasa()) {
-				wynik_max = getMaxTrasa();
+			if (wynik_max < getMaxRoute()) {
+				wynik_max = getMaxRoute();
 			}
-			if (wynik_min > getMinTrasa()) {
+			if (wynik_min > getMinRoute()) {
 				bestGeneration=pok;
 				bestSpecimen=population.get(0).clone();
-				wynik_min = getMinTrasa();
+				wynik_min = getMinRoute();
 
 			}
 		}
@@ -92,25 +92,25 @@ public class IwoCore extends Core {
 		ArrayList<Double> fitness = new ArrayList<>();
 		for(Specimen individual : populacja)
 		{
-			fitness.add(individual.getRate());
+			fitness.add(individual.getRouteLength());
 		}
 		return fitness;
 	}
 
-	int calculateSeedNumber(int specimenIndex, List<Specimen> populacja){
-		double specRate = (populacja.get(specimenIndex)).getRate();
-		double minRate  = populacja.get(populacja.size()-1).getRate();
-		double maxRate  = populacja.get(0).getRate();
+	int calculateSeedNumber(int specimenIndex, List<Specimen> population){
+		double specRate = (population.get(specimenIndex)).getRouteLength();
+		double minRate  = population.get(population.size()-1).getRouteLength();
+		double maxRate  = population.get(0).getRouteLength();
 		return (params.getMinSeedNumber() + (int)java.lang.Math.floor((minRate - specRate) * 
 				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate))));
 	}
 
-	ArrayList<Specimen> clonePopulacja(){
-		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
+	ArrayList<Specimen> clonePopolation(){
+		ArrayList<Specimen> result= new ArrayList<Specimen>();
 		for(Specimen os:population){
-			wynik.add(os.clone());
+			result.add(os.clone());
 		}
-		return wynik;
+		return result;
 	}
 
 	void initSpecimen() {
@@ -119,9 +119,9 @@ public class IwoCore extends Core {
 		population=new ArrayList<Specimen>();
 		population.add(zero);
 		for (int i = 0; i < params.getMinSpecimenInPopulation(); i++) {
-			Specimen nowy = population.get(0).clone();
-			nowy.shuffleRoute();
-			population.add(nowy);
+			Specimen newSpecimen = population.get(0).clone();
+			newSpecimen.shuffleRoute();
+			population.add(newSpecimen);
 		}
 	}
 
@@ -132,24 +132,24 @@ public class IwoCore extends Core {
 	void printPopulation() {
 
 		for (int i = 0; i < population.size(); i++) {
-			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRate(),3)+ " ROULETTE PROBABILITY: "+population.get(i).getP_Roulette());
+			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRouteLength(),3)+ " ROULETTE PROBABILITY: "+population.get(i).getP_Roulette());
 		}
 	}
 
-	double getMinTrasa() {
-		return population.get(0).getRate();
+	double getMinRoute() {
+		return population.get(0).getRouteLength();
 	}
 
-	double getMaxTrasa() {
-		return population.get(population.size() - 1).getRate();
+	double getMaxRoute() {
+		return population.get(population.size() - 1).getRouteLength();
 	}
 
-	double getAvgTrasa() {
-		double srednia = 0;
-		for (Specimen os : population) {
-			srednia += os.getRate();
+	double getAvgRoute() {
+		double meanRate = 0;
+		for (Specimen spec : population) {
+			meanRate += spec.getRouteLength();
 		}
-		return (srednia / population.size());
+		return (meanRate / population.size());
 	}
 
 	public double round(double d,int pos){

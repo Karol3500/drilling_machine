@@ -37,7 +37,7 @@ public class RandomCore extends Core{
 
 	public void generateSpecimen(int n) {
 		currentSpecimen.shuffleRoute();
-		currentLen=currentSpecimen.getRate();
+		currentLen=currentSpecimen.getRouteLength();
 
 		if(currentLen<bestLen){
 			bestSpecimen=currentSpecimen;

@@ -3,9 +3,11 @@ package pl.edu.pwr.aic.dmp;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.IwoCore;
+import pl.edu.pwr.aic.dmp.alg.SACore;
 import pl.edu.pwr.aic.dmp.alg.utils.ExperimentSetup;
-import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
@@ -47,20 +49,39 @@ public class ConsoleEntry {
 //			a.showEffects();
 //		}
 	public static void main(String[] args){
+//		MachineParameters mparams = new MachineParameters();
+//		mparams.setSaneDefaults();
+//		Machine m = new Machine(mparams);
+//		
+//		IwoParameters iwoParams = new IwoParameters();
+//		iwoParams.setSaneDefaults();
+//		IwoCore iwo = new IwoCore();
+//		List<Parameters> params = new ArrayList<Parameters>();
+//		params.add(iwoParams);
+//		
+//		ExperimentSetup setup = new ExperimentSetup();
+//		setup.setAlgorithm(iwo);
+//		setup.setDrillChangeInterval(m.getDrillChangeInterval());
+//		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
+//		setup.setParamsList(params);
+//		setup.setNumberOfUnitExperimentRepetitions(4);
+//		setup.setupExperimentEnvironment();
+//		
+//		setup.performExperiment();
 		MachineParameters mparams = new MachineParameters();
 		mparams.setSaneDefaults();
 		Machine m = new Machine(mparams);
 		
-		IwoParameters iwoParams = new IwoParameters();
-		iwoParams.setSaneDefaults();
-		IwoCore iwo = new IwoCore();
+		SAParameters saParams = new SAParameters();
+		saParams.setSaneDefaults();
+		Core alg = new SACore();
 		List<Parameters> params = new ArrayList<Parameters>();
-		params.add(iwoParams);
+		params.add(saParams);
 		
 		ExperimentSetup setup = new ExperimentSetup();
-		setup.setAlgorithm(iwo);
+		setup.setAlgorithm(alg);
 		setup.setDrillChangeInterval(m.getDrillChangeInterval());
-		setup.setFilePath("/home/karol/Pobrane/resource/_maps_working/a280.tsp");
+		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
 		setup.setParamsList(params);
 		setup.setNumberOfUnitExperimentRepetitions(4);
 		setup.setupExperimentEnvironment();

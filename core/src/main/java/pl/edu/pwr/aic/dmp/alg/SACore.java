@@ -1,145 +1,84 @@
 package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
-import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
-import pl.edu.pwr.aic.dmp.utils.Machine;
 
 public class SACore extends Core{
-	Specimen currentSpecimen;
-	Specimen mutatedSpecimen;
 	SAParameters params;
-	double len;		//dlugosc aktualnej trasy
-	double bestLen;	//dlugosc najlepszej trasy
-	int cAmount;
+	double bestLength;	//dlugosc najlepszej trasy
+	int numberOfCitiesMinusOne;
 	int bestCycle; // nr cyklu z bestSpecimenm osobnikiem
 	public SACore() {
 		algorithmName = "Simulated Annealing";
-		currentSpecimen = new Specimen(this);
-		mutatedSpecimen = new Specimen(this);
 		bestSpecimen = new Specimen(this);
-		bestLen = Double.MAX_VALUE;
-		len = Double.MAX_VALUE;
+		bestLength = Double.MAX_VALUE;
 		bestCycle = -1;
 	}
 
 	@Override
 	void runAlg() {
 		params = (SAParameters) algorithmParameters;
-		cAmount = cities.size()-1;
+		numberOfCitiesMinusOne = cities.size()-1;
 		startCity= cities.get(0).clone();
-		for (int ep=0; !abort && ep<params.getCyclesNumber(); ep++) {
-			simulate(ep);
+		for (int cycleNumber=0; !abort && cycleNumber<params.getCyclesNumber(); cycleNumber++) {
+			simulate(cycleNumber);
 		}
 	}
 
-	//losowa inicjalizacja trasy
-	void makeTour() {
-		currentSpecimen=new Specimen(this);
-		currentSpecimen.setRoute(cities);
-		currentSpecimen.shuffleRoute();
-		len = currentSpecimen.getRate();
+	Specimen getInitialSpecimenWithDefaultValues() {
+		Specimen specimen=new Specimen(this);
+		specimen.setRoute(cities);
+		specimen.shuffleRoute();
+		return specimen;
 	}
-
-	//odwraca losowo wybrana podtrase i
-	//wstawia za losowo wybranym miastem
-	//odwraca losowo wybrany segment
-	double mutacja1(double len) {
-		City[] cMut=new City[cAmount];
-		int p1,p2; //punkty rozciecia
-		int sw=0, i,j,k=0;
-		p1 = (int)(cAmount*Math.random());
-		do {
-			p2 = (int)(Math.random()*cAmount); 
-		} while (Math.abs(p1-p2)<2||Math.abs(p1-p2)==cAmount-1);
-		if (p2<p1) {
-			sw=p1; p1=p2; p2=sw;
-		}
-		i=0;
-		do {
-			if (i<p1 || i>p2) {
-				cMut[k++]=currentSpecimen.getCity(i++);
-				//neigh[k++] = trasa[i++];
-			}
-			else
-				for (j=p2; j>=p1; j--) {
-					cMut[k++]=currentSpecimen.getCity(j);
-					//neigh[k++] = trasa[j];
-					i++;
-				}
-		} while(i<cAmount);
-		mutatedSpecimen=new Specimen(this);
-		mutatedSpecimen.setRoute(cMut);
-		len = mutatedSpecimen.getRate();
-
-		return len;
-	}    
-
-	/*
-	 * wlasciwy algorytm SA
-	 */ 
-	double simulate(int ep) {
-		int i=0;
-
-		double tempLen; //dlugosc mutanta;
-		double T=params.getStartTemperature();
-
-
-		//wyznaczam startowa trase
-		makeTour();
-
-
+	
+	double simulate(int currentCycleNumber) {
+		double currentTemperature=params.getStartTemperature();
+		Specimen currentSpecimen = getInitialSpecimenWithDefaultValues();
 		boolean success = false;
 		boolean found   = false;
-		boolean done    = false;
-		int fail = 0;	//liczy porazki
-		int succ;		//liczy sukcesy
-		while (!done) {
-			i = 0;
-			succ = 0;
+		int failsCounter = 0;
+		int successesCounter;
+		while (!(failsCounter==params.getPermutationAttempts())) {
+			int i=0;
+			successesCounter = 0;
 			success = false;
 			found = false;
 			while (!success) {
-				tempLen = mutacja1(len);
-				if (accept(tempLen, len,T)) {
-					currentSpecimen=mutatedSpecimen.clone();
-					//trasa = copy(neigh);
-					len = tempLen;
-					if (tempLen<bestLen) {
-						bestSpecimen=mutatedSpecimen.clone();
-						//bestT = copy(neigh);
-						bestCycle=ep;
-						bestLen = tempLen;
+				Specimen mutatedSpecimen = currentSpecimen.returnMutatedClone();				
+				if (shouldNewSolutionBeAccepted(mutatedSpecimen.getRouteLength(), 
+						currentSpecimen.getRouteLength(), currentTemperature)) {
+					currentSpecimen=mutatedSpecimen;
+					if (currentSpecimen.getRouteLength()<bestLength) {
+						bestSpecimen=currentSpecimen.clone();
+						bestCycle=currentCycleNumber;
+						bestLength = currentSpecimen.getRouteLength();
 						found = true;
-						succ++;
+						successesCounter++;
 					}
 				}
 				i++; 
 
-				success = (i>100*cAmount||succ>10*cAmount);
+				success = (i>100*numberOfCitiesMinusOne||successesCounter>10*numberOfCitiesMinusOne);
 			}
-			T = T*params.getCoolingCoefficient();
+			currentTemperature = currentTemperature*params.getCoolingCoefficient();
 			if (found) {
-				fail = 0;
-			} else fail++;
-			done = (fail==params.getPermutationAttempts());
+				failsCounter = 0;
+			} else failsCounter++;
 		}
-		return bestLen;
+		return bestLength;
 	}
 
 
 
-	boolean accept(double tempLen, double len, double T) {
-		boolean yes = false;
-		if (tempLen<len) {
-			yes = true;
-		} else {
-			yes = (Math.random() < Math.exp(-(tempLen-len)/T));
-		}
-		return yes;
+	boolean shouldNewSolutionBeAccepted(double currentRouteLength, double bestRouteLength, double currentTemperature) {
+		return currentRouteLength <= bestRouteLength ? true : 
+			(Math.random() < probabilityOfStateAcceptance(currentRouteLength, bestRouteLength, currentTemperature));
 	}
 
-
+	private double probabilityOfStateAcceptance(double tempLen, double len, double temperature) {
+		return Math.exp((len - tempLen)/temperature);
+	}
 
 	public double round(double d,int pos){
 		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();

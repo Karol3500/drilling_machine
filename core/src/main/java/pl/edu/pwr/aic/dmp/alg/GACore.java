@@ -59,11 +59,11 @@ public class GACore extends Core{
 			if (params.getSelectionMethod() == SelectionMethod.ROULETTE) {
 				double sumaOdwrotnosciOcen = 0.0;
 				for (Specimen os : population) {
-					sumaOdwrotnosciOcen += 1/os.getRate();
+					sumaOdwrotnosciOcen += 1/os.getRouteLength();
 				}
 
 				for (Specimen os : population) {
-					os.setP_Roulette((1/os.getRate()) / sumaOdwrotnosciOcen);
+					os.setP_Roulette((1/os.getRouteLength()) / sumaOdwrotnosciOcen);
 				}
 			}
 
@@ -278,17 +278,17 @@ public class GACore extends Core{
 	}
 
 	double getMinRoute() {
-		return population.get(0).getRate();
+		return population.get(0).getRouteLength();
 	}
 
 	double getMaxRoute() {
-		return population.get(population.size() - 1).getRate();
+		return population.get(population.size() - 1).getRouteLength();
 	}
 
 	double getAvgRoute() {
 		double srednia = 0;
 		for (Specimen os : population) {
-			srednia += os.getRate();
+			srednia += os.getRouteLength();
 		}
 		return (srednia / population.size());
 	}

@@ -35,7 +35,7 @@ public abstract class Core extends Thread {
 		runAlg();
 		stopTime=System.currentTimeMillis();
 		result.setExecutionTimeInSeconds((stopTime-startTime)/1000d);
-		result.setBestRouteLength(bestSpecimen.getRate());
+		result.setBestRouteLength(bestSpecimen.getRouteLength());
 		result.setPermutation(bestSpecimen.getBestRoute());
 		
 		showEffects();
