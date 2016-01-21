@@ -10,8 +10,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
-		<module>java_cup</module>
-		<module>grappa</module>
 		<module>core</module>
 		<module>ConsoleApplication</module>
 	</modules>
