@@ -2,10 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>dmp</groupId>
+		<groupId>pl.edu.pwr.aic</groupId>
 		<artifactId>dmp</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>DYNAMIC-SNAPSHOT</version>
 	</parent>
+	
+	<groupId>pl.edu.pwr.aic.dmp</groupId>
 	<artifactId>core</artifactId>
 
 	<build>
@@ -43,21 +45,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>colt</groupId>
-			<artifactId>colt</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-			<version>1.0.13</version>
-		</dependency>
-		<dependency>
-			<groupId>dmp</groupId>
-			<artifactId>grappa</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
