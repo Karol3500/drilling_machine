@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
+import pl.edu.pwr.aic.dmp.utils.IwoParameters;
 
 public class IwoCore extends Core {
 

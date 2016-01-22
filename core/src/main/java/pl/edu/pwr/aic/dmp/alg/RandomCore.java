@@ -1,9 +1,7 @@
 package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
-import java.util.List;
 
-import pl.edu.pwr.aic.dmp.alg.utils.RandomParameters;
-import pl.edu.pwr.aic.dmp.utils.Machine;
+import pl.edu.pwr.aic.dmp.utils.RandomParameters;
 
 public class RandomCore extends Core{
 	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami

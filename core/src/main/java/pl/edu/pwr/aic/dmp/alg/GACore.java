@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
+import pl.edu.pwr.aic.dmp.utils.GAParameters;
 
 
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji

@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import pl.edu.pwr.aic.dmp.alg.utils.UnitResult;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
+import pl.edu.pwr.aic.dmp.utils.UnitResult;
 
 public abstract class Core extends Thread {
 	boolean abort;
@@ -107,6 +107,10 @@ public abstract class Core extends Thread {
 		this.cities = cities;
 	}
 
+	public Specimen getBestSpecimen() {
+		return bestSpecimen;
+	}
+	
 	public UnitResult getResult() {
 		return result;
 	}

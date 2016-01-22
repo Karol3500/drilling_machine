@@ -1,7 +1,7 @@
 package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 
-import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
+import pl.edu.pwr.aic.dmp.utils.SAParameters;
 
 public class SACore extends Core{
 	SAParameters params;

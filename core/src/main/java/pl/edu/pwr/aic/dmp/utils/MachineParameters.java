@@ -17,6 +17,17 @@ public class MachineParameters implements Parameters {
 		setHoleDeepnessInMm(50);
 	}
 	
+	@Override
+	public Object clone(){
+		MachineParameters clone = new MachineParameters();
+		clone.drillDiameterInMm = drillDiameterInMm;
+		clone.drillDurabilityInM = drillDurabilityInM;
+		clone.movePerRotation = movePerRotation;
+		clone.holeDeepnessInMm = holeDeepnessInMm;
+		clone.spindleSpeedInRotPerMin = spindleSpeedInRotPerMin;
+		return clone;
+	}
+	
 	public double getDrillDurabilityInM() {
 		return drillDurabilityInM;
 	}
