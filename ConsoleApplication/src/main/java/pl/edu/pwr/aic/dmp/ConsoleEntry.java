@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
+import pl.edu.pwr.aic.dmp.alg.GACore;
 import pl.edu.pwr.aic.dmp.alg.IwoCore;
 import pl.edu.pwr.aic.dmp.alg.SACore;
 import pl.edu.pwr.aic.dmp.alg.utils.ExperimentSetup;
+import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
@@ -49,37 +52,20 @@ public class ConsoleEntry {
 //			a.showEffects();
 //		}
 	public static void main(String[] args){
-//		MachineParameters mparams = new MachineParameters();
-//		mparams.setSaneDefaults();
-//		Machine m = new Machine(mparams);
-//		
-//		IwoParameters iwoParams = new IwoParameters();
-//		iwoParams.setSaneDefaults();
-//		IwoCore iwo = new IwoCore();
-//		List<Parameters> params = new ArrayList<Parameters>();
-//		params.add(iwoParams);
-//		
-//		ExperimentSetup setup = new ExperimentSetup();
-//		setup.setAlgorithm(iwo);
-//		setup.setDrillChangeInterval(m.getDrillChangeInterval());
-//		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
-//		setup.setParamsList(params);
-//		setup.setNumberOfUnitExperimentRepetitions(4);
-//		setup.setupExperimentEnvironment();
-//		
-//		setup.performExperiment();
 		MachineParameters mparams = new MachineParameters();
 		mparams.setSaneDefaults();
 		Machine m = new Machine(mparams);
 		
-		SAParameters saParams = new SAParameters();
-		saParams.setSaneDefaults();
-		Core alg = new SACore();
+		IwoParameters iwoParams = new IwoParameters();
+		iwoParams.setSaneDefaults();
+		iwoParams.setMaxSpecimenInPopulation(500);
+		iwoParams.setNumberOfIterations(300);
+		IwoCore iwo = new IwoCore();
 		List<Parameters> params = new ArrayList<Parameters>();
-		params.add(saParams);
+		params.add(iwoParams);
 		
 		ExperimentSetup setup = new ExperimentSetup();
-		setup.setAlgorithm(alg);
+		setup.setAlgorithm(iwo);
 		setup.setDrillChangeInterval(m.getDrillChangeInterval());
 		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
 		setup.setParamsList(params);
@@ -87,5 +73,47 @@ public class ConsoleEntry {
 		setup.setupExperimentEnvironment();
 		
 		setup.performExperiment();
+		
+		
+//		MachineParameters mparams = new MachineParameters();
+//		mparams.setSaneDefaults();
+//		Machine m = new Machine(mparams);
+//		
+//		SAParameters saParams = new SAParameters();
+//		saParams.setSaneDefaults();
+//		Core alg = new SACore();
+//		List<Parameters> params = new ArrayList<Parameters>();
+//		params.add(saParams);
+//		
+//		ExperimentSetup setup = new ExperimentSetup();
+//		setup.setAlgorithm(alg);
+//		setup.setDrillChangeInterval(m.getDrillChangeInterval());
+//		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
+//		setup.setParamsList(params);
+//		setup.setNumberOfUnitExperimentRepetitions(4);
+//		setup.setupExperimentEnvironment();
+//		
+//		setup.performExperiment();
+
+
+//		MachineParameters mparams = new MachineParameters();
+//		mparams.setSaneDefaults();
+//		Machine m = new Machine(mparams);
+//		
+//		GAParameters gaParams = new GAParameters();
+//		gaParams.setSaneDefaults();
+//		Core alg = new GACore();
+//		List<Parameters> params = new ArrayList<Parameters>();
+//		params.add(gaParams);
+//		
+//		ExperimentSetup setup = new ExperimentSetup();
+//		setup.setAlgorithm(alg);
+//		setup.setDrillChangeInterval(m.getDrillChangeInterval());
+//		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
+//		setup.setParamsList(params);
+//		setup.setNumberOfUnitExperimentRepetitions(4);
+//		setup.setupExperimentEnvironment();
+//		
+//		setup.performExperiment();
 	}
 }

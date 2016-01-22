@@ -3,17 +3,13 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 
-
-/**
- * Created by Karol on 2014-05-25.
- */
 public class IwoCore extends Core {
 
-	List<Specimen> population;
 	int dobry_wynik;
 	double wynik_max;
 	double wynik_min;
@@ -21,7 +17,7 @@ public class IwoCore extends Core {
 
 	public IwoCore() {
 		algorithmName = "IWO Algorithm";
-		population = new ArrayList<Specimen>();
+		population = new LinkedList<Specimen>();
 		abort = false;
 	}
 
@@ -39,9 +35,9 @@ public class IwoCore extends Core {
 		wynik_max = getMaxRoute();
 		wynik_min = getMinRoute();
 		bestSpecimen = population.get(0).clone();
-		for (int pok = 0; !abort && pok < params.getNumberOfIterations(); pok++) {
-			int distance = calculateDistance(pok,params.getNumberOfIterations());
-			ArrayList<Specimen> newSpecimens = new ArrayList<>();
+		for (int iter = 0; !abort && iter < params.getNumberOfIterations(); iter++) {
+			int distance = calculateDistance(iter,params.getNumberOfIterations());
+			List<Specimen> newSpecimens = new ArrayList<>();
 			for(int specIndex = 0; specIndex < population.size();specIndex++)
 			{
 				Specimen aktualny = population.get(specIndex);
@@ -59,20 +55,13 @@ public class IwoCore extends Core {
 				}
 			}
 			population.addAll(newSpecimens);
-			newSpecimens.clear();
-			Collections.sort(population);
-			if(population.size()>params.getMaxSpecimenInPopulation())
-			{
-				while(population.size()!=params.getMaxSpecimenInPopulation())
-				{
-					population.remove(population.size()-1);
-				}
-			}
+			newSpecimens=new ArrayList<>();
+			performSelection();
 			if (wynik_max < getMaxRoute()) {
 				wynik_max = getMaxRoute();
 			}
 			if (wynik_min > getMinRoute()) {
-				bestGeneration=pok;
+				bestGeneration=iter;
 				bestSpecimen=population.get(0).clone();
 				wynik_min = getMinRoute();
 
@@ -80,17 +69,25 @@ public class IwoCore extends Core {
 		}
 	}
 
-	private int calculateDistance(int aktualnaIteracja, int iloscIteracji) {
-		return (int)Math.round(Math.pow((iloscIteracji - aktualnaIteracja)
-				/iloscIteracji,params.getNonLinearCoefficient())
+	private void performSelection() {
+		if(population.size()>params.getMaxSpecimenInPopulation())
+		{
+			Collections.shuffle(population);
+			population = reduceShuffledPopulationUsingTournament(population, params.getMaxSpecimenInPopulation());
+		}
+	}
+
+	private int calculateDistance(int currentIteration, int numberOfIterations) {
+		return (int)Math.round(Math.pow((numberOfIterations - currentIteration)
+				/numberOfIterations,params.getNonLinearCoefficient())
 				*(params.getInitialStandardDeviation()-params.getFinalStandardDeviation())
 				+params.getFinalStandardDeviation());
 	}
 
-	ArrayList<Double> calculateFitnessValue(ArrayList<Specimen> populacja)
+	List<Double> calculateFitnessValue(List<Specimen> population)
 	{
-		ArrayList<Double> fitness = new ArrayList<>();
-		for(Specimen individual : populacja)
+		List<Double> fitness = new ArrayList<>(population.size());
+		for(Specimen individual : population)
 		{
 			fitness.add(individual.getRouteLength());
 		}
@@ -105,8 +102,8 @@ public class IwoCore extends Core {
 				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate))));
 	}
 
-	ArrayList<Specimen> clonePopolation(){
-		ArrayList<Specimen> result= new ArrayList<Specimen>();
+	List<Specimen> clonePopolation(){
+		List<Specimen> result= new LinkedList<Specimen>();
 		for(Specimen os:population){
 			result.add(os.clone());
 		}
@@ -116,7 +113,7 @@ public class IwoCore extends Core {
 	void initSpecimen() {
 		Specimen zero=population.get(0);
 		zero.shuffleRoute();
-		population=new ArrayList<Specimen>();
+		population=new LinkedList<Specimen>();
 		population.add(zero);
 		for (int i = 0; i < params.getMinSpecimenInPopulation(); i++) {
 			Specimen newSpecimen = population.get(0).clone();
@@ -126,7 +123,7 @@ public class IwoCore extends Core {
 	}
 
 	protected void finish() {
-		population = new ArrayList<Specimen>();
+		population = new LinkedList<Specimen>();
 	}
 
 	void printPopulation() {

@@ -10,20 +10,16 @@ import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
 
-	ArrayList<Specimen> population;
-	ArrayList<Specimen> turniej;
-	ArrayList<Specimen> ranking;
 	GAParameters params;
 	
-	int ranking_iter;
-	int ranking_count;
-	int dobry_wynik;
-	double wynik_max;
-	double wynik_min;
+	int rankingIter;
+	int rankingCount;
+	double maxRoute;
+	double minRoute;
 	public GACore() {
 		algorithmName = "Genetic Algorthm";
 		population = new ArrayList<Specimen>();
-		turniej = new ArrayList<Specimen>();
+		tournament = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
 		abort = false;
 	}
@@ -39,21 +35,21 @@ public class GACore extends Core{
 		initSpecimen();
 
 		Collections.sort(population);
-		wynik_max = getMaxRoute();
-		wynik_min = getMinRoute();
+		maxRoute = getMaxRoute();
+		minRoute = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 
 		for (int pok = 0; !abort && pok < params.getGenerationsCount(); pok++) {
 			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
 			if(params.getSelectionMethod() == SelectionMethod.RANKING){
 				ranking = new ArrayList<Specimen>();
-				ranking_iter=0;
+				rankingIter=0;
 				int minimum=20;
 				if(params.getPopulationCount()<minimum){
 					minimum=params.getPopulationCount();
 				}
 				double losowi=Math.random()*params.getPopulationCount()/2;
-				ranking_count = minimum + (int)(losowi);
+				rankingCount = minimum + (int)(losowi);
 			}
 
 			if (params.getSelectionMethod() == SelectionMethod.ROULETTE) {
@@ -95,14 +91,14 @@ public class GACore extends Core{
 			Collections.sort(population);
 			populacja_kolejna = new ArrayList<Specimen>();
 
-			if (wynik_max < getMaxRoute()) {
-				wynik_max = getMaxRoute();
+			if (maxRoute < getMaxRoute()) {
+				maxRoute = getMaxRoute();
 			}
 
-			if (wynik_min > getMinRoute()) {
+			if (minRoute > getMinRoute()) {
 				bestGeneration=pok;
 				bestSpecimen=population.get(0).clone();
-				wynik_min = getMinRoute();
+				minRoute = getMinRoute();
 
 			}
 		}
@@ -110,16 +106,16 @@ public class GACore extends Core{
 
 	Specimen selekcja(SelectionMethod metoda) {
 		if (metoda == SelectionMethod.ROULETTE) {
-			return selekcja_ruletka();
+			return selectionRoulette();
 		} else if (metoda == SelectionMethod.TOURNAMENT) {
-			return selekcja_turniejowa();
+			return selectionTournament();
 		} else {
-			return selekcja_rankingowa();
+			return selectionRanking();
 
 		}
 	}
 
-	Specimen selekcja_ruletka() {
+	Specimen selectionRoulette() {
 		double los = Math.random();
 		double currentSumaP = 0.0;
 		int j;
@@ -132,56 +128,23 @@ public class GACore extends Core{
 		return population.get(j);
 	}
 
-	Specimen selekcja_turniejowa() {
-		if(!turniej.isEmpty()){
-			Specimen os=turniej.get(0);
-			turniej.remove(0);
-			return os;
-		}
+	Specimen selectionRanking() {
 
-		int przedzial=2+(int)(Math.random()*((population.size()/2)-1));
-		ArrayList<ArrayList<Specimen>> turnieje=new ArrayList<ArrayList<Specimen>>();
-		turnieje.add(new ArrayList<Specimen>());
-
-		ArrayList<Specimen> populacja_rand=clonePopulacja();
-		Collections.shuffle(populacja_rand);
-		int licznik_grupy=przedzial;
-		for(int i=0;i<populacja_rand.size();i++){
-			if(licznik_grupy==0){
-				licznik_grupy=przedzial;
-				turnieje.add(new ArrayList<Specimen>());
-			}
-			turnieje.get(turnieje.size()-1).add(populacja_rand.get(i));
-			licznik_grupy--;
-		}
-
-		for(ArrayList<Specimen> grupa:turnieje){
-			Collections.sort(grupa);
-			turniej.add(grupa.get(0));
-		}
-
-		Specimen os=turniej.get(0);
-		turniej.remove(0);
-		return os;
-	}
-
-	Specimen selekcja_rankingowa() {
-
-		if(ranking_iter>=ranking_count){
-			ranking_iter=0;
+		if(rankingIter>=rankingCount){
+			rankingIter=0;
 		}
 
 		if(ranking.isEmpty()){
 			ranking=createRanking();
 		}
 
-		Specimen os=ranking.get(ranking_iter++);
+		Specimen os=ranking.get(rankingIter++);
 		return os;
 	}
 
 	Specimen selekcja_rankingowa_old() {
 		if(ranking.isEmpty()){
-			ranking=clonePopulacja();
+			ranking=getClonedPopulation();
 			Collections.sort(ranking);
 		}
 
@@ -247,16 +210,8 @@ public class GACore extends Core{
 
 	ArrayList<Specimen> createRanking(){
 		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
-		for(int i=0;i<ranking_count;i++){
+		for(int i=0;i<rankingCount;i++){
 			wynik.add(population.get(i).clone());
-		}
-		return wynik;
-	}
-
-	ArrayList<Specimen> clonePopulacja(){
-		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
-		for(Specimen os:population){
-			wynik.add(os.clone());
 		}
 		return wynik;
 	}
