@@ -15,6 +15,7 @@ import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
 
+@SuppressWarnings("unused")
 public class ConsoleEntry {
 
 //		public static void main(String[] args) {

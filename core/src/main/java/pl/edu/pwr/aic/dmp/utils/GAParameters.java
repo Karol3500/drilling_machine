@@ -12,12 +12,13 @@ public class GAParameters implements Parameters {
 	SelectionMethod selectionMethod = SelectionMethod.RANKING;
 	
 	@Override
-	public void setSaneDefaults() {
+	public Parameters setSaneDefaults() {
 		populationCount = 800;
 		generationsCount = 400;
 		crossingProbability = 0.65;
 		mutationProbability = 0.2;
 		selectionMethod = SelectionMethod.RANKING;
+		return this;
 	}
 	
 	@Override

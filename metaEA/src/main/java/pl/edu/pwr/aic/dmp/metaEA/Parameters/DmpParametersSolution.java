@@ -9,6 +9,22 @@ public class DmpParametersSolution implements Solution {
 
 	private static final long serialVersionUID = 1L;
 
+	public Parameters getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
+
+	public Core getAlgorithm() {
+		return algorithm;
+	}
+
+	public void setAlgorithm(Core algorithm) {
+		this.algorithm = algorithm;
+	}
+
 	Parameters parameters;
 	Core algorithm;
 	

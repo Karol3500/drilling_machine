@@ -10,11 +10,12 @@ public class SAParameters implements Parameters {
 	int permutationAttempts;
 	
 	@Override
-	public void setSaneDefaults() {
+	public Parameters setSaneDefaults() {
 		cyclesNumber = 2;
 		startTemperature = 300;
 		coolingCoefficient = 0.95;
 		permutationAttempts = 10;
+		return this;
 	}
 	
 	@Override

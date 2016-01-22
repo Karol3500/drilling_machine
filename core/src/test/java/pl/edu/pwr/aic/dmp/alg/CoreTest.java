@@ -14,16 +14,7 @@ import org.mockito.Mockito;
 public class CoreTest {
 	
 	Core c = new IwoCore();
-	
-	@Test
-	public void shouldCalculateIntervalCorrectly(){
-//		Core c = new Core(new ArrayList<City>(),false) {};
-//		
-//		c.calculateInterval(4, 20, 3184, 0.8, 50);
-//		//TODO: investigate why the hell this test pass
-//		assertEquals(0, c.getInterwal());
-	}
-	
+
 	@Test
 	public void shouldRemoveHalfSpecimen(){
 		List<Specimen> s = new LinkedList<Specimen>();

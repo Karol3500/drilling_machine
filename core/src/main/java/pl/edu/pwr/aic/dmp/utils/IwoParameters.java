@@ -14,7 +14,7 @@ public class IwoParameters implements Parameters {
 	private int finalStandardDeviation;
 
 	@Override
-	public void setSaneDefaults(){
+	public Parameters setSaneDefaults(){
 		minSpecimenInPopulation = 10;
 		maxSpecimenInPopulation = 100;
 		numberOfIterations = 100;
@@ -23,6 +23,7 @@ public class IwoParameters implements Parameters {
 		nonLinearCoefficient = 1;
 		initialStandardDeviation = 15;
 		finalStandardDeviation = 2;
+		return this;
 	}
 	
 	@Override

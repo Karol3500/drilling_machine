@@ -9,12 +9,13 @@ public class MachineParameters implements Parameters {
 	private double spindleSpeedInRotPerMin;
 	
 	@Override
-	public void setSaneDefaults(){
+	public Parameters setSaneDefaults(){
 		setDrillDiameterInMm(20);
 		setDrillDurabilityInM(4);
 		setSpindleSpeedInRotPerMin(3184);
 		setMovePerRotation(0.8);
 		setHoleDeepnessInMm(50);
+		return this;
 	}
 	
 	@Override

@@ -6,8 +6,9 @@ public class RandomParameters implements Parameters {
 	private int cyclesNumber;
 	
 	@Override
-	public void setSaneDefaults() {
+	public Parameters setSaneDefaults() {
 		cyclesNumber = 200;
+		return this;
 	}
 	
 	@Override
