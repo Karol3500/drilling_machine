@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pl.edu.pwr.aic.dmp.utils.GAParameters;
+import pl.edu.pwr.aic.dmp.utils.GaParameters;
 
 
 //parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
 
-	GAParameters params;
+	GaParameters params;
 	
 	int rankingIter;
 	int rankingCount;
@@ -26,7 +26,7 @@ public class GACore extends Core{
 
 	@Override
 	void runAlg() {
-		params = (GAParameters)algorithmParameters;
+		params = (GaParameters)algorithmParameters;
 		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
 		zero.setRoute(cities);
@@ -254,7 +254,7 @@ public class GACore extends Core{
 	
 	@Override
 	protected boolean areProperParametersGiven() {
-		if (algorithmParameters != null && algorithmParameters instanceof GAParameters)
+		if (algorithmParameters != null && algorithmParameters instanceof GaParameters)
 			return true;
 		return false;
 	}

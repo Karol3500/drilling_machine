@@ -3,13 +3,13 @@ package pl.edu.pwr.aic.dmp.utils;
 import pl.edu.pwr.aic.dmp.alg.SelectionMethod;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
 
-public class GAParameters implements Parameters {
+public class GaParameters implements Parameters {
 
 	int populationCount;
 	int generationsCount;
 	double mutationProbability;
 	double crossingProbability;
-	SelectionMethod selectionMethod = SelectionMethod.RANKING;
+	SelectionMethod selectionMethod = SelectionMethod.TOURNAMENT;
 	
 	@Override
 	public Parameters setSaneDefaults() {
@@ -23,7 +23,7 @@ public class GAParameters implements Parameters {
 	
 	@Override
 	public Object clone(){
-		GAParameters clone = new GAParameters();
+		GaParameters clone = new GaParameters();
 		clone.populationCount = populationCount;
 		clone.generationsCount = generationsCount;
 		clone.mutationProbability = mutationProbability;
