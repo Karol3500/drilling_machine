@@ -11,11 +11,9 @@ import org.coinor.opents.TabuList;
 import org.coinor.opents.TabuSearch;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.alg.IwoCore;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
 import pl.edu.pwr.aic.dmp.metaEA.iwo.move.IwoMoveManager;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
-import pl.edu.pwr.aic.dmp.utils.IwoParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
@@ -31,14 +29,16 @@ public class AlgorithmTuner {
 	private MoveManager moveManager;
 	private TabuList tabuList;
 	private TabuSearch tabuSearchEngine;
+	private String mapFilePath;
 
-	public AlgorithmTuner(Core algorithm, Parameters algParams){
+	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath){
 		this.algorithm = algorithm;
 		this.algParams = algParams;
 		experimentResults = new ArrayList<TuningExperimentResult>();
 		objFunc = new DmpObjectiveFunction();
 		moveManager = new IwoMoveManager();
 		tabuList = new SimpleTabuList(TABU_SEARCH_TENURE);
+		this.mapFilePath = mapFilePath;
 	}
 
 	public void performExperiment(int iterations){
@@ -75,11 +75,6 @@ public class AlgorithmTuner {
 				getDefaultMachine().getDrillChangeInterval());
 	}
 
-	public static void main(String[] args){
-		AlgorithmTuner tuner = new AlgorithmTuner(new IwoCore(), new IwoParameters());
-		tuner.performExperiment(10);
-	}
-
 	private Machine getDefaultMachine() {
 		return new Machine((MachineParameters)new MachineParameters().setSaneDefaults());
 	}
@@ -87,7 +82,7 @@ public class AlgorithmTuner {
 	private Core configureAlgorithm(Core algorithm, Parameters algParams, int drillChangeInterval) {
 		algorithm.setAlgorithmParameters(algParams);
 		algorithm.setDrillChangeInterval(drillChangeInterval);
-		loadAndSetMap(algorithm, "src/main/resources/maps_for_research/mapa101.tsp");
+		loadAndSetMap(algorithm, mapFilePath);
 		return algorithm;
 	}
 
