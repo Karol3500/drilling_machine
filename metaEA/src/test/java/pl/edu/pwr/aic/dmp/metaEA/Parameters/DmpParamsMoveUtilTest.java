@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParamsMoveUtil;
+
 public class DmpParamsMoveUtilTest {
 
 	@Test

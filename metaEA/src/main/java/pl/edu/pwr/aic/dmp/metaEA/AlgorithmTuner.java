@@ -13,9 +13,8 @@ import org.coinor.opents.TabuSearch;
 
 import pl.edu.pwr.aic.dmp.alg.IwoCore;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
-import pl.edu.pwr.aic.dmp.metaEA.Parameters.DmpParametersSolution;
 import pl.edu.pwr.aic.dmp.metaEA.iwo.move.IwoMoveManager;
-import pl.edu.pwr.aic.dmp.utils.ExperimentResult;
+import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
 import pl.edu.pwr.aic.dmp.utils.IwoParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;

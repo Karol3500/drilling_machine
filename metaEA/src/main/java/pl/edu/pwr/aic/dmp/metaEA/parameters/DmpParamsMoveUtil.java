@@ -1,8 +1,6 @@
-package pl.edu.pwr.aic.dmp.metaEA.Parameters;
+package pl.edu.pwr.aic.dmp.metaEA.parameters;
 
 import java.util.Random;
-
-import pl.edu.pwr.aic.dmp.metaEA.iwo.Parameters.IwoParameter;
 
 public class DmpParamsMoveUtil {
 
@@ -15,10 +13,6 @@ public class DmpParamsMoveUtil {
 			return parameter;
 		}
 		return parameter - new Random().nextInt(parameter-lowerBound);
-	}
-
-	public static IwoParameter drawParam() {
-		return IwoParameter.values()[new Random().nextInt(IwoParameter.values().length)];
 	}
 
 	public static double getIncreasedDouble(double parameter, double upperBound) {

@@ -11,7 +11,7 @@ import org.coinor.opents.ObjectiveFunction;
 import org.coinor.opents.Solution;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.metaEA.Parameters.DmpParametersSolution;
+import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
 
 public class DmpObjectiveFunction implements ObjectiveFunction {
 

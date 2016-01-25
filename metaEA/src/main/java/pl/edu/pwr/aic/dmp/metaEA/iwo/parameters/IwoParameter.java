@@ -1,6 +1,6 @@
-package pl.edu.pwr.aic.dmp.metaEA.iwo.Parameters;
+package pl.edu.pwr.aic.dmp.metaEA.iwo.parameters;
 
-import pl.edu.pwr.aic.dmp.metaEA.Parameters.ParameterEnum;
+import pl.edu.pwr.aic.dmp.metaEA.parameters.ParameterEnum;
 
 public enum IwoParameter implements ParameterEnum{
 	NUMBER_OF_ITERATIONS(1,2000),

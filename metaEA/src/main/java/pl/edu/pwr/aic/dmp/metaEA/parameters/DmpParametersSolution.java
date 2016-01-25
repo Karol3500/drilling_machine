@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp.metaEA.Parameters;
+package pl.edu.pwr.aic.dmp.metaEA.parameters;
 
 import java.util.List;
 
