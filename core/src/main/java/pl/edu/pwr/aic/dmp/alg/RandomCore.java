@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import pl.edu.pwr.aic.dmp.utils.RandomParameters;
 
 public class RandomCore extends Core{
-	double[][] lengths; // macie� d�ugo�ci tras mi�dzy poszczeg�lnymi miastami
-	double currentLen; // warto�� funkcji oceny najepszego osobnika
-	int bestCycle; // nr cyklu z najlepszym osobnikiem
-	Specimen currentSpecimen; // obecny osobnik
+	double[][] lengths;
+	double currentLen;
+	int bestCycle;
+	Specimen currentSpecimen;
 	double bestLen;
 	double cycleLen[];
 	RandomParameters params;

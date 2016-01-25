@@ -6,8 +6,6 @@ import java.util.Collections;
 
 import pl.edu.pwr.aic.dmp.utils.GaParameters;
 
-
-//parametry: populacja,pokolenia,p_mutacji, p_krzyzowania, metoda selekcji
 public class GACore extends Core{
 
 	GaParameters params;
@@ -99,7 +97,6 @@ public class GACore extends Core{
 				bestGeneration=pok;
 				bestSpecimen=population.get(0).clone();
 				minRoute = getMinRoute();
-
 			}
 		}
 	}
@@ -129,7 +126,6 @@ public class GACore extends Core{
 	}
 
 	Specimen selectionRanking() {
-
 		if(rankingIter>=rankingCount){
 			rankingIter=0;
 		}
@@ -152,8 +148,6 @@ public class GACore extends Core{
 		ranking.remove(0);
 		return os;
 	}
-
-
 
 	void krzyzowanie(Specimen o1, Specimen o2) {
 		int startindex = (int) (Math.random() * (o1.getRoute().size())); //[0,1) * 10= [0,9]

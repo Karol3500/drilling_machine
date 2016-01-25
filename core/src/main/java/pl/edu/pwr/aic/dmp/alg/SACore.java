@@ -5,9 +5,9 @@ import pl.edu.pwr.aic.dmp.utils.SAParameters;
 
 public class SACore extends Core{
 	SAParameters params;
-	double bestLength;	//dlugosc najlepszej trasy
+	double bestLength;
 	int numberOfCitiesMinusOne;
-	int bestCycle; // nr cyklu z bestSpecimenm osobnikiem
+	int bestCycle;
 	public SACore() {
 		algorithmName = "Simulated Annealing";
 		bestSpecimen = new Specimen(this);
