@@ -3,7 +3,6 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.utils.IwoParameters;
@@ -17,7 +16,7 @@ public class IwoCore extends Core {
 
 	public IwoCore() {
 		algorithmName = "IWO Algorithm";
-		population = new LinkedList<Specimen>();
+		population = getNewSpecimenList();
 		abort = false;
 	}
 
@@ -36,8 +35,8 @@ public class IwoCore extends Core {
 		wynik_min = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 		for (int iter = 0; !abort && iter < params.getNumberOfIterations(); iter++) {
-			int distance = calculateDistance(iter,params.getNumberOfIterations());
-			List<Specimen> newSpecimens = new ArrayList<>();
+			int distance = calculateCurrentNumberOfTransformationsPerSeed(iter,params.getNumberOfIterations());
+			List<Specimen> newSpecimens = getNewSpecimenList();
 			for(int specIndex = 0; specIndex < population.size();specIndex++)
 			{
 				Specimen aktualny = population.get(specIndex);
@@ -55,7 +54,6 @@ public class IwoCore extends Core {
 				}
 			}
 			population.addAll(newSpecimens);
-			newSpecimens=new ArrayList<>();
 			performSelection();
 			if (wynik_max < getMaxRoute()) {
 				wynik_max = getMaxRoute();
@@ -77,11 +75,11 @@ public class IwoCore extends Core {
 		}
 	}
 
-	private int calculateDistance(int currentIteration, int numberOfIterations) {
+	private int calculateCurrentNumberOfTransformationsPerSeed(int currentIteration, int numberOfIterations) {
 		return (int)Math.round(Math.pow((numberOfIterations - currentIteration)
 				/numberOfIterations,params.getNonLinearCoefficient())
-				*(params.getInitialStandardDeviation()-params.getFinalStandardDeviation())
-				+params.getFinalStandardDeviation());
+				*(params.getInitialTransformationsPerSeed()-params.getFinalTransformationsPerSeed())
+				+params.getFinalTransformationsPerSeed());
 	}
 
 	List<Double> calculateFitnessValue(List<Specimen> population)
@@ -103,7 +101,7 @@ public class IwoCore extends Core {
 	}
 
 	List<Specimen> clonePopolation(){
-		List<Specimen> result= new LinkedList<Specimen>();
+		List<Specimen> result= getNewSpecimenList();
 		for(Specimen os:population){
 			result.add(os.clone());
 		}
@@ -113,7 +111,7 @@ public class IwoCore extends Core {
 	void initSpecimen() {
 		Specimen zero=population.get(0);
 		zero.shuffleRoute();
-		population=new LinkedList<Specimen>();
+		population=getNewSpecimenList();
 		population.add(zero);
 		for (int i = 0; i < params.getMinSpecimenInPopulation(); i++) {
 			Specimen newSpecimen = population.get(0).clone();
@@ -122,12 +120,7 @@ public class IwoCore extends Core {
 		}
 	}
 
-	protected void finish() {
-		population = new LinkedList<Specimen>();
-	}
-
 	void printPopulation() {
-
 		for (int i = 0; i < population.size(); i++) {
 			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRouteLength(),3)+ " ROULETTE PROBABILITY: "+population.get(i).getP_Roulette());
 		}

@@ -16,7 +16,7 @@ public class IwoDecreaseFinalTransformationsPerSeedMove implements Move {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
 		params.setFinalTransformationsPerSeed(DmpParamsMoveUtil.getDecreasedInt(
 				params.getFinalTransformationsPerSeed(),
-				(int)IwoParameter.FINAL_TRANSFORMATIONS_PER_SEED.lb));
+				(int)IwoParameter.FINAL_TRANSFORMATIONS_PER_SEED.lowerBound));
 	}
 	
 	@Override

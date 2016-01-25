@@ -16,7 +16,7 @@ public class IwoDecreaseNonLinearCoefficientMove implements Move {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
 		params.setNonLinearCoefficient(DmpParamsMoveUtil.getDecreasedDouble(
 				params.getNonLinearCoefficient(),
-				IwoParameter.NON_LINEAR_COEFFICIENT.lb));
+				IwoParameter.NON_LINEAR_COEFFICIENT.lowerBound));
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class IwoDecreaseMinSeedNumberMove implements Move {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
 		params.setMinSeedNumber(DmpParamsMoveUtil.getDecreasedInt(
 				params.getMinSeedNumber(),
-				(int)IwoParameter.MIN_SEED_NUMBER.lb));
+				(int)IwoParameter.MIN_SEED_NUMBER.lowerBound));
 	}
 
 	@Override

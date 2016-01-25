@@ -10,8 +10,8 @@ public class IwoParameters implements Parameters {
 	private int minSeedNumber;
 	private int maxSeedNumber;
 	private double nonLinearCoefficient;
-	private int initialStandardDeviation;
-	private int finalStandardDeviation;
+	private int initialTransformationsPerSeed;
+	private int finalTransformationsPerSeed;
 
 	@Override
 	public Parameters setSaneDefaults(){
@@ -21,8 +21,8 @@ public class IwoParameters implements Parameters {
 		maxSeedNumber = 10;
 		minSeedNumber = 2;
 		nonLinearCoefficient = 1;
-		initialStandardDeviation = 15;
-		finalStandardDeviation = 2;
+		initialTransformationsPerSeed = 15;
+		finalTransformationsPerSeed = 2;
 		return this;
 	}
 	
@@ -35,9 +35,23 @@ public class IwoParameters implements Parameters {
 		clone.minSeedNumber = minSeedNumber;
 		clone.maxSeedNumber = maxSeedNumber;
 		clone.nonLinearCoefficient = nonLinearCoefficient;
-		clone.initialStandardDeviation = initialStandardDeviation;
-		clone.finalStandardDeviation = finalStandardDeviation;
+		clone.initialTransformationsPerSeed = initialTransformationsPerSeed;
+		clone.finalTransformationsPerSeed = finalTransformationsPerSeed;
 		return clone;
+	}
+
+	@Override
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("Number of iterations: " + numberOfIterations + "\n");
+		sb.append(" Min specimen in population: " + minSpecimenInPopulation + "\n");
+		sb.append("Max specimen in population: " + maxSpecimenInPopulation + "\n");
+		sb.append("Min seed number: " + minSeedNumber + "\n");
+		sb.append("Max seed number: " + maxSeedNumber+ "\n");
+		sb.append("Nonlinear coefficient: " + nonLinearCoefficient+ "\n");
+		sb.append("Initial transform per seed: " + initialTransformationsPerSeed + "\n");
+		sb.append("Final transform per seed: " + finalTransformationsPerSeed);
+		return sb.toString();
 	}
 	
 	public int getNumberOfIterations() {
@@ -76,16 +90,16 @@ public class IwoParameters implements Parameters {
 	public void setNonLinearCoefficient(double nonLinearCoefficient) {
 		this.nonLinearCoefficient = nonLinearCoefficient;
 	}
-	public int getInitialStandardDeviation() {
-		return initialStandardDeviation;
+	public int getInitialTransformationsPerSeed() {
+		return initialTransformationsPerSeed;
 	}
-	public void setInitialStandardDeviation(int initialStandardDeviation) {
-		this.initialStandardDeviation = initialStandardDeviation;
+	public void setInitialTransformationsPerSeed(int initialTransformations) {
+		this.initialTransformationsPerSeed = initialTransformations;
 	}
-	public int getFinalStandardDeviation() {
-		return finalStandardDeviation;
+	public int getFinalTransformationsPerSeed() {
+		return finalTransformationsPerSeed;
 	}
-	public void setFinalStandardDeviation(int finalStandardDeviation) {
-		this.finalStandardDeviation = finalStandardDeviation;
+	public void setFinalTransformationsPerSeed(int finalTransformations) {
+		this.finalTransformationsPerSeed = finalTransformations;
 	}
 }

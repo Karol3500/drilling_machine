@@ -12,11 +12,11 @@ public enum IwoParameter implements ParameterEnum{
 	INIT_TRANSFORMATIONS_PER_SEED(1, 1000),
 	FINAL_TRANSFORMATIONS_PER_SEED(1, 1000);
 	
-	public double lb;
-	public double ub;
+	public double lowerBound;
+	public double upperBound;
 	
-	IwoParameter(double lb, double ub){
-		this.lb = lb;
-		this.ub = ub;
+	IwoParameter(double lowerBound, double upperBound){
+		this.lowerBound = lowerBound;
+		this.upperBound = upperBound;
 	}
 }

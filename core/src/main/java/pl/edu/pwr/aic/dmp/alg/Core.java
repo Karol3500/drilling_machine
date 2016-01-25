@@ -33,10 +33,6 @@ public abstract class Core extends Thread {
 		random = new Random();
 	}
 	
-	public void setParameters(Parameters algorithmParameters){
-		this.algorithmParameters = algorithmParameters;
-	}
-	
 	@Override
 	public void run(){
 		startTime=System.currentTimeMillis();
@@ -47,7 +43,7 @@ public abstract class Core extends Thread {
 		result.setBestRouteLength(bestSpecimen.getRouteLength());
 		result.setPermutation(bestSpecimen.getBestRoute());
 		
-		showEffects();
+		//showEffects();
 	}
 	
 	abstract void runAlg();
@@ -70,6 +66,8 @@ public abstract class Core extends Thread {
 		}
 		addLine(">>>"+algorithmName+" finished " + temp + "with result:");
 		addPhrase("Algorithm working time: " + result.getExecutionTimeInSeconds() + " s");
+		newLine();
+		addPhrase("Parameters: " + algorithmParameters);
 		newLine();
 		addLine("Drill change interval: " + drillChangeInterval);
 		addLine("Route length: " + result.getBestRouteLength());
@@ -129,14 +127,26 @@ public abstract class Core extends Thread {
 		this.drillChangeInterval = drillChangeInterval;
 	}
 
+	public Parameters getAlgorithmParameters() {
+		return algorithmParameters;
+	}
+	
+	public void setAlgorithmParameters(Parameters algorithmParameters){
+		this.algorithmParameters = algorithmParameters;
+	}
+	
 	protected abstract boolean areProperParametersGiven() ;
 
 	protected List<Specimen> getClonedPopulation() {
-		List<Specimen> wynik= new LinkedList<Specimen>();
+		List<Specimen> wynik= getNewSpecimenList();
 		for(Specimen os:population){
 			wynik.add(os.clone());
 		}
 		return wynik;
+	}
+
+	protected List<Specimen> getNewSpecimenList() {
+		return new LinkedList<Specimen>();
 	}
 
 	protected Specimen selectionTournament() {
@@ -173,24 +183,24 @@ public abstract class Core extends Thread {
 	}
 	
 	protected List<Specimen> reduceShuffledPopulationUsingTournament(
-			List<Specimen> specimens, int maxPopulationSize) {
-		while(shouldHalfOfPopulationBeRemovedBecauseOfTooManyTournaments(specimens.size(),maxPopulationSize)){
-			wipeHalfPopulation(specimens);
+			List<Specimen> previouslyShuffledSpecimens, int maxPopulationSize) {
+		while(shouldHalfOfPopulationBeRemovedBecauseOfTooManyTournaments(previouslyShuffledSpecimens.size(),maxPopulationSize)){
+			wipeHalfPopulation(previouslyShuffledSpecimens);
 		}
-		int specForRem = calculateNumberOfSpecimenForRemoval(specimens.size(),maxPopulationSize);
+		int specForRem = calculateNumberOfSpecimenForRemoval(previouslyShuffledSpecimens.size(),maxPopulationSize);
 		if(specForRem == 0){
-			return specimens;
+			return previouslyShuffledSpecimens;
 		}
 		ArrayList<Specimen> specForRemoval = new ArrayList<>(specForRem);
-		int specimensPerTournament = specimens.size()/specForRem;
+		int specimensPerTournament = previouslyShuffledSpecimens.size()/specForRem;
 	    for (int i = 0; i < specForRem-1; i++) {
 	    	int fromIndex = i*specimensPerTournament;
 			int toIndex = (i+1)*specimensPerTournament;
-			determineLooser(specimens.subList(fromIndex, toIndex), specForRemoval);
+			determineLooser(previouslyShuffledSpecimens.subList(fromIndex, toIndex), specForRemoval);
 	    }
-	    determineLooser(specimens.subList((specForRem-1)*specimensPerTournament, specimens.size()), specForRemoval);
-	    specimens.removeAll(specForRemoval);
-		return specimens;
+	    determineLooser(previouslyShuffledSpecimens.subList((specForRem-1)*specimensPerTournament, previouslyShuffledSpecimens.size()), specForRemoval);
+	    previouslyShuffledSpecimens.removeAll(specForRemoval);
+		return previouslyShuffledSpecimens;
 	}
 
 	private void determineLooser(List<Specimen> tournamentParticipators, ArrayList<Specimen> specForRemoval) {

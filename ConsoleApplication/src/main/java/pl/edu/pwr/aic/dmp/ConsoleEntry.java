@@ -68,7 +68,7 @@ public class ConsoleEntry {
 		ExperimentSetup setup = new ExperimentSetup();
 		setup.setAlgorithm(iwo);
 		setup.setDrillChangeInterval(m.getDrillChangeInterval());
-		setup.setFilePath("src/main/resources/maps_working/a280.tsp");
+		setup.setFilePath("src/main/resources/maps_working/att13.tsp");
 		setup.setParamsList(params);
 		setup.setNumberOfUnitExperimentRepetitions(4);
 		setup.setupExperimentEnvironment();

@@ -36,7 +36,7 @@ public class ExperimentSetup {
 	public void performExperiment(){
 		for(Parameters p : paramsList){
 			ExperimentResult res = new ExperimentResult(p, mapName, algorithm.getClass());
-			algorithm.setParameters(p);
+			algorithm.setAlgorithmParameters(p);
 			for(int i=0; i<numberOfUnitExperimentRepetitions; i++){
 				algorithm.setCities(cr.getMapClone());
 				algorithm.setDrillChangeInterval(drillChangeInterval);
