@@ -10,8 +10,8 @@ import pl.edu.pwr.aic.dmp.utils.IwoParameters;
 public class IwoCore extends Core {
 
 	int dobry_wynik;
-	double wynik_max;
-	double wynik_min;
+	double worstResult;
+	double bestResult;
 	IwoParameters params;
 
 	public IwoCore() {
@@ -31,38 +31,36 @@ public class IwoCore extends Core {
 		initSpecimen();
 
 		Collections.sort(population);
-		wynik_max = getMaxRoute();
-		wynik_min = getMinRoute();
+		worstResult = getMaxRoute();
+		bestResult = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 		for (int iter = 0; !abort && iter < params.getNumberOfIterations(); iter++) {
 			int distance = calculateCurrentNumberOfTransformationsPerSeed(iter,params.getNumberOfIterations());
 			List<Specimen> newSpecimens = getNewSpecimenList();
 			for(int specIndex = 0; specIndex < population.size();specIndex++)
 			{
-				Specimen aktualny = population.get(specIndex);
-				int seedNumber = calculateSeedNumber(specIndex,population);
-				seedNumber = seedNumber> params.getMaxSeedNumber() ? params.getMaxSeedNumber() : seedNumber;
-
-				for(int childSpecimenCount = 0;childSpecimenCount<seedNumber;childSpecimenCount++)
+				Specimen actual = population.get(specIndex);
+				int seedNumber = Math.min(calculateSeedNumber(specIndex,population), params.getMaxSeedNumber());
+				for(int childrenCount = 0;childrenCount<seedNumber;childrenCount++)
 				{
-					Specimen childSpecimen = aktualny.clone();
+					Specimen children = actual.clone();
 					for (int distanceCounter = 0; distanceCounter < distance; distanceCounter++) {
-						childSpecimen.inver(childSpecimen);
+						children.inver(children);
 					}
 
-					newSpecimens.add(childSpecimen);
+					newSpecimens.add(children);
 				}
 			}
 			population.addAll(newSpecimens);
 			performSelection();
-			if (wynik_max < getMaxRoute()) {
-				wynik_max = getMaxRoute();
+			Collections.sort(population);
+			if (worstResult < getMaxRoute()) {
+				worstResult = getMaxRoute();
 			}
-			if (wynik_min > getMinRoute()) {
+			if (bestResult > getMinRoute()) {
 				bestGeneration=iter;
 				bestSpecimen=population.get(0).clone();
-				wynik_min = getMinRoute();
-
+				bestResult = getMinRoute();
 			}
 		}
 	}
@@ -96,8 +94,8 @@ public class IwoCore extends Core {
 		double specRate = (population.get(specimenIndex)).getRouteLength();
 		double minRate  = population.get(population.size()-1).getRouteLength();
 		double maxRate  = population.get(0).getRouteLength();
-		return (params.getMinSeedNumber() + (int)java.lang.Math.floor((minRate - specRate) * 
-				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate))));
+		return params.getMinSeedNumber() + (int)java.lang.Math.floor((minRate - specRate) * 
+				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate)));
 	}
 
 	List<Specimen> clonePopolation(){
