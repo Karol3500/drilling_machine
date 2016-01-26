@@ -22,9 +22,9 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>dmp</groupId>
+			<groupId>pl.edu.pwr.aic.dmp</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>DYNAMIC-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

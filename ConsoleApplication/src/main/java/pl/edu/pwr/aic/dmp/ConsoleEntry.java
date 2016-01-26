@@ -3,14 +3,9 @@ package pl.edu.pwr.aic.dmp;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.alg.GACore;
 import pl.edu.pwr.aic.dmp.alg.IwoCore;
-import pl.edu.pwr.aic.dmp.alg.SACore;
-import pl.edu.pwr.aic.dmp.alg.utils.ExperimentSetup;
-import pl.edu.pwr.aic.dmp.alg.utils.GAParameters;
-import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
-import pl.edu.pwr.aic.dmp.alg.utils.SAParameters;
+import pl.edu.pwr.aic.dmp.utils.ExperimentSetup;
+import pl.edu.pwr.aic.dmp.utils.IwoParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
