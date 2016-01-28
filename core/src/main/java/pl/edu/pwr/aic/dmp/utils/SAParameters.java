@@ -27,6 +27,20 @@ public class SAParameters implements Parameters {
 		clone.permutationAttempts = permutationAttempts;
 		return clone;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof SAParameters)){
+			return false;
+		}
+		SAParameters comp = (SAParameters) obj;
+		if(comp.getCoolingCoefficient() != coolingCoefficient||
+				comp.getCyclesNumber() != cyclesNumber||
+				comp.getPermutationAttempts() != permutationAttempts||
+				comp.getStartTemperature() != startTemperature)
+			return false;
+		return true;
+	}
 
 	public int getCyclesNumber() {
 		return cyclesNumber;

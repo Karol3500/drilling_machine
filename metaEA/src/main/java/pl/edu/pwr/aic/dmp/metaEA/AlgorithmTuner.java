@@ -1,7 +1,4 @@
 package pl.edu.pwr.aic.dmp.metaEA;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.coinor.opents.BestEverAspirationCriteria;
 import org.coinor.opents.MoveManager;
 import org.coinor.opents.ObjectiveFunction;
@@ -12,7 +9,6 @@ import org.coinor.opents.TabuSearch;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
-import pl.edu.pwr.aic.dmp.metaEA.iwo.move.IwoMoveManager;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
 import pl.edu.pwr.aic.dmp.utils.Machine;
 import pl.edu.pwr.aic.dmp.utils.MachineParameters;
@@ -24,19 +20,17 @@ public class AlgorithmTuner {
 	public static int maxSecondsPerTest = 120;
 	private Core algorithm;
 	private Parameters algParams;
-	private List<TuningExperimentResult> experimentResults;
 	private ObjectiveFunction objFunc;
 	private MoveManager moveManager;
 	private TabuList tabuList;
 	private TabuSearch tabuSearchEngine;
 	private String mapFilePath;
 
-	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath){
+	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath, MoveManager moveManager){
 		this.algorithm = algorithm;
 		this.algParams = algParams;
-		experimentResults = new ArrayList<TuningExperimentResult>();
 		objFunc = new DmpObjectiveFunction();
-		moveManager = new IwoMoveManager();
+		this.moveManager = moveManager;
 		tabuList = new SimpleTabuList(TABU_SEARCH_TENURE);
 		this.mapFilePath = mapFilePath;
 	}
@@ -48,19 +42,30 @@ public class AlgorithmTuner {
 	}
 
 	public void printAllSolutions() {
-		for(TuningExperimentResult res : experimentResults){
-			System.out.println(res);
+		for(TuningExperimentResult s : SolutionsSingleton.getResultsList()){
+			System.out.println(s);
 		}
 	}
 
-	public void PrintBestFoundSolution() {
+	public void printBestFoundSolution() {
 		DmpParametersSolution best = (DmpParametersSolution) tabuSearchEngine.getBestSolution();
-		System.out.println("BestSolution:\n" + best);
+		Parameters params = best.getParameters();
+		double objFunVal = 0;
+		double routeLength = 0;
+		for(TuningExperimentResult res : SolutionsSingleton.getResultsList()){
+			if(res.getParams().equals(params)){
+				objFunVal = res.objectiveFunctionResult;
+				routeLength = res.getRouteLength();
+			}
+		}
+		System.out.println("\nBestSolution:\n" + best);
+		System.out.println("\nObjective function value: " + objFunVal);
+		System.out.println("\nRoute length: " + routeLength);
 	}
 
 	private void setupTabuSearchEngine(int iterations) {
 		tabuSearchEngine = new SingleThreadedTabuSearch(
-				new DmpParametersSolution(algorithm, experimentResults),
+				new DmpParametersSolution(algorithm, algorithm.getAlgorithmParameters()),
 				moveManager,
 				objFunc,
 				tabuList,
@@ -71,7 +76,7 @@ public class AlgorithmTuner {
 
 	private void setupAlgorithm() {
 		algorithm = configureAlgorithm(algorithm,
-				algParams.setSaneDefaults(),
+				algParams,
 				getDefaultMachine().getDrillChangeInterval());
 	}
 
@@ -90,13 +95,5 @@ public class AlgorithmTuner {
 		CityReader cr = new CityReader(); 
 		cr.loadFile(filePath);
 		algorithm.setCities(cr.getMapClone());
-	}
-
-	public List<TuningExperimentResult> getExperimentResults() {
-		return experimentResults;
-	}
-
-	public void setExperimentResults(List<TuningExperimentResult> experimentResults) {
-		this.experimentResults = experimentResults;
 	}
 }

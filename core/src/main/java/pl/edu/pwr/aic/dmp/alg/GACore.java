@@ -252,4 +252,9 @@ public class GACore extends Core{
 			return true;
 		return false;
 	}
+
+	@Override
+	protected Core getNewInstance() {
+		return new GACore();
+	}
 }

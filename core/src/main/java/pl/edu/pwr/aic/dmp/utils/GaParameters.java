@@ -31,6 +31,32 @@ public class GaParameters implements Parameters {
 		clone.selectionMethod = selectionMethod;
 		return clone;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder s = new StringBuilder();
+		s.append("populationCount: " + populationCount + "\n");
+		s.append("generationsCount: " + generationsCount + "\n");
+		s.append("mutationProbability: " + mutationProbability + "\n");
+		s.append("crossingProbability: " + crossingProbability + "\n");
+		s.append("selectionMethod: " + selectionMethod);
+		return s.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof GaParameters)){
+			return false;
+		}
+		GaParameters comp = (GaParameters) obj;
+		if(comp.getCrossingProbability() != crossingProbability||
+				comp.getGenerationsCount() != generationsCount||
+				comp.getMutationProbability() != mutationProbability||
+				comp.getPopulationCount() != populationCount||
+				comp.getSelectionMethod() != selectionMethod)
+			return false;
+		return true;
+	}
 
 	public int getPopulationCount() {
 		return populationCount;

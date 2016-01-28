@@ -58,4 +58,11 @@ public class RandomCore extends Core{
 			return true;
 		return false;
 	}
+
+	@Override
+	protected Core getNewInstance() {
+		return new RandomCore();
+	}
+	
+	
 }

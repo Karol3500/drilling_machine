@@ -28,7 +28,6 @@ public class DmpObjectiveFunction implements ObjectiveFunction {
 		Core algorithm = sol.getAlgorithm();
 		algorithm.setAlgorithmParameters(sol.getParameters());
 		double startTime = System.currentTimeMillis();
-		
 		return performExperiment(sol, algorithm, startTime);
 	}
 
@@ -39,8 +38,9 @@ public class DmpObjectiveFunction implements ObjectiveFunction {
 			if(sol.getObjectiveValue() == null){
 				return new double[]{Double.MAX_VALUE};
 			}
-			sol.getExperimentResults().add(prepareExperimentResult(sol, startTime));
-			return getCalculatedObjectiveValue(algorithm, startTime);
+			double[] calculatedObjectiveValue = getCalculatedObjectiveValue(algorithm, startTime);
+			SolutionsSingleton.addResult(prepareExperimentResult(sol, startTime, calculatedObjectiveValue[0]));
+			return calculatedObjectiveValue;
 		} catch(TimeoutException e) {
 			return cancelTask(future);
 		} catch(Exception e){
@@ -72,11 +72,12 @@ public class DmpObjectiveFunction implements ObjectiveFunction {
 		return future;
 	}
 
-	protected TuningExperimentResult prepareExperimentResult(DmpParametersSolution sol, double startTime) {
+	protected TuningExperimentResult prepareExperimentResult(DmpParametersSolution sol, double startTime, 
+			double objFunVal) {
 		return new TuningExperimentResult(sol.getParameters(),
 				sol.getAlgorithm().getBestSpecimen().getRouteLength(),
 				System.currentTimeMillis()-startTime,
-				sol.getObjectiveValue()[0]);
+				objFunVal);
 	}
 
 	private double getObjectiveValue(double routeLength, double timeElapsed) {

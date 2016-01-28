@@ -3,7 +3,7 @@ package pl.edu.pwr.aic.dmp.utils;
 import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public class IwoParameters implements Parameters {
-	
+
 	private int numberOfIterations;
 	private int minSpecimenInPopulation;
 	private int maxSpecimenInPopulation;
@@ -25,7 +25,7 @@ public class IwoParameters implements Parameters {
 		finalTransformationsPerSeed = 2;
 		return this;
 	}
-	
+
 	@Override
 	public Object clone(){
 		IwoParameters clone = new IwoParameters();
@@ -53,7 +53,25 @@ public class IwoParameters implements Parameters {
 		sb.append("Final transform per seed: " + finalTransformationsPerSeed);
 		return sb.toString();
 	}
-	
+
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof IwoParameters)){
+			return false;
+		}
+		IwoParameters comp = (IwoParameters) obj;
+		if(comp.getFinalTransformationsPerSeed() != finalTransformationsPerSeed ||
+				comp.getInitialTransformationsPerSeed() != initialTransformationsPerSeed||
+				comp.getMaxSeedNumber() != maxSeedNumber||
+				comp.getMaxSpecimenInPopulation() != maxSpecimenInPopulation||
+				comp.getMinSeedNumber() != minSeedNumber||
+				comp.getMinSpecimenInPopulation() != minSpecimenInPopulation||
+				comp.getNonLinearCoefficient() != nonLinearCoefficient||
+				comp.getNumberOfIterations() != numberOfIterations)
+			return false;
+		return true;
+	}
+
 	public int getNumberOfIterations() {
 		return numberOfIterations;
 	}

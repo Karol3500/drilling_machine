@@ -80,6 +80,18 @@ public abstract class Core extends Thread {
 		System.out.println(message);
 	}
 
+	@Override
+	public Object clone(){
+		Core c = this.getNewInstance();
+		c.setDrillChangeInterval(drillChangeInterval);
+		c.setCities(cities);
+		c.startCity = startCity;
+		c.algorithmParameters = algorithmParameters;
+		return c;
+	}
+	
+	protected abstract Core getNewInstance();
+
 	public void addPhrase(String s) {
 		message += s;
 	}
