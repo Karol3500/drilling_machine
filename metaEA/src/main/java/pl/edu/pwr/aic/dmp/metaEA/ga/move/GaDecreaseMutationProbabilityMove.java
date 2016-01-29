@@ -14,7 +14,7 @@ public class GaDecreaseMutationProbabilityMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setMutationProbability(DmpParamsMoveUtil.getDecreasedDouble(
+		params.setMutationProbability(DmpParamsMoveUtil.getRandomlyDecreasedDouble(
 				params.getMutationProbability(),
 				GaParameter.MUTATION_PROBABILITY.lowerBound));
 	}

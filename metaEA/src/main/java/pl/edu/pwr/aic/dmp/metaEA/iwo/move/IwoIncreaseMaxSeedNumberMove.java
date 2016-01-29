@@ -14,7 +14,7 @@ public class IwoIncreaseMaxSeedNumberMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setMaxSeedNumber(DmpParamsMoveUtil.getIncreasedInt(
+		params.setMaxSeedNumber(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getMaxSeedNumber(),
 				(int)IwoParameter.MAX_SEED_NUMBER.upperBound));
 	}

@@ -14,7 +14,7 @@ public class GaDecreaseGenerationsCountMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setGenerationsCount(DmpParamsMoveUtil.getDecreasedInt(
+		params.setGenerationsCount(DmpParamsMoveUtil.getRandomlyDecreasedInt(
 				params.getGenerationsCount(),
 				(int)GaParameter.GENERATIONS_COUNT.lowerBound));
 	}

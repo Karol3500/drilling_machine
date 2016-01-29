@@ -14,7 +14,7 @@ public class GaDecreaseCrossingProbabilityMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setCrossingProbability(DmpParamsMoveUtil.getDecreasedDouble(
+		params.setCrossingProbability(DmpParamsMoveUtil.getRandomlyDecreasedDouble(
 				params.getCrossingProbability(),
 				GaParameter.CROSSING_PROBABILITY.lowerBound));
 	}

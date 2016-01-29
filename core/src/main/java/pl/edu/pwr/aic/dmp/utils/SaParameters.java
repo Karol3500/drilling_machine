@@ -2,7 +2,7 @@ package pl.edu.pwr.aic.dmp.utils;
 
 import pl.edu.pwr.aic.dmp.utils.Parameters;
 
-public class SAParameters implements Parameters {
+public class SaParameters implements Parameters {
 	
 	int cyclesNumber;
 	double startTemperature;
@@ -20,7 +20,7 @@ public class SAParameters implements Parameters {
 	
 	@Override
 	public Object clone(){
-		SAParameters clone = new SAParameters();
+		SaParameters clone = new SaParameters();
 		clone.cyclesNumber = cyclesNumber;
 		clone.startTemperature = startTemperature;
 		clone.coolingCoefficient = coolingCoefficient;
@@ -30,10 +30,10 @@ public class SAParameters implements Parameters {
 	
 	@Override
 	public boolean equals(Object obj){
-		if(!(obj instanceof SAParameters)){
+		if(!(obj instanceof SaParameters)){
 			return false;
 		}
-		SAParameters comp = (SAParameters) obj;
+		SaParameters comp = (SaParameters) obj;
 		if(comp.getCoolingCoefficient() != coolingCoefficient||
 				comp.getCyclesNumber() != cyclesNumber||
 				comp.getPermutationAttempts() != permutationAttempts||

@@ -11,7 +11,7 @@ public class DmpParamsMoveUtilTest {
 	@Test
 	public void shouldProperlyIncreaseIntParameter(){
 		for(int i=0; i<50; i++){
-			int result = DmpParamsMoveUtil.getIncreasedInt(5, 10);
+			int result = DmpParamsMoveUtil.getRandomlyIncreasedInt(5, 10);
 			assertTrue("Should be >= 5, is: " +result, result >= 5);
 			assertTrue("Should be < 10, is: " +result, result < 10);
 		}
@@ -22,7 +22,7 @@ public class DmpParamsMoveUtilTest {
 		int param = 1;
 		int lowerBound = 1;
 		for(int i=0;i<50;i++){
-			int result = DmpParamsMoveUtil.getDecreasedInt(param, lowerBound);
+			int result = DmpParamsMoveUtil.getRandomlyDecreasedInt(param, lowerBound);
 			assertDecreasingResult(param, lowerBound, result);
 		}
 	}
@@ -32,7 +32,7 @@ public class DmpParamsMoveUtilTest {
 		double param = 1d;
 		double upperBound = 1.5d;
 		for(int i=0; i<50; i++){
-			double result = DmpParamsMoveUtil.getIncreasedDouble(param, upperBound);
+			double result = DmpParamsMoveUtil.getRandomlyIncreasedDouble(param, upperBound);
 			assertIncreasingResult(param, upperBound, result);
 		}
 	}
@@ -42,7 +42,7 @@ public class DmpParamsMoveUtilTest {
 		double param = 1d;
 		double lowerBound = 0.5d;
 		for(int i=0; i<50; i++){
-			double result = DmpParamsMoveUtil.getDecreasedDouble(param, lowerBound);
+			double result = DmpParamsMoveUtil.getRandomlyDecreasedDouble(param, lowerBound);
 			assertDecreasingResult(param, lowerBound, result);
 		}
 	}

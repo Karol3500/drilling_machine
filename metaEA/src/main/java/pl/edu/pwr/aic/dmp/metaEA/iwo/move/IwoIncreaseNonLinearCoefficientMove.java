@@ -14,7 +14,7 @@ public class IwoIncreaseNonLinearCoefficientMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setNonLinearCoefficient(DmpParamsMoveUtil.getIncreasedDouble(
+		params.setNonLinearCoefficient(DmpParamsMoveUtil.getRandomlyIncreasedDouble(
 				params.getNonLinearCoefficient(),
 				(int)IwoParameter.NON_LINEAR_COEFFICIENT.lowerBound));
 	}

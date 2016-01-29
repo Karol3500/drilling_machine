@@ -1,10 +1,10 @@
 package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 
-import pl.edu.pwr.aic.dmp.utils.SAParameters;
+import pl.edu.pwr.aic.dmp.utils.SaParameters;
 
 public class SACore extends Core{
-	SAParameters params;
+	SaParameters params;
 	double bestLength;
 	int numberOfCitiesMinusOne;
 	int bestCycle;
@@ -17,7 +17,7 @@ public class SACore extends Core{
 
 	@Override
 	void runAlg() {
-		params = (SAParameters) algorithmParameters;
+		params = (SaParameters) algorithmParameters;
 		numberOfCitiesMinusOne = cities.size()-1;
 		startCity= cities.get(0).clone();
 		for (int cycleNumber=0; !abort && cycleNumber<params.getCyclesNumber(); cycleNumber++) {
@@ -86,7 +86,7 @@ public class SACore extends Core{
 	
 	@Override
 	protected boolean areProperParametersGiven() {
-		if (algorithmParameters != null && algorithmParameters instanceof SAParameters)
+		if (algorithmParameters != null && algorithmParameters instanceof SaParameters)
 			return true;
 		return false;
 	}

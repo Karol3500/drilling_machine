@@ -14,7 +14,7 @@ public class IwoIncreaseIterationsMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setNumberOfIterations(DmpParamsMoveUtil.getIncreasedInt(
+		params.setNumberOfIterations(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getNumberOfIterations(),
 				(int)IwoParameter.NUMBER_OF_ITERATIONS.upperBound));
 	}

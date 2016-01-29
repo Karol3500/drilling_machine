@@ -81,7 +81,8 @@ public class DmpObjectiveFunction implements ObjectiveFunction {
 	}
 
 	private double getObjectiveValue(double routeLength, double timeElapsed) {
-		return (8*routeLength+2*timeElapsed)/10;
+		//return (8*routeLength+2*timeElapsed)/10;
+		return routeLength;
 	}
 
 	private Solution getSolutionCloneMoved(Solution sol, Move move) {

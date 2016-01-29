@@ -14,7 +14,7 @@ public class IwoDecreaseIterationsMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters parameters = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		parameters.setNumberOfIterations(DmpParamsMoveUtil.getDecreasedInt(
+		parameters.setNumberOfIterations(DmpParamsMoveUtil.getRandomlyDecreasedInt(
 				parameters.getNumberOfIterations(),
 				(int)IwoParameter.NUMBER_OF_ITERATIONS.lowerBound));
 	}

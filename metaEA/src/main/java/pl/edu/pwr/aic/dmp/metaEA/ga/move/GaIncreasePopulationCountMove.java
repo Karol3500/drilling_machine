@@ -14,7 +14,7 @@ public class GaIncreasePopulationCountMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setPopulationCount(DmpParamsMoveUtil.getIncreasedInt(
+		params.setPopulationCount(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getPopulationCount(),
 				(int)GaParameter.POPULATION_COUNT.upperBound));
 	}

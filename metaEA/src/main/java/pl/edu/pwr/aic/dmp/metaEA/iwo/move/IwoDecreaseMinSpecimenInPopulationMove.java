@@ -14,7 +14,7 @@ public class IwoDecreaseMinSpecimenInPopulationMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setMinSpecimenInPopulation(DmpParamsMoveUtil.getDecreasedInt(
+		params.setMinSpecimenInPopulation(DmpParamsMoveUtil.getRandomlyDecreasedInt(
 				params.getMinSpecimenInPopulation(),
 				(int)IwoParameter.MIN_SPECIMEN_IN_POPULATION.lowerBound));
 	}

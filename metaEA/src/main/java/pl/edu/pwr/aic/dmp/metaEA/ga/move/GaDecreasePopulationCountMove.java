@@ -14,7 +14,7 @@ public class GaDecreasePopulationCountMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setPopulationCount(DmpParamsMoveUtil.getDecreasedInt(
+		params.setPopulationCount(DmpParamsMoveUtil.getRandomlyDecreasedInt(
 				params.getPopulationCount(),
 				(int)GaParameter.POPULATION_COUNT.lowerBound));
 	}

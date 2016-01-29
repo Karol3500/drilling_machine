@@ -14,7 +14,7 @@ public class GaIncreaseGenerationsCountMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		GaParameters params = (GaParameters)((DmpParametersSolution)soln).getParameters();
-		params.setGenerationsCount(DmpParamsMoveUtil.getIncreasedInt(
+		params.setGenerationsCount(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getGenerationsCount(),
 				(int)GaParameter.GENERATIONS_COUNT.upperBound));
 	}

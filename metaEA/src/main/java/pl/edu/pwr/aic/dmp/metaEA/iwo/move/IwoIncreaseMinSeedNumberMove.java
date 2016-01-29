@@ -14,7 +14,7 @@ public class IwoIncreaseMinSeedNumberMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setMinSeedNumber(DmpParamsMoveUtil.getIncreasedInt(
+		params.setMinSeedNumber(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getMinSeedNumber(),
 				params.getMaxSeedNumber()));
 	}

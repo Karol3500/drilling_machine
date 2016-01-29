@@ -14,7 +14,7 @@ public class IwoIncreaseMaxSpecimenInPopulationMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setMaxSpecimenInPopulation(DmpParamsMoveUtil.getIncreasedInt(
+		params.setMaxSpecimenInPopulation(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getMaxSpecimenInPopulation(),
 				(int)IwoParameter.MAX_SPECIMEN_IN_POPULATION.upperBound));
 	}

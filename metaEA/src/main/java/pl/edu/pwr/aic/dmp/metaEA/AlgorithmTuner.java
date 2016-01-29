@@ -59,10 +59,15 @@ public class AlgorithmTuner {
 			}
 		}
 		System.out.println("\nBestSolution:\n" + best);
-		System.out.println("\nObjective function value: " + objFunVal);
+		System.out.println("\nObjective function value: " + best.getObjectiveValue()[0]);
 		System.out.println("\nRoute length: " + routeLength);
 	}
 
+	public void printBestSolutionInTermsOfRouteLength(){
+		ResultsManager m = new ResultsManager();
+		System.out.println(m.getResultsSortedByExecutionTime().get(0));
+	}
+	
 	private void setupTabuSearchEngine(int iterations) {
 		tabuSearchEngine = new SingleThreadedTabuSearch(
 				new DmpParametersSolution(algorithm, algorithm.getAlgorithmParameters()),

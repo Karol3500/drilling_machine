@@ -14,7 +14,7 @@ public class IwoIncreaseFinalTransformationsPerSeedMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setFinalTransformationsPerSeed(DmpParamsMoveUtil.getIncreasedInt(
+		params.setFinalTransformationsPerSeed(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getFinalTransformationsPerSeed(),
 				params.getInitialTransformationsPerSeed()));
 	}

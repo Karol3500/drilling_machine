@@ -14,7 +14,7 @@ public class IwoIncreaseInitialTransformationsPerSeedMove implements Move {
 	@Override
 	public void operateOn(Solution soln) {
 		IwoParameters params = (IwoParameters)((DmpParametersSolution)soln).getParameters();
-		params.setInitialTransformationsPerSeed(DmpParamsMoveUtil.getIncreasedInt(
+		params.setInitialTransformationsPerSeed(DmpParamsMoveUtil.getRandomlyIncreasedInt(
 				params.getInitialTransformationsPerSeed(),
 				(int)IwoParameter.INIT_TRANSFORMATIONS_PER_SEED.upperBound));
 	}
