@@ -1,5 +1,7 @@
 package pl.edu.pwr.aic.dmp.utils;
 
+import pl.edu.pwr.aic.dmp.alg.utils.MachineParameters;
+
 public class Machine {
 	
 	protected int drillChangeInterval;

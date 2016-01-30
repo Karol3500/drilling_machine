@@ -1,7 +1,7 @@
 package pl.edu.pwr.aic.dmp.alg;
 import java.math.BigDecimal;
 
-import pl.edu.pwr.aic.dmp.utils.RandomParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.RandomParameters;
 
 public class RandomCore extends Core{
 	double[][] lengths;
@@ -24,8 +24,7 @@ public class RandomCore extends Core{
 		params = (RandomParameters) algorithmParameters;
 		cycleLen = new double[params.getCyclesNumber() + 1];
 		startCity= cities.get(0).clone();
-		currentSpecimen = new Specimen(this);
-		currentSpecimen.setRoute(cities);
+		currentSpecimen = new Specimen(cities, startCity, drillChangeInterval);
 		int i = 0;
 		while (!abort && i <= params.getCyclesNumber()) {
 			generateSpecimen(i);

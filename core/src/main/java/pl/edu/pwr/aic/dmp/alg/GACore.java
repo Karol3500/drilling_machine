@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pl.edu.pwr.aic.dmp.utils.GaParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.GaParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.SelectionMethod;
 
 public class GACore extends Core{
 
@@ -25,9 +26,8 @@ public class GACore extends Core{
 	@Override
 	void runAlg() {
 		params = (GaParameters)algorithmParameters;
-		Specimen zero=new Specimen(this);
+		Specimen zero=new Specimen(cities, startCity, drillChangeInterval);
 		startCity= cities.get(0).clone();
-		zero.setRoute(cities);
 		zero.shuffleRoute();
 		population.add(zero);
 		initSpecimen();
@@ -152,8 +152,8 @@ public class GACore extends Core{
 	void krzyzowanie(Specimen o1, Specimen o2) {
 		int startindex = (int) (Math.random() * (o1.getRoute().size())); //[0,1) * 10= [0,9]
 		int endindex = startindex + (int) (Math.random() * (o1.getRoute().size() - startindex));
-		Specimen ox_o1=new Specimen(this);
-		Specimen ox_o2=new Specimen(this);
+		Specimen ox_o1=new Specimen(cities, startCity, drillChangeInterval);
+		Specimen ox_o2=new Specimen(cities, startCity, drillChangeInterval);
 
 		for(int j=endindex+1;j<o1.getRoute().size();j++){
 			ox_o1.addCity(o2.getCity(j).clone());

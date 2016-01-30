@@ -4,10 +4,10 @@ import org.coinor.opents.MoveManager;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.GACore;
+import pl.edu.pwr.aic.dmp.alg.utils.GaParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.metaEA.AlgorithmTuner;
 import pl.edu.pwr.aic.dmp.metaEA.ga.move.GaMoveManager;
-import pl.edu.pwr.aic.dmp.utils.GaParameters;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public class GaAlgorithmTuner extends AlgorithmTuner {
 

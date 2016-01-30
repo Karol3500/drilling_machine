@@ -10,37 +10,29 @@ public class Specimen implements Comparable<Specimen> {
 	private double rate;
 	private double rouletteProbablity;
 	private boolean isRateActual;
-	private Core alg;
+	int drillChangeInterval;
+	City startCity;
 
-	public Specimen(Core alg){
-		cities = new ArrayList<City>();
-		isRateActual=false;
-		this.alg=alg;
+	public Specimen(List<City> cities, City startingCity, int drillChangeInterval){
+		this.cities = cities;
+		this.startCity = startingCity;
+		this.isRateActual=false;
+		this.drillChangeInterval = drillChangeInterval;
 	}
 
 	public List<Integer> getBestRoute(){
 		List<Integer> bestRoute = new ArrayList<Integer>();
-		bestRoute.add(alg.startCity.getNumber());
+		bestRoute.add(startCity.getNumber());
 		for(int i=0;i<cities.size();i++) {
-			if(((i+1) % alg.getDrillChangeInterval())==0){
-				bestRoute.add(alg.startCity.getNumber());
+			if(((i+1) % drillChangeInterval)==0){
+				bestRoute.add(startCity.getNumber());
 				bestRoute.add(cities.get(i).getNumber());
 			} else {
 				bestRoute.add(cities.get(i).getNumber());
 			}
 		}
-		bestRoute.add(alg.startCity.getNumber());
+		bestRoute.add(startCity.getNumber());
 		return bestRoute;
-	}
-
-	public void setRoute(City[] cArray){
-		for(City c:cArray){
-			cities.add(c);
-		}
-	}
-
-	public void setRoute(List<City> cArray){
-		cities=cArray;
 	}
 
 	public List<City> getRoute(){
@@ -48,8 +40,8 @@ public class Specimen implements Comparable<Specimen> {
 	}
 
 	public void swapCities(int i, int j){
-		City c1=cities.get(i).clone();
-		City c2=cities.get(j).clone();
+		City c1=cities.get(i);
+		City c2=cities.get(j);
 		cities.set(i, c2);
 		cities.set(j, c1);
 	}
@@ -81,7 +73,8 @@ public class Specimen implements Comparable<Specimen> {
 		cities.set(x, t);
 		isRateActual=false;
 	}
-	public City getCity(int x){
+	
+	City getCity(int x){
 		return cities.get(x);
 	}
 
@@ -90,33 +83,31 @@ public class Specimen implements Comparable<Specimen> {
 			return rate;
 		}
 		double routeLength=0d;
-		int i;
-
-		routeLength+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-cities.get(0).getX()),2)+Math.pow((double)(alg.startCity.getY()-cities.get(0).getY()),2));
-
-		for(i=0;i<cities.size()-1;i++) {
-			if(((i+1) % alg.getDrillChangeInterval())==0){
-				routeLength+=Math.sqrt(Math.pow((double)(cities.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(cities.get(i).getY()-alg.startCity.getY()),2));
-				routeLength+=Math.sqrt(Math.pow((double)(alg.startCity.getX()-cities.get(i+1).getX()),2)+Math.pow((double)(alg.startCity.getY()-cities.get(i+1).getY()),2));
+		try{
+		routeLength+=Math.sqrt(Math.pow((double)(startCity.getX()-cities.get(0).getX()),2)
+				+ Math.pow((double)(startCity.getY()-cities.get(0).getY()),2));
+		}
+		catch(IndexOutOfBoundsException e){
+			System.out.println("Number of cities: " + cities.size());
+			System.out.println("Cities: \n" + cities);
+			System.out.println("StartCity x:" + startCity.getX());
+			System.out.println("Cities(0) x:" + cities.get(0).getX());
+			System.out.println("StartCity y:" + startCity.getY());
+			System.out.println("Cities(0) y:" + cities.get(0).getY());
+		}
+		for(int i=0;i<cities.size()-1;i++) {
+			if(((i+1) % drillChangeInterval)==0){
+				routeLength+=Math.sqrt(Math.pow((double)(cities.get(i).getX()-startCity.getX()),2)+Math.pow((double)(cities.get(i).getY()-startCity.getY()),2));
+				routeLength+=Math.sqrt(Math.pow((double)(startCity.getX()-cities.get(i+1).getX()),2)+Math.pow((double)(startCity.getY()-cities.get(i+1).getY()),2));
 			} else {
 				routeLength+=Math.sqrt(Math.pow((double)(cities.get(i).getX()-cities.get(i+1).getX()),2)+Math.pow((double)(cities.get(i).getY()-cities.get(i+1).getY()),2));
 			}
 		}
-		routeLength+=Math.sqrt(Math.pow((double)(cities.get(i).getX()-alg.startCity.getX()),2)+Math.pow((double)(cities.get(i).getY()-alg.startCity.getY()),2));
+		routeLength+=Math.sqrt(Math.pow((double)(cities.get(cities.size()-1).getX()-startCity.getX()),2)+Math.pow((double)(cities.get(cities.size()-1).getY()-startCity.getY()),2));
 
 		isRateActual=true;
 		rate=routeLength;
 		return rate;
-	}
-
-	public int cityRepeats(City countedCity){
-		int repetitions=0;
-		for(City m:cities){
-			if(countedCity.cequals(m)){
-				repetitions++;
-			}
-		}
-		return repetitions;
 	}
 
 	public double getP_Roulette(){
@@ -129,15 +120,15 @@ public class Specimen implements Comparable<Specimen> {
 
 	public Specimen clone(){
 
-		Specimen o = new Specimen(alg);
+		Specimen spec = new Specimen(new ArrayList<City>(), startCity , drillChangeInterval);
 		for(int i = 0; i < cities.size(); i++){
-			o.addCity(new City(getCity(i).getNumber(),getCity(i).getX(), getCity(i).getY()));
+			spec.addCity(new City(getCity(i).getNumber(),getCity(i).getX(), getCity(i).getY()));
 		}
-		o.rate=rate;
-		o.isRateActual=isRateActual;
-		o.rouletteProbablity=rouletteProbablity;
+		spec.rate=rate;
+		spec.isRateActual=isRateActual;
+		spec.rouletteProbablity=rouletteProbablity;
 
-		return o;
+		return spec;
 	}
 
 	@Override
@@ -164,7 +155,7 @@ public class Specimen implements Comparable<Specimen> {
 				{
 					specimen.swapCities(start, end );
 				}
-				isRateActual=false;
+				specimen.isRateActual=false;
 		return specimen;
 	}
 	

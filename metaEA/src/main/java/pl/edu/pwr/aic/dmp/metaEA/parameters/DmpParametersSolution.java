@@ -3,7 +3,7 @@ package pl.edu.pwr.aic.dmp.metaEA.parameters;
 import org.coinor.opents.SolutionAdapter;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 
 public class DmpParametersSolution extends SolutionAdapter{
 

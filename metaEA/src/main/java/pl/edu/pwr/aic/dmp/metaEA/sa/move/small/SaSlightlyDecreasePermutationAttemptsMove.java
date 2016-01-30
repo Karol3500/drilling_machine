@@ -3,10 +3,10 @@ package pl.edu.pwr.aic.dmp.metaEA.sa.move.small;
 import org.coinor.opents.Move;
 import org.coinor.opents.Solution;
 
+import pl.edu.pwr.aic.dmp.alg.utils.SaParameters;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParamsMoveUtil;
 import pl.edu.pwr.aic.dmp.metaEA.sa.parameters.SaParameter;
-import pl.edu.pwr.aic.dmp.utils.SaParameters;
 
 public class SaSlightlyDecreasePermutationAttemptsMove implements Move {
 	private static final long serialVersionUID = 1L;

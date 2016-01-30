@@ -1,6 +1,4 @@
-package pl.edu.pwr.aic.dmp.utils;
-
-import pl.edu.pwr.aic.dmp.utils.Parameters;
+package pl.edu.pwr.aic.dmp.alg.utils;
 
 public class IwoParameters implements Parameters {
 

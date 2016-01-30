@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 
 public class ExperimentResult {
 

@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp.utils;
+package pl.edu.pwr.aic.dmp.alg.utils;
 
 public class MachineParameters implements Parameters {
 	

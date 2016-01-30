@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import pl.edu.pwr.aic.dmp.alg.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.utils.Machine;
-import pl.edu.pwr.aic.dmp.utils.MachineParameters;
 
 
 public class MachineTest {

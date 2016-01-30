@@ -4,10 +4,10 @@ import org.coinor.opents.MoveManager;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.IwoCore;
+import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.metaEA.AlgorithmTuner;
 import pl.edu.pwr.aic.dmp.metaEA.iwo.move.IwoMoveManager;
-import pl.edu.pwr.aic.dmp.utils.IwoParameters;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public class IwoAlgorithmTuner extends AlgorithmTuner {
 

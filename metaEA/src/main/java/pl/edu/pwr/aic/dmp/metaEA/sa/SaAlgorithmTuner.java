@@ -4,11 +4,10 @@ import org.coinor.opents.MoveManager;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.SACore;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
+import pl.edu.pwr.aic.dmp.alg.utils.SaParameters;
 import pl.edu.pwr.aic.dmp.metaEA.AlgorithmTuner;
-import pl.edu.pwr.aic.dmp.metaEA.sa.move.random.SaRandomMoveManager;
 import pl.edu.pwr.aic.dmp.metaEA.sa.move.small.SaSlightMoveManager;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
-import pl.edu.pwr.aic.dmp.utils.SaParameters;
 
 public class SaAlgorithmTuner extends AlgorithmTuner {
 

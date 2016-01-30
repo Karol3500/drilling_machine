@@ -8,11 +8,11 @@ import org.coinor.opents.TabuList;
 import org.coinor.opents.TabuSearch;
 
 import pl.edu.pwr.aic.dmp.alg.Core;
+import pl.edu.pwr.aic.dmp.alg.utils.MachineParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
 import pl.edu.pwr.aic.dmp.utils.Machine;
-import pl.edu.pwr.aic.dmp.utils.MachineParameters;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public class AlgorithmTuner {
 

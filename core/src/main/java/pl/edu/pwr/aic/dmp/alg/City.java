@@ -10,10 +10,10 @@ public class City {
     private double y;
 
 
-    public City(int numer,double x, double y){
+    public City(int nubmer,double x, double y){
         this.x = x;
         this.y = y;
-        number=numer;
+        number=nubmer;
     }
 
 
@@ -35,10 +35,6 @@ public class City {
     
     public void setNumber(int numer){
         number=numer;
-    }
-    
-    public boolean cequals(City m){
-        return number==m.getNumber();
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import pl.edu.pwr.aic.dmp.utils.Parameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.utils.UnitResult;
 
 public abstract class Core extends Thread {
@@ -43,7 +43,7 @@ public abstract class Core extends Thread {
 		result.setBestRouteLength(bestSpecimen.getRouteLength());
 		result.setPermutation(bestSpecimen.getBestRoute());
 		
-		//showEffects();
+		showEffects();
 	}
 	
 	abstract void runAlg();
@@ -114,7 +114,13 @@ public abstract class Core extends Thread {
 	}
 
 	public void setCities(List<City> cities) {
-		this.cities = cities;
+		if(cities != null && cities.size() > 0){
+			this.startCity = cities.get(0);
+			this.cities = cities;
+		}
+		else{
+			System.out.println("An empty list of cities was passed to setCities in Core");
+		}
 	}
 
 	public Specimen getBestSpecimen() {
@@ -192,6 +198,16 @@ public abstract class Core extends Thread {
 		Specimen os=tournament.get(0);
 		tournament.remove(0);
 		return os;
+	}
+	
+	public Specimen getInitialSolution(){
+		return new Specimen(cities, startCity, drillChangeInterval);
+	}
+	
+	public Specimen getRandomSolution(Core alg){
+		Specimen specimen = new Specimen(cities, startCity, drillChangeInterval);
+		specimen.shuffleRoute();
+		return specimen;
 	}
 	
 	protected List<Specimen> reduceShuffledPopulationUsingTournament(

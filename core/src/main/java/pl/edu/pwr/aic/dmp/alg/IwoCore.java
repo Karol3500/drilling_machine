@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pl.edu.pwr.aic.dmp.utils.IwoParameters;
+import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 
 public class IwoCore extends Core {
 
@@ -23,9 +23,8 @@ public class IwoCore extends Core {
 	@Override
 	void runAlg() {
 		params = (IwoParameters) algorithmParameters;
-		Specimen zero=new Specimen(this);
 		startCity= cities.get(0).clone();
-		zero.setRoute(cities);
+		Specimen zero=new Specimen(cities, startCity, drillChangeInterval);
 		zero.shuffleRoute();
 		population.add(zero);
 		initSpecimen();
@@ -120,7 +119,7 @@ public class IwoCore extends Core {
 
 	void printPopulation() {
 		for (int i = 0; i < population.size(); i++) {
-			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRouteLength(),3)+ " ROULETTE PROBABILITY: "+population.get(i).getP_Roulette());
+			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRouteLength(),3));
 		}
 	}
 

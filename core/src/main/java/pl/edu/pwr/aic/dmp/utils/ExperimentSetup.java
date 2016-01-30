@@ -6,8 +6,8 @@ import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.City;
 import pl.edu.pwr.aic.dmp.alg.Core;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
-import pl.edu.pwr.aic.dmp.utils.Parameters;
 
 public class ExperimentSetup {
 

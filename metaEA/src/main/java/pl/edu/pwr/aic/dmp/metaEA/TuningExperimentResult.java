@@ -1,6 +1,6 @@
 package pl.edu.pwr.aic.dmp.metaEA;
 
-import pl.edu.pwr.aic.dmp.utils.Parameters;
+import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 
 public class TuningExperimentResult {
 	

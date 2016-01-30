@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp.alg;
+package pl.edu.pwr.aic.dmp.alg.utils;
 
 public enum SelectionMethod {
 	ROULETTE,
