@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.experimental.theories.Theories;
-
 import pl.edu.pwr.aic.dmp.metaEA.export.CsvTuningExperimentResultExporter;
 
 public class SolutionsSingleton {

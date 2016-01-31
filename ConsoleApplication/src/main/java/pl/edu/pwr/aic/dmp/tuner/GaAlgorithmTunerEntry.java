@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp.metaEA;
+package pl.edu.pwr.aic.dmp.tuner;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import pl.edu.pwr.aic.dmp.alg.GACore;
 import pl.edu.pwr.aic.dmp.alg.utils.GaParameters;
 import pl.edu.pwr.aic.dmp.metaEA.ga.move.GaMoveManager;
 
-public class GaAlgorithmTunerEntry extends TuningApplicationEntry{
+public class GaAlgorithmTunerEntry extends AbstractTuningApplicationEntry{
 	private static final String DEFAULT_MAP_FILE_NAME = "src/main/resources/maps_working/pr1002.tsp";
 	private static final String DEFAULT_RESULT_FILE_NAME = "GaPR1002";
 	

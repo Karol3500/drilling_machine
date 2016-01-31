@@ -18,6 +18,39 @@
 					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.tuner.IwoAlgorithmTunerEntry</mainClass>
+							<id>iwo_tuner</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.tuner.GaAlgorithmTunerEntry</mainClass>
+							<id>ga_tuner</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.tuner.SaAlgorithmTunerEntry</mainClass>
+							<id>sa_tuner</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.IwoConsoleEntry</mainClass>
+							<id>iwo_single</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.GaConsoleEntry</mainClass>
+							<id>ga_single</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.SaConsoleEntry</mainClass>
+							<id>sa_single</id>
+						</program>
+					</programs>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>

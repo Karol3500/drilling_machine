@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp.metaEA;
+package pl.edu.pwr.aic.dmp.tuner;
 
 import java.io.IOException;
 
@@ -7,9 +7,11 @@ import org.coinor.opents.MoveManager;
 import jxl.write.WriteException;
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
+import pl.edu.pwr.aic.dmp.metaEA.AlgorithmTuner;
+import pl.edu.pwr.aic.dmp.metaEA.SolutionsSingleton;
 import pl.edu.pwr.aic.dmp.metaEA.export.CsvTuningExperimentResultExporter;
 
-public abstract class TuningApplicationEntry {
+public abstract class AbstractTuningApplicationEntry {
 	
 	protected static final int TABU_ITERATIONS_NUMBER = 10;
 	protected static String map;

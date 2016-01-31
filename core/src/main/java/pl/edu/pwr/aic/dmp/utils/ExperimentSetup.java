@@ -40,7 +40,7 @@ public class ExperimentSetup {
 			for(int i=0; i<numberOfUnitExperimentRepetitions; i++){
 				algorithm.setCities(cr.getMapClone());
 				algorithm.setDrillChangeInterval(drillChangeInterval);
-				algorithm.start();
+				algorithm.run();
 				res.getResults().add(algorithm.getResult());
 			}
 			results.add(res);
