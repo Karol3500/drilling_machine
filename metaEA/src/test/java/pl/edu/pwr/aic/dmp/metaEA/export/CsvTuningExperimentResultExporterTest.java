@@ -23,10 +23,9 @@ public class CsvTuningExperimentResultExporterTest {
 	
 	@Test
 	public void shouldExportSingleExperimentResult() throws IOException, WriteException{
-		CsvTuningExperimentResultExporter e = new CsvTuningExperimentResultExporter();
+		CsvTuningExperimentResultExporter e = new CsvTuningExperimentResultExporter("tuningRes");
 		TuningExperimentResult res = new TuningExperimentResult(new IwoParameters().setSaneDefaults()
 				, 5d, 100, 15d);
-		e.createFile("tuningRes");
 		createdFiles.add(e.fileName);
 		
 		e.write(res);
@@ -40,12 +39,31 @@ public class CsvTuningExperimentResultExporterTest {
 	
 	@Test
 	public void shouldExportManyExperimentResults() throws IOException, WriteException{
-		CsvTuningExperimentResultExporter e = new CsvTuningExperimentResultExporter();
+		CsvTuningExperimentResultExporter e = new CsvTuningExperimentResultExporter("tuningResMany");
 		List<TuningExperimentResult> results = getFewResults();
-		e.createFile("tuningResMany");
 		createdFiles.add(e.fileName);
 		
 		e.writeMany(results);
+		
+		List<String> expectedLines = Arrays.asList(createHeaderString(
+				results.get(0).getParams().getParameterNamesAsList()),
+				getDataRow(results.get(0).getParams().getParameterValuesAsList()),
+				getDataRow(results.get(0).getParams().getParameterValuesAsList()),
+				getDataRow(results.get(0).getParams().getParameterValuesAsList()));
+		List<String> actualLines = Files.readAllLines(Paths.get(e.fileName));
+		
+		assertEquals(expectedLines, actualLines);
+	}
+	
+	@Test
+	public void shouldExportManyExperimentResultsIterativelyToOneFile() throws IOException, WriteException{
+		CsvTuningExperimentResultExporter e = new CsvTuningExperimentResultExporter("tuningResMany");
+		List<TuningExperimentResult> results = getFewResults();
+		createdFiles.add(e.fileName);
+		
+		for(TuningExperimentResult res : results){
+			e.write(res);
+		}
 		
 		List<String> expectedLines = Arrays.asList(createHeaderString(
 				results.get(0).getParams().getParameterNamesAsList()),

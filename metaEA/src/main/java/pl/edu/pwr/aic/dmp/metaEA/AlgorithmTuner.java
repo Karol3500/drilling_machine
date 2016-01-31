@@ -25,7 +25,7 @@ public class AlgorithmTuner {
 	private TabuList tabuList;
 	private TabuSearch tabuSearchEngine;
 	private String mapFilePath;
-
+	
 	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath, MoveManager moveManager){
 		this.algorithm = algorithm;
 		this.algParams = algParams;

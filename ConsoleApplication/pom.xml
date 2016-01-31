@@ -26,5 +26,10 @@
 			<artifactId>core</artifactId>
 			<version>DYNAMIC-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>pl.edu.pwr.aic.dmp</groupId>
+			<artifactId>metaEA</artifactId>
+			<version>DYNAMIC-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

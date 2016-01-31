@@ -8,6 +8,104 @@
 	</parent>
 	<groupId>pl.edu.pwr.aic.dmp</groupId>
 	<artifactId>metaEA</artifactId>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/maps</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-openTS</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>mvn</executable>
+					<arguments>
+						<argument>install:install-file</argument>
+						<argument>-Dfile=${project.basedir}/lib/OpenTS.jar</argument>
+						<argument>-DgroupId=org.coinor</argument>
+						<argument>-DartifactId=opents</argument>
+						<argument>-Dversion=1.0</argument>
+						<argument>-Dpackaging=jar</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+<!-- 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.metaEA.iwo.IwoAlgorithmTuner</mainClass>
+							<id>iwo</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.metaEA.ga.GaAlgorithmTuner</mainClass>
+							<id>ga</id>
+						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.metaEA.sa.SaAlgorithmTuner</mainClass>
+							<id>sa</id>
+						</program>
+					</programs>
+				</configuration>
+			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+				<configuration> <archive> <manifest> <addClasspath>true</addClasspath> <classpathPrefix>lib</classpathPrefix> 
+				<mainClass>test.org.Cliente</mainClass> </manifest> <manifestEntries> <Class-Path>lib/</Class-Path> 
+				</manifestEntries> </archive> </configuration> </plugin> -->
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -24,9 +122,7 @@
 		<dependency>
 			<groupId>org.coinor</groupId>
 			<artifactId>opents</artifactId>
-			<scope>system</scope>
 			<version>1.0</version>
-			<systemPath>${project.basedir}/lib/OpenTS.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pl.edu.pwr.aic.dmp</groupId>

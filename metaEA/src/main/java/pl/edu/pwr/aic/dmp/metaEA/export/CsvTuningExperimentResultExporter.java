@@ -13,20 +13,21 @@ public class CsvTuningExperimentResultExporter {
 	protected static String ROUTE_LENGTH = "Route length";
 	protected static String EXEC_TIME = "Execution time";
 	protected static String OBJ_FUN_VAL = "Objective fun val";
+	private boolean isHeaderWritten = false;
 	
 	public String fileName;
 	CsvExporterUtil util;
 	
-	public CsvTuningExperimentResultExporter(){
+	public CsvTuningExperimentResultExporter(String fileName) throws WriteException, IOException{
 		util = new CsvExporterUtil();
-	}
-
-	public void createFile(String fileName) throws WriteException, IOException {
 		this.fileName = util.createFile(fileName);
 	}
 
 	public void write(TuningExperimentResult res) throws IOException {
-		writeHeader(res);
+		if(!isHeaderWritten){
+			writeHeader(res);
+			isHeaderWritten = true;
+		}
 		util.writeRow(prepareDataRow(res), fileName);
 	}
 
@@ -60,5 +61,9 @@ public class CsvTuningExperimentResultExporter {
 			rowsData.add(prepareDataRow(res));
 		}
 		util.writeRows(rowsData, fileName);
+	}
+	
+	public String getFileName(){
+		return fileName;
 	}
 }
