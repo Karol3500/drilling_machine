@@ -1,5 +1,7 @@
 package pl.edu.pwr.aic.dmp.alg.utils;
 
+import java.util.List;
+
 public class MachineParameters implements Parameters {
 	
 	private double drillDurabilityInM;
@@ -58,5 +60,17 @@ public class MachineParameters implements Parameters {
 	}
 	public void setSpindleSpeedInRotPerMin(double spindleSpeedInRotPerMin) {
 		this.spindleSpeedInRotPerMin = spindleSpeedInRotPerMin;
+	}
+
+	@Override
+	public List<? extends Object> getParameterNamesAsList() {
+		// Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<? extends Object> getParameterValuesAsList() {
+		// Auto-generated method stub
+		return null;
 	}
 }

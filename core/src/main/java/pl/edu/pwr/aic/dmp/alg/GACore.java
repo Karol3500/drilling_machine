@@ -1,6 +1,5 @@
 package pl.edu.pwr.aic.dmp.alg;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,12 +8,12 @@ import pl.edu.pwr.aic.dmp.alg.utils.SelectionMethod;
 
 public class GACore extends Core{
 
-	GaParameters params;
+	private GaParameters params;
+	private int rankingIter;
+	private int rankingCount;
+	private double maxRoute;
+	private double minRoute;
 	
-	int rankingIter;
-	int rankingCount;
-	double maxRoute;
-	double minRoute;
 	public GACore() {
 		algorithmName = "Genetic Algorthm";
 		population = new ArrayList<Specimen>();
@@ -62,23 +61,23 @@ public class GACore extends Core{
 			}
 
 			while (populacja_kolejna.size() < population.size()) {
-				Specimen k1 = selekcja(params.getSelectionMethod());
+				Specimen k1 = selectSpecimen(params.getSelectionMethod());
 				Specimen k2 = null;
 
 				if (params.getPopulationCount() > (populacja_kolejna.size() + 1) && Math.random() < params.getCrossingProbability()) {  
-					k2 = selekcja(params.getSelectionMethod());
-					krzyzowanie(k1, k2);
+					k2 = selectSpecimen(params.getSelectionMethod());
+					crossing(k1, k2);
 				}
 
 				if (Math.random() < params.getMutationProbability()) {
-					mutacja(k1);
+					mutation(k1);
 					populacja_kolejna.add(k1);
 				} else {
 					populacja_kolejna.add(k1);
 				}
 
 				if (k2 != null && Math.random() < params.getMutationProbability()) {
-					mutacja(k2);
+					mutation(k2);
 					populacja_kolejna.add(k2);
 				} else if (k2 != null) {
 					populacja_kolejna.add(k2);
@@ -101,7 +100,7 @@ public class GACore extends Core{
 		}
 	}
 
-	Specimen selekcja(SelectionMethod metoda) {
+	private Specimen selectSpecimen(SelectionMethod metoda) {
 		if (metoda == SelectionMethod.ROULETTE) {
 			return selectionRoulette();
 		} else if (metoda == SelectionMethod.TOURNAMENT) {
@@ -112,7 +111,7 @@ public class GACore extends Core{
 		}
 	}
 
-	Specimen selectionRoulette() {
+	private Specimen selectionRoulette() {
 		double los = Math.random();
 		double currentSumaP = 0.0;
 		int j;
@@ -125,7 +124,7 @@ public class GACore extends Core{
 		return population.get(j);
 	}
 
-	Specimen selectionRanking() {
+	private Specimen selectionRanking() {
 		if(rankingIter>=rankingCount){
 			rankingIter=0;
 		}
@@ -138,18 +137,7 @@ public class GACore extends Core{
 		return os;
 	}
 
-	Specimen selekcja_rankingowa_old() {
-		if(ranking.isEmpty()){
-			ranking=getClonedPopulation();
-			Collections.sort(ranking);
-		}
-
-		Specimen os=ranking.get(0);
-		ranking.remove(0);
-		return os;
-	}
-
-	void krzyzowanie(Specimen o1, Specimen o2) {
+	private void crossing(Specimen o1, Specimen o2) {
 		int startindex = (int) (Math.random() * (o1.getRoute().size())); //[0,1) * 10= [0,9]
 		int endindex = startindex + (int) (Math.random() * (o1.getRoute().size() - startindex));
 		Specimen ox_o1=new Specimen(cities, startCity, drillChangeInterval);
@@ -188,7 +176,7 @@ public class GACore extends Core{
 		}
 	}
 
-	void mutacja(Specimen o) {
+	private void mutation(Specimen o) {
 		int startindex = (int) (Math.random() * (o.getRoute().size() - 1)); //[0,1) * 10= [0,9]
 		int endindex = startindex + 1 + (int) (Math.random() * (o.getRoute().size() - 1 - startindex));
 
@@ -202,7 +190,7 @@ public class GACore extends Core{
 		}
 	}
 
-	ArrayList<Specimen> createRanking(){
+	private ArrayList<Specimen> createRanking(){
 		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
 		for(int i=0;i<rankingCount;i++){
 			wynik.add(population.get(i).clone());
@@ -210,7 +198,7 @@ public class GACore extends Core{
 		return wynik;
 	}
 
-	void initSpecimen() {
+	private void initSpecimen() {
 		Specimen zero=population.get(0);
 		zero.shuffleRoute();
 		population=new ArrayList<Specimen>();
@@ -222,30 +210,14 @@ public class GACore extends Core{
 		}
 	}
 
-	protected void finish() {
-		population = new ArrayList<Specimen>();
-	}
-
-	double getMinRoute() {
+	private double getMinRoute() {
 		return population.get(0).getRouteLength();
 	}
 
-	double getMaxRoute() {
+	private double getMaxRoute() {
 		return population.get(population.size() - 1).getRouteLength();
 	}
 
-	double getAvgRoute() {
-		double srednia = 0;
-		for (Specimen os : population) {
-			srednia += os.getRouteLength();
-		}
-		return (srednia / population.size());
-	}
-
-	public double round(double d,int pos){
-		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
-	
 	@Override
 	protected boolean areProperParametersGiven() {
 		if (algorithmParameters != null && algorithmParameters instanceof GaParameters)

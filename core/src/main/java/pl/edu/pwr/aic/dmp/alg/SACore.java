@@ -1,16 +1,13 @@
 package pl.edu.pwr.aic.dmp.alg;
-import java.math.BigDecimal;
-
 import pl.edu.pwr.aic.dmp.alg.utils.SaParameters;
 
 public class SACore extends Core{
-	SaParameters params;
-	double bestLength;
-	int bestCycle;
+	private SaParameters params;
+	private double bestLength;
+	
 	public SACore() {
 		algorithmName = "Simulated Annealing";
 		bestLength = Double.MAX_VALUE;
-		bestCycle = -1;
 	}
 
 	@Override
@@ -21,7 +18,7 @@ public class SACore extends Core{
 		simulate();
 	}
 
-	Specimen getInitialSpecimenWithDefaultValues() {
+	private Specimen getInitialSpecimenWithDefaultValues() {
 		Specimen specimen=new Specimen(cities, startCity, drillChangeInterval);
 		specimen.shuffleRoute();
 		return specimen;
@@ -64,7 +61,7 @@ public class SACore extends Core{
 	//		return bestLength;
 	//	}
 	//
-	public double simulate() {
+	private double simulate() {
 		double t = params.getStartTemperature();
 		Specimen solution =  getInitialSpecimenWithDefaultValues();
 		double iterTemp = t;
@@ -78,7 +75,6 @@ public class SACore extends Core{
 					solution = mutant;
 					if (solution.getRouteLength()<bestLength) {
 						bestSpecimen=solution.clone();
-						bestCycle=i;
 						bestLength = solution.getRouteLength();
 					}
 					iterTemp = t * params.getCoolingCoefficient();
@@ -88,17 +84,13 @@ public class SACore extends Core{
 		return solution.getRouteLength();
 	}
 
-	boolean shouldNewSolutionBeAccepted(double currentRouteLength, double bestRouteLength, double currentTemperature) {
+	private boolean shouldNewSolutionBeAccepted(double currentRouteLength, double bestRouteLength, double currentTemperature) {
 		return currentRouteLength <= bestRouteLength ? true : 
 			(Math.random() < probabilityOfStateAcceptance(currentRouteLength, bestRouteLength, currentTemperature));
 	}
 
 	private double probabilityOfStateAcceptance(double tempLen, double len, double temperature) {
 		return Math.exp((len - tempLen)/temperature);
-	}
-
-	public double round(double d,int pos){
-		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	@Override

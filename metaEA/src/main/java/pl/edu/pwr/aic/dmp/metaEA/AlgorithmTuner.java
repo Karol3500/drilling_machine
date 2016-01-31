@@ -50,11 +50,9 @@ public class AlgorithmTuner {
 	public void printBestFoundSolution() {
 		DmpParametersSolution best = (DmpParametersSolution) tabuSearchEngine.getBestSolution();
 		Parameters params = best.getParameters();
-		double objFunVal = 0;
 		double routeLength = 0;
 		for(TuningExperimentResult res : SolutionsSingleton.getResultsList()){
 			if(res.getParams().equals(params)){
-				objFunVal = res.objectiveFunctionResult;
 				routeLength = res.getRouteLength();
 			}
 		}

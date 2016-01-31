@@ -1,5 +1,8 @@
 package pl.edu.pwr.aic.dmp.alg.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RandomParameters implements Parameters {
 	private int cyclesNumber;
 	
@@ -22,5 +25,15 @@ public class RandomParameters implements Parameters {
 
 	public void setCyclesNumber(int cyclesNumber) {
 		this.cyclesNumber = cyclesNumber;
+	}
+
+	@Override
+	public List<? extends Object> getParameterNamesAsList() {
+		return Arrays.asList("Number of cycles");
+	}
+
+	@Override
+	public List<? extends Object> getParameterValuesAsList() {
+		return Arrays.asList(cyclesNumber);
 	}
 }

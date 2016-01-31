@@ -11,14 +11,14 @@ import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
 
 public class ExperimentSetup {
 
-	List<ExperimentResult> results;
-	Core algorithm;
-	String filePath;
-	String mapName;
-	CityReader cr;
-	List<Parameters> paramsList;
-	int drillChangeInterval;
-	int numberOfUnitExperimentRepetitions;
+	private List<ExperimentResult> results;
+	private Core algorithm;
+	private String filePath;
+	private String mapName;
+	private CityReader cr;
+	private List<Parameters> paramsList;
+	private int drillChangeInterval;
+	private int numberOfUnitExperimentRepetitions;
 
 	public void setupExperimentEnvironment(String filePath, Core algorithm, List<Parameters> params, 
 			int numberOfUnitExperimentRepetitions){
@@ -40,14 +40,14 @@ public class ExperimentSetup {
 			for(int i=0; i<numberOfUnitExperimentRepetitions; i++){
 				algorithm.setCities(cr.getMapClone());
 				algorithm.setDrillChangeInterval(drillChangeInterval);
-				algorithm.run();
+				algorithm.start();
 				res.getResults().add(algorithm.getResult());
 			}
 			results.add(res);
 		}
 	}
 	
-	void setupMap(String filePath){
+	private void setupMap(String filePath){
 		cr = new CityReader();
 		cr.loadFile(filePath);
 		this.filePath = filePath;
@@ -55,7 +55,7 @@ public class ExperimentSetup {
 	}
 	
 	protected String getMapNameFromPath(String fp) {
-		String[] c = fp.split(File.separator);
+		String[] c = fp.split(File.separatorChar=='\\' ? "\\\\" : File.separator);
 		return c[c.length-1];
 	}
 

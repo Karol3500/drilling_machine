@@ -1,5 +1,8 @@
 package pl.edu.pwr.aic.dmp.alg.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class GaParameters implements Parameters {
 
 	int populationCount;
@@ -7,6 +10,21 @@ public class GaParameters implements Parameters {
 	double mutationProbability;
 	double crossingProbability;
 	SelectionMethod selectionMethod = SelectionMethod.TOURNAMENT;
+
+
+	@Override
+	public List<? extends Object> getParameterNamesAsList() {
+		return Arrays.asList("Population count", "Generations count",
+				"Mutation probability", "Crossing probability",
+				"Selection method");
+	}
+
+	@Override
+	public List<? extends Object> getParameterValuesAsList() {
+		return Arrays.asList(populationCount, generationsCount,
+				mutationProbability, crossingProbability);
+	}
+
 	
 	@Override
 	public Parameters setSaneDefaults() {
@@ -17,7 +35,7 @@ public class GaParameters implements Parameters {
 		selectionMethod = SelectionMethod.RANKING;
 		return this;
 	}
-	
+
 	@Override
 	public Object clone(){
 		GaParameters clone = new GaParameters();
@@ -28,7 +46,7 @@ public class GaParameters implements Parameters {
 		clone.selectionMethod = selectionMethod;
 		return clone;
 	}
-	
+
 	@Override
 	public String toString(){
 		StringBuilder s = new StringBuilder();
@@ -39,7 +57,7 @@ public class GaParameters implements Parameters {
 		s.append("selectionMethod: " + selectionMethod);
 		return s.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj){
 		if(!(obj instanceof GaParameters)){
@@ -53,6 +71,13 @@ public class GaParameters implements Parameters {
 				comp.getSelectionMethod() != selectionMethod)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int)(crossingProbability*100) + generationsCount +
+				(int)(mutationProbability*100) + populationCount +
+				selectionMethod.name().hashCode();
 	}
 
 	public int getPopulationCount() {
@@ -94,5 +119,4 @@ public class GaParameters implements Parameters {
 	public void setSelectionMethod(SelectionMethod selectionMethod) {
 		this.selectionMethod = selectionMethod;
 	}
-	
 }

@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class DmpParamsMoveUtil {
 
+	static Random random = new Random();
+	
 	public static int getRandomlyIncreasedInt(int parameter, int upperBound) {
 		return parameter + new Random().nextInt(upperBound-parameter);
 	}
@@ -16,14 +18,14 @@ public class DmpParamsMoveUtil {
 	}
 
 	public static double getRandomlyIncreasedDouble(double parameter, double upperBound) {
-		return parameter + (upperBound - parameter) * new Random().nextDouble();
+		return parameter + (upperBound - parameter) * random.nextDouble();
 	}
 
 	public static double getRandomlyDecreasedDouble(double parameter, double lowerBound) {
 		if(parameter == lowerBound){
 			return parameter;
 		}
-		return lowerBound + (parameter - lowerBound) * new Random().nextDouble();
+		return lowerBound + (parameter - lowerBound) * random.nextDouble();
 	}
 	
 	public static int getSlightlyIncreasedInt(int parameter, int step, int upperBound) {

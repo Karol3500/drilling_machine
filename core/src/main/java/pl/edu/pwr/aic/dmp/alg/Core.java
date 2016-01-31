@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.utils.UnitResult;
@@ -15,22 +14,19 @@ public abstract class Core extends Thread {
 	City startCity;
 	int drillChangeInterval;
 	protected List<City> cities;
-	protected long startTime;
-	protected long stopTime;
+	private long startTime;
+	private long stopTime;
 	protected Specimen bestSpecimen;
 	protected int bestGeneration;
-	protected String message;
-	protected UnitResult result;
+	private String message;
+	private UnitResult result;
 	protected String algorithmName;
 	protected Parameters algorithmParameters;
 	protected List<Specimen> tournament;
 	protected List<Specimen> ranking;
 	protected List<Specimen> population;
-	private Random random;
-	
 	protected Core(){
 		result = new UnitResult();
-		random = new Random();
 	}
 	
 	@Override
@@ -43,18 +39,10 @@ public abstract class Core extends Thread {
 		result.setBestRouteLength(bestSpecimen.getRouteLength());
 		result.setPermutation(bestSpecimen.getBestRoute());
 		
-		showEffects();
+//		showEffects();
 	}
 	
 	abstract void runAlg();
-	
-	public void abort() {
-		abort = true;
-	}
-	
-	public City getstartCity(){
-		return startCity;
-	}
 
 	public void showEffects() {
 		message="";
@@ -92,20 +80,20 @@ public abstract class Core extends Thread {
 	
 	protected abstract Core getNewInstance();
 
-	public void addPhrase(String s) {
+	private void addPhrase(String s) {
 		message += s;
 	}
 
-	public void addDate() {
+	private void addDate() {
 		message += new Date();
 	}
 
-	public void addLine(String s) {
+	private void addLine(String s) {
 		addPhrase(s);
 		newLine();
 	}
 
-	public void newLine() {
+	private void newLine() {
 		message += "\n";
 	}
 
@@ -262,12 +250,5 @@ public abstract class Core extends Thread {
 			return populationSize - maxPopulationSize;
 		}
 		return 0;
-	}
-
-	protected int calculateIndexOfSpecimenToBeRemoved(int populationSize, int specimensToBeRemoved, int removedSpecimenCounter) {
-		double beginningOfRange = populationSize*removedSpecimenCounter/(double)specimensToBeRemoved;
-		double endOfRange = populationSize*(removedSpecimenCounter+1)/(double)specimensToBeRemoved;
-		int rand = (int)Math.ceil(random.nextInt(((int)Math.ceil(endOfRange - beginningOfRange))) + beginningOfRange)-removedSpecimenCounter;
-		return rand;
 	}
 }

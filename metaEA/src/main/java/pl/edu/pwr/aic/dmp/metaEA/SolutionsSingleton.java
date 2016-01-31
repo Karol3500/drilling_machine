@@ -5,8 +5,6 @@ import java.util.List;
 
 public class SolutionsSingleton {
 
-	public final static SolutionsSingleton INSTANCE = new SolutionsSingleton();
-
 	private static final List<TuningExperimentResult> RESULTS = new ArrayList<TuningExperimentResult>();
 	
 	private SolutionsSingleton() {

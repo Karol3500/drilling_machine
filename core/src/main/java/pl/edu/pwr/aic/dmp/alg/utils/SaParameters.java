@@ -1,11 +1,25 @@
 package pl.edu.pwr.aic.dmp.alg.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SaParameters implements Parameters {
 	
 	int cyclesNumber;
 	double startTemperature;
 	double coolingCoefficient;
 	int permutationAttempts;
+
+	@Override
+	public List<? extends Object> getParameterNamesAsList() {
+		return Arrays.asList("Number of cycles", "Start temperature",
+				"Cooling coefficient", "Permutation attempts");
+	}
+
+	@Override
+	public List<? extends Object> getParameterValuesAsList() {
+		return Arrays.asList(cyclesNumber, startTemperature, coolingCoefficient, permutationAttempts);
+	}
 	
 	@Override
 	public Parameters setSaneDefaults() {
@@ -39,6 +53,11 @@ public class SaParameters implements Parameters {
 			return false;
 		return true;
 	}
+	
+	@Override
+    public int hashCode() {
+    	return (int)(100 * coolingCoefficient) + cyclesNumber + permutationAttempts + (int)(100*startTemperature);
+    }
 
 	public int getCyclesNumber() {
 		return cyclesNumber;

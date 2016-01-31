@@ -1,5 +1,8 @@
 package pl.edu.pwr.aic.dmp.alg.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class IwoParameters implements Parameters {
 
 	private int numberOfIterations;
@@ -37,6 +40,22 @@ public class IwoParameters implements Parameters {
 		clone.finalTransformationsPerSeed = finalTransformationsPerSeed;
 		return clone;
 	}
+	
+	@Override
+	public List<? extends Object> getParameterNamesAsList() {
+		return Arrays.asList("Number of iterations", "Min specimen in population",
+				"Max specimen in population", "Min seed number", "Max seed number",
+				"Nonlinear coefficient", "Init transformations per seed",
+				"Final transformations per seed");
+	}
+	
+	@Override
+	public List<? extends Object> getParameterValuesAsList() {
+		return Arrays.asList(minSpecimenInPopulation, maxSpecimenInPopulation,
+				numberOfIterations, maxSeedNumber, minSeedNumber,
+				nonLinearCoefficient, initialTransformationsPerSeed,
+				finalTransformationsPerSeed);
+	}
 
 	@Override
 	public String toString(){
@@ -70,6 +89,13 @@ public class IwoParameters implements Parameters {
 		return true;
 	}
 
+	@Override
+    public int hashCode() {
+    	return finalTransformationsPerSeed + initialTransformationsPerSeed +
+    			maxSeedNumber + minSeedNumber + maxSpecimenInPopulation +
+    			minSpecimenInPopulation + (int)(100 * nonLinearCoefficient) + numberOfIterations; 
+    }
+	
 	public int getNumberOfIterations() {
 		return numberOfIterations;
 	}

@@ -4,16 +4,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Specimen implements Comparable<Specimen> {
-	List<City> cities;
+public class Specimen implements Comparable<Specimen>, Cloneable{
+	private List<City> cities;
 
 	private double rate;
 	private double rouletteProbablity;
 	private boolean isRateActual;
-	int drillChangeInterval;
-	City startCity;
+	private int drillChangeInterval;
+	private City startCity;
 
-	public Specimen(List<City> cities, City startingCity, int drillChangeInterval){
+	Specimen(List<City> cities, City startingCity, int drillChangeInterval){
 		this.cities = cities;
 		this.startCity = startingCity;
 		this.isRateActual=false;
@@ -39,27 +39,27 @@ public class Specimen implements Comparable<Specimen> {
 		return cities;
 	}
 
-	public void swapCities(int i, int j){
+	private void swapCities(int i, int j){
 		City c1=cities.get(i);
 		City c2=cities.get(j);
 		cities.set(i, c2);
 		cities.set(j, c1);
 	}
 
-	public void shuffleRoute(){
+	void shuffleRoute(){
 		Collections.shuffle(cities);   
 		isRateActual=false;
 	}
 
-	public void addCity(City m){
+	void addCity(City m){
 		cities.add(m);
 		isRateActual=false;
 	}
-	public void deleteCity(int x){
+	void deleteCity(int x){
 		cities.remove(x);
 		isRateActual=false;
 	}
-	public void deleteCity(City m){
+	void deleteCity(City m){
 		for(int i=0;i<cities.size();i++){
 			if(cities.get(i).getNumber()==m.getNumber()){
 				cities.remove(i);
@@ -69,7 +69,7 @@ public class Specimen implements Comparable<Specimen> {
 		isRateActual=false;
 	}
 
-	public void setCity(int x, City t){
+	void setCity(int x, City t){
 		cities.set(x, t);
 		isRateActual=false;
 	}
@@ -145,7 +145,7 @@ public class Specimen implements Comparable<Specimen> {
 		return comp;
 	}
 
-	public Specimen inver(Specimen specimen) {
+	Specimen inver(Specimen specimen) {
 		Random generator = new Random();
 		int startCity = generator.nextInt(cities.size()-1);
 				int endCity = generator.nextInt(cities.size()-startCity)+startCity;
@@ -159,7 +159,7 @@ public class Specimen implements Comparable<Specimen> {
 		return specimen;
 	}
 	
-	public Specimen returnMutatedClone() {
+	Specimen returnMutatedClone() {
 		return inver(this.clone());
 	}
 }

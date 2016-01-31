@@ -37,14 +37,6 @@ public class CityReaderTest {
 		assertTrue(map.get(0).equals(cr.map.get(0)));
 	}
 	
-	@Test
-	public void shouldClearMap(){
-		CityReader cr = getCityReaderWithFileRead(MAP_PATH_WITH_13_POINTS);
-		cr.clear();
-		
-		assertFalse(cr.isMapLoaded());		
-	}
-	
 	private CityReader getCityReaderWithFileRead(String path) {
 		CityReader cr = new CityReader();
 		cr.loadFile(path);

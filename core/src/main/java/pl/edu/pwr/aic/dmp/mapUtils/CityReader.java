@@ -17,6 +17,7 @@ public class CityReader {
 		Scanner scanner = MapReader.readFileAsScanner(filePath);
 		if(scanner == null){
 			System.err.println("Failure: Cannot access file.");
+			return;
 		}
 		if(!fileParser.parseFile(scanner)){
 			System.err.println("Failure: File malformed");
@@ -37,9 +38,5 @@ public class CityReader {
 
 	public int getNumberOfCities() {
 		return numberOfCities;
-	}
-	
-	public void clear(){
-		map = null;
 	}
 }

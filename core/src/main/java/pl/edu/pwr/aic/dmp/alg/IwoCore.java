@@ -1,7 +1,5 @@
 package pl.edu.pwr.aic.dmp.alg;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,10 +7,9 @@ import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 
 public class IwoCore extends Core {
 
-	int dobry_wynik;
-	double worstResult;
-	double bestResult;
-	IwoParameters params;
+	private double worstResult;
+	private double bestResult;
+	private IwoParameters params;
 
 	public IwoCore() {
 		algorithmName = "IWO Algorithm";
@@ -64,6 +61,9 @@ public class IwoCore extends Core {
 		}
 	}
 
+	/**
+	 * Watch out, sorts the population.
+	 */
 	private void performSelection() {
 		if(population.size()>params.getMaxSpecimenInPopulation())
 		{
@@ -79,17 +79,10 @@ public class IwoCore extends Core {
 				+params.getFinalTransformationsPerSeed());
 	}
 
-	List<Double> calculateFitnessValue(List<Specimen> population)
-	{
-		List<Double> fitness = new ArrayList<>(population.size());
-		for(Specimen individual : population)
-		{
-			fitness.add(individual.getRouteLength());
-		}
-		return fitness;
-	}
-
-	int calculateSeedNumber(int specimenIndex, List<Specimen> population){
+	/**
+	 *  Important! For proper work requires population to be sorted.
+	 */
+	private int calculateSeedNumber(int specimenIndex, List<Specimen> population){
 		double specRate = (population.get(specimenIndex)).getRouteLength();
 		double minRate  = population.get(population.size()-1).getRouteLength();
 		double maxRate  = population.get(0).getRouteLength();
@@ -97,15 +90,7 @@ public class IwoCore extends Core {
 				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate)));
 	}
 
-	List<Specimen> clonePopolation(){
-		List<Specimen> result= getNewSpecimenList();
-		for(Specimen os:population){
-			result.add(os.clone());
-		}
-		return result;
-	}
-
-	void initSpecimen() {
+	private void initSpecimen() {
 		Specimen zero=population.get(0);
 		zero.shuffleRoute();
 		population=getNewSpecimenList();
@@ -117,30 +102,12 @@ public class IwoCore extends Core {
 		}
 	}
 
-	void printPopulation() {
-		for (int i = 0; i < population.size(); i++) {
-			System.out.println("SPECIMEN " + i + "=" +" MARK: "+round(population.get(i).getRouteLength(),3));
-		}
-	}
-
-	double getMinRoute() {
+	private double getMinRoute() {
 		return population.get(0).getRouteLength();
 	}
 
-	double getMaxRoute() {
+	private double getMaxRoute() {
 		return population.get(population.size() - 1).getRouteLength();
-	}
-
-	double getAvgRoute() {
-		double meanRate = 0;
-		for (Specimen spec : population) {
-			meanRate += spec.getRouteLength();
-		}
-		return (meanRate / population.size());
-	}
-
-	public double round(double d,int pos){
-		return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	@Override

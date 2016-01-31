@@ -1,7 +1,6 @@
 package pl.edu.pwr.aic.dmp.alg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,30 +60,6 @@ public class CoreTest {
 		assertEquals(70, s.size());
 	}
 
-	@Test
-	public void shouldReturnCorrectIndexOfSpecForRemovalOfTheFirst(){
-		testSpecimenForRemoval(60, 3, 0, 0, 20);
-	}
-	
-	@Test
-	public void shouldReturnCorrectIndexOfSpecForRemovalOfTheFourth(){
-		testSpecimenForRemoval(20, 5, 3, 12, 15);
-	}
-	
-	@Test
-	public void shouldReturnCorrectIndexOfSpecForRemovalOfTheFifth(){
-		testSpecimenForRemoval(20, 5, 4, 16, 19);
-	}
-
-	private void testSpecimenForRemoval(int populationSize, int specimensToBeRemoved, int removedSpecimenCounter, int lowBound, int upBound) {
-		for(int i=removedSpecimenCounter;i<50;i++){
-			int indx = c.calculateIndexOfSpecimenToBeRemoved(populationSize, specimensToBeRemoved, removedSpecimenCounter);
-			assertTrue("Got value: " + (indx -removedSpecimenCounter) + ", expected > " + (lowBound-removedSpecimenCounter), (lowBound - removedSpecimenCounter) <= indx);
-			assertTrue("Got value: " + (indx -removedSpecimenCounter) + ", expected < " + (upBound-removedSpecimenCounter), indx <= (upBound-removedSpecimenCounter));
-		}
-	}
-	
-	
 	private List<Specimen> initializeBigPopulation() {
 		List<Specimen> specimens = new LinkedList<>();
 		for(int i=0; i< 1000; i++){
