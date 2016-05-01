@@ -12,7 +12,6 @@ public class SACore extends Core{
 
 	@Override
 	void runAlg() {
-		startCity= cities.get(0).clone();
 		bestSpecimen = new Specimen(cities, startCity, drillChangeInterval);
 		params = (SaParameters) algorithmParameters;
 		for (int cycleNumber=0; !abort && cycleNumber<params.getCyclesNumber(); cycleNumber++) {

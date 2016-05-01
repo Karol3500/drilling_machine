@@ -23,7 +23,6 @@ public class RandomCore extends Core{
 	void runAlg() {
 		params = (RandomParameters) algorithmParameters;
 		cycleLen = new double[params.getCyclesNumber() + 1];
-		startCity= cities.get(0).clone();
 		currentSpecimen = new Specimen(cities, startCity, drillChangeInterval);
 		int i = 0;
 		while (!abort && i <= params.getCyclesNumber()) {

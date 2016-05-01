@@ -7,8 +7,6 @@ import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 
 public class IwoCore extends Core {
 
-	private double worstResult;
-	private double bestResult;
 	private IwoParameters params;
 
 	public IwoCore() {
@@ -20,15 +18,8 @@ public class IwoCore extends Core {
 	@Override
 	void runAlg() {
 		params = (IwoParameters) algorithmParameters;
-		startCity= cities.get(0).clone();
-		Specimen zero=new Specimen(cities, startCity, drillChangeInterval);
-		zero.shuffleRoute();
-		population.add(zero);
-		initSpecimen();
-
+		population = initPopulation(params.getMinSpecimenInPopulation());
 		Collections.sort(population);
-		worstResult = getMaxRoute();
-		bestResult = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 		for (int iter = 0; !abort && iter < params.getNumberOfIterations(); iter++) {
 			int distance = calculateCurrentNumberOfTransformationsPerSeed(iter,params.getNumberOfIterations());
@@ -36,7 +27,7 @@ public class IwoCore extends Core {
 			for(int specIndex = 0; specIndex < population.size();specIndex++)
 			{
 				Specimen actual = population.get(specIndex);
-				int seedNumber = Math.min(calculateSeedNumber(specIndex,population), params.getMaxSeedNumber());
+				int seedNumber = Math.min(calculateSeedNumberOnSortedPopulation(specIndex,population), params.getMaxSeedNumber());
 				for(int childrenCount = 0;childrenCount<seedNumber;childrenCount++)
 				{
 					Specimen children = actual.clone();
@@ -48,23 +39,12 @@ public class IwoCore extends Core {
 				}
 			}
 			population.addAll(newSpecimens);
-			performSelection();
-			Collections.sort(population);
-			if (worstResult < getMaxRoute()) {
-				worstResult = getMaxRoute();
-			}
-			if (bestResult > getMinRoute()) {
-				bestGeneration=iter;
-				bestSpecimen=population.get(0).clone();
-				bestResult = getMinRoute();
-			}
+			performSelection(population);
+			setBestSpecimenAndIterationIfFound(iter, population);
 		}
 	}
 
-	/**
-	 * Watch out, sorts the population.
-	 */
-	private void performSelection() {
+	private void performSelection(List<Specimen> population) {
 		if(population.size()>params.getMaxSpecimenInPopulation())
 		{
 			Collections.shuffle(population);
@@ -79,35 +59,12 @@ public class IwoCore extends Core {
 				+params.getFinalTransformationsPerSeed());
 	}
 
-	/**
-	 *  Important! For proper work requires population to be sorted.
-	 */
-	private int calculateSeedNumber(int specimenIndex, List<Specimen> population){
+	private int calculateSeedNumberOnSortedPopulation(int specimenIndex, List<Specimen> population){
 		double specRate = (population.get(specimenIndex)).getRouteLength();
 		double minRate  = population.get(population.size()-1).getRouteLength();
 		double maxRate  = population.get(0).getRouteLength();
 		return params.getMinSeedNumber() + (int)java.lang.Math.floor((minRate - specRate) * 
 				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate)));
-	}
-
-	private void initSpecimen() {
-		Specimen zero=population.get(0);
-		zero.shuffleRoute();
-		population=getNewSpecimenList();
-		population.add(zero);
-		for (int i = 0; i < params.getMinSpecimenInPopulation(); i++) {
-			Specimen newSpecimen = population.get(0).clone();
-			newSpecimen.shuffleRoute();
-			population.add(newSpecimen);
-		}
-	}
-
-	private double getMinRoute() {
-		return population.get(0).getRouteLength();
-	}
-
-	private double getMaxRoute() {
-		return population.get(population.size() - 1).getRouteLength();
 	}
 
 	@Override

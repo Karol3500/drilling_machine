@@ -2,6 +2,7 @@ package pl.edu.pwr.aic.dmp.alg;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.GaParameters;
 import pl.edu.pwr.aic.dmp.alg.utils.SelectionMethod;
@@ -11,8 +12,6 @@ public class GACore extends Core{
 	private GaParameters params;
 	private int rankingIter;
 	private int rankingCount;
-	private double maxRoute;
-	private double minRoute;
 	
 	public GACore() {
 		algorithmName = "Genetic Algorthm";
@@ -25,48 +24,21 @@ public class GACore extends Core{
 	@Override
 	void runAlg() {
 		params = (GaParameters)algorithmParameters;
-		Specimen zero=new Specimen(cities, startCity, drillChangeInterval);
-		startCity= cities.get(0).clone();
-		zero.shuffleRoute();
-		population.add(zero);
-		initSpecimen();
+		population = initPopulation(params.getPopulationCount());
 
 		Collections.sort(population);
-		maxRoute = getMaxRoute();
-		minRoute = getMinRoute();
 		bestSpecimen = population.get(0).clone();
 
 		for (int pok = 0; !abort && pok < params.getGenerationsCount(); pok++) {
-			ArrayList<Specimen> populacja_kolejna = new ArrayList<Specimen>();
-			if(params.getSelectionMethod() == SelectionMethod.RANKING){
-				ranking = new ArrayList<Specimen>();
-				rankingIter=0;
-				int minimum=20;
-				if(params.getPopulationCount()<minimum){
-					minimum=params.getPopulationCount();
-				}
-				double losowi=Math.random()*params.getPopulationCount()/2;
-				rankingCount = minimum + (int)(losowi);
-			}
-
-			if (params.getSelectionMethod() == SelectionMethod.ROULETTE) {
-				double sumaOdwrotnosciOcen = 0.0;
-				for (Specimen os : population) {
-					sumaOdwrotnosciOcen += 1/os.getRouteLength();
-				}
-
-				for (Specimen os : population) {
-					os.setP_Roulette((1/os.getRouteLength()) / sumaOdwrotnosciOcen);
-				}
-			}
-
+			List<Specimen> populacja_kolejna = getNewSpecimenList();
+			
 			while (populacja_kolejna.size() < population.size()) {
 				Specimen k1 = selectSpecimen(params.getSelectionMethod());
 				Specimen k2 = null;
 
-				if (params.getPopulationCount() > (populacja_kolejna.size() + 1) && Math.random() < params.getCrossingProbability()) {  
-					k2 = selectSpecimen(params.getSelectionMethod());
-					crossing(k1, k2);
+				if (params.getPopulationCount() > (populacja_kolejna.size() + 1) && Math.random() < params.getCrossingProbability()) {
+					k2 = selectSpecimen(SelectionMethod.TOURNAMENT);
+					cross(k1, k2);
 				}
 
 				if (Math.random() < params.getMutationProbability()) {
@@ -85,18 +57,8 @@ public class GACore extends Core{
 			}
 
 			population = populacja_kolejna;
-			Collections.sort(population);
 			populacja_kolejna = new ArrayList<Specimen>();
-
-			if (maxRoute < getMaxRoute()) {
-				maxRoute = getMaxRoute();
-			}
-
-			if (minRoute > getMinRoute()) {
-				bestGeneration=pok;
-				bestSpecimen=population.get(0).clone();
-				minRoute = getMinRoute();
-			}
+			setBestSpecimenAndIterationIfFound(pok,population);
 		}
 	}
 
@@ -137,52 +99,52 @@ public class GACore extends Core{
 		return os;
 	}
 
-	private void crossing(Specimen o1, Specimen o2) {
-		int startindex = (int) (Math.random() * (o1.getRoute().size())); //[0,1) * 10= [0,9]
-		int endindex = startindex + (int) (Math.random() * (o1.getRoute().size() - startindex));
-		Specimen ox_o1=new Specimen(cities, startCity, drillChangeInterval);
-		Specimen ox_o2=new Specimen(cities, startCity, drillChangeInterval);
+	private void cross(Specimen o1, Specimen o2) {
+		int startindex = (int) (Math.random() * (o1.getCities().size())); //[0,1) * 10= [0,9]
+		int endindex = startindex + (int) (Math.random() * (o1.getCities().size() - startindex));
+		Specimen ox_o1=o1.clone();
+		Specimen ox_o2=o2.clone();
 
-		for(int j=endindex+1;j<o1.getRoute().size();j++){
-			ox_o1.addCity(o2.getCity(j).clone());
-			ox_o2.addCity(o1.getCity(j).clone());
+		for(int j=endindex+1;j<o1.getCities().size();j++){
+			ox_o1.addCity(o2.getCities().get(j).clone());
+			ox_o2.addCity(o1.getCities().get(j).clone());
 		}
 
 		for(int j=0;j<startindex;j++){
-			ox_o1.addCity(o2.getCity(j).clone());
-			ox_o2.addCity(o1.getCity(j).clone());
+			ox_o1.addCity(o2.getCities().get(j).clone());
+			ox_o2.addCity(o1.getCities().get(j).clone());
 		}
 
 		for (int i = startindex; i <= endindex; i++) {
-			City temp = o1.getCity(i);
-			o1.setCity(i, o2.getCity(i));
-			ox_o1.deleteCity(o2.getCity(i));
+			City temp = o1.getCities().get(i);
+			o1.setCity(i, o2.getCities().get(i));
+			ox_o1.deleteCity(o2.getCities().get(i));
 			o2.setCity(i, temp);
 			ox_o2.deleteCity(temp);
 		}
 
-		for(int i=endindex+1;i<o1.getRoute().size();i++){
-			o1.setCity(i, ox_o1.getCity(0));
+		for(int i=endindex+1;i<o1.getCities().size();i++){
+			o1.setCity(i, ox_o1.getCities().get(0));
 			ox_o1.deleteCity(0);
-			o2.setCity(i, ox_o2.getCity(0));
+			o2.setCity(i, ox_o2.getCities().get(0));
 			ox_o2.deleteCity(0);
 		}
 
 		for(int i=0;i<startindex;i++){
-			o1.setCity(i, ox_o1.getCity(0));
+			o1.setCity(i, ox_o1.getCities().get(0));
 			ox_o1.deleteCity(0);
-			o2.setCity(i, ox_o2.getCity(0));
+			o2.setCity(i, ox_o2.getCities().get(0));
 			ox_o2.deleteCity(0);
 		}
 	}
 
 	private void mutation(Specimen o) {
-		int startindex = (int) (Math.random() * (o.getRoute().size() - 1)); //[0,1) * 10= [0,9]
-		int endindex = startindex + 1 + (int) (Math.random() * (o.getRoute().size() - 1 - startindex));
+		int startindex = (int) (Math.random() * (o.getCities().size() - 1)); //[0,1) * 10= [0,9]
+		int endindex = startindex + 1 + (int) (Math.random() * (o.getCities().size() - 1 - startindex));
 
 		ArrayList<City> odwracaneMiasta = new ArrayList<City>();
 		for (int i = startindex; i <= endindex; i++) {
-			odwracaneMiasta.add(o.getCity(i));
+			odwracaneMiasta.add(o.getCities().get(i));
 		}
 
 		for (int i = 0; startindex + i <= endindex; i++) {
@@ -196,26 +158,6 @@ public class GACore extends Core{
 			wynik.add(population.get(i).clone());
 		}
 		return wynik;
-	}
-
-	private void initSpecimen() {
-		Specimen zero=population.get(0);
-		zero.shuffleRoute();
-		population=new ArrayList<Specimen>();
-		population.add(zero);
-		for (int i = 0; i < params.getPopulationCount(); i++) {
-			Specimen newSpecimen = population.get(0).clone();
-			newSpecimen.shuffleRoute();
-			population.add(newSpecimen);
-		}
-	}
-
-	private double getMinRoute() {
-		return population.get(0).getRouteLength();
-	}
-
-	private double getMaxRoute() {
-		return population.get(population.size() - 1).getRouteLength();
 	}
 
 	@Override

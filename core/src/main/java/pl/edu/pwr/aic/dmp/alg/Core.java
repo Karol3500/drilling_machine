@@ -3,7 +3,6 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
@@ -37,7 +36,7 @@ public abstract class Core extends Thread {
 		stopTime=System.currentTimeMillis();
 		result.setExecutionTimeInSeconds((stopTime-startTime)/1000d);
 		result.setBestRouteLength(bestSpecimen.getRouteLength());
-		result.setPermutation(bestSpecimen.getBestRoute());
+		result.setPermutation(bestSpecimen.getRoute());
 		
 //		showEffects();
 	}
@@ -102,13 +101,7 @@ public abstract class Core extends Thread {
 	}
 
 	public void setCities(List<City> cities) {
-		if(cities != null && cities.size() > 0){
-			this.startCity = cities.get(0);
-			this.cities = cities;
-		}
-		else{
-			System.out.println("An empty list of cities was passed to setCities in Core");
-		}
+		this.cities = cities;
 	}
 
 	public Specimen getBestSpecimen() {
@@ -141,6 +134,14 @@ public abstract class Core extends Thread {
 		this.algorithmParameters = algorithmParameters;
 	}
 	
+	public City getStartCity() {
+		return startCity;
+	}
+
+	public void setStartCity(City startCity) {
+		this.startCity = startCity;
+	}
+	
 	protected abstract boolean areProperParametersGiven() ;
 
 	protected List<Specimen> getClonedPopulation() {
@@ -152,7 +153,7 @@ public abstract class Core extends Thread {
 	}
 
 	protected List<Specimen> getNewSpecimenList() {
-		return new LinkedList<Specimen>();
+		return new ArrayList<Specimen>();
 	}
 
 	protected Specimen selectionTournament() {
@@ -203,7 +204,7 @@ public abstract class Core extends Thread {
 		while(shouldHalfOfPopulationBeRemovedBecauseOfTooManyTournaments(previouslyShuffledSpecimens.size(),maxPopulationSize)){
 			wipeHalfPopulation(previouslyShuffledSpecimens);
 		}
-		int specForRem = calculateNumberOfSpecimenForRemoval(previouslyShuffledSpecimens.size(),maxPopulationSize);
+		int specForRem = calculateNumberOfSpecimensForRemoval(previouslyShuffledSpecimens.size(),maxPopulationSize);
 		if(specForRem == 0){
 			return previouslyShuffledSpecimens;
 		}
@@ -238,17 +239,45 @@ public abstract class Core extends Thread {
 	}
 
 	private boolean shouldHalfOfPopulationBeRemovedBecauseOfTooManyTournaments(int populationSize, int maxPopulationSize) {
-		int sForRem = calculateNumberOfSpecimenForRemoval(populationSize, maxPopulationSize);
+		int sForRem = calculateNumberOfSpecimensForRemoval(populationSize, maxPopulationSize);
 		if(sForRem == 0 || maxPopulationSize > sForRem){
 			return false;
 		}
 		return true;
 	}
 
-	private int calculateNumberOfSpecimenForRemoval(int populationSize, int maxPopulationSize) {
+	private int calculateNumberOfSpecimensForRemoval(int populationSize, int maxPopulationSize) {
 		if(populationSize > maxPopulationSize){
 			return populationSize - maxPopulationSize;
 		}
 		return 0;
+	}
+
+	protected List<Specimen> initPopulation(int populationCount) {
+		Specimen zero=new Specimen(cities, startCity, drillChangeInterval);
+		List<Specimen> population = getNewSpecimenList();
+		cloneAndShuffleSpecimenForPopulationCountTimes(populationCount, zero, population);
+		return population;
+	}
+
+	private void cloneAndShuffleSpecimenForPopulationCountTimes(int populationCount, Specimen zero,
+			List<Specimen> population) {
+		for (int i = 0; i < populationCount; i++) {
+			Specimen newSpecimen = zero.clone();
+			newSpecimen.shuffleRoute();
+			population.add(newSpecimen);
+		}
+	}
+
+	protected void setBestSpecimenAndIterationIfFound(int iteration, List<Specimen> population) {
+		Collections.sort(population);
+		if (bestSpecimen.getRouteLength() > getMinRoute(population)) {
+			bestGeneration=iteration;
+			bestSpecimen=population.get(0).clone();
+		}
+	}
+
+	double getMinRoute(List<Specimen> population) {
+		return population.get(0).getRouteLength();
 	}
 }

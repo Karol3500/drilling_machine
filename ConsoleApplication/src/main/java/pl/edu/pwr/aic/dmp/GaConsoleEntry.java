@@ -33,5 +33,6 @@ public class GaConsoleEntry {
 			setup.setupExperimentEnvironment();
 	
 			setup.performExperiment();
+			System.out.println(setup.getResults().get(0).getResults().get(0).getPermutation());
 		}
 }

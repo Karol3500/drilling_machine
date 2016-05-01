@@ -24,9 +24,9 @@ public class SaParameters implements Parameters {
 	@Override
 	public Parameters setSaneDefaults() {
 		cyclesNumber = 2;
-		startTemperature = 300;
+		startTemperature = 30;
 		coolingCoefficient = 0.95;
-		permutationAttempts = 10;
+		permutationAttempts = 1;
 		return this;
 	}
 	

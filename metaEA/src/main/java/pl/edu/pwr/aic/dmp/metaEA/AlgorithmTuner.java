@@ -1,4 +1,6 @@
 package pl.edu.pwr.aic.dmp.metaEA;
+import java.util.List;
+
 import org.coinor.opents.BestEverAspirationCriteria;
 import org.coinor.opents.MoveManager;
 import org.coinor.opents.ObjectiveFunction;
@@ -7,6 +9,7 @@ import org.coinor.opents.SingleThreadedTabuSearch;
 import org.coinor.opents.TabuList;
 import org.coinor.opents.TabuSearch;
 
+import pl.edu.pwr.aic.dmp.alg.City;
 import pl.edu.pwr.aic.dmp.alg.Core;
 import pl.edu.pwr.aic.dmp.alg.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
@@ -97,6 +100,8 @@ public class AlgorithmTuner {
 	private void loadAndSetMap(Core algorithm, String filePath) {
 		CityReader cr = new CityReader(); 
 		cr.loadFile(filePath);
-		algorithm.setCities(cr.getMapClone());
+		List<City> cities = cr.getMapClone();
+		algorithm.setStartCity(cities.get(0));
+		algorithm.setCities(cities.subList(1, cities.size()));
 	}
 }

@@ -1,7 +1,7 @@
 package pl.edu.pwr.aic.dmp.mapUtils;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,11 +20,13 @@ public class CityReader {
 			return;
 		}
 		if(!fileParser.parseFile(scanner)){
-			System.err.println("Failure: File malformed");
+			System.err.println("Failure: File malformed.");
 		}
-
 		numberOfCities = fileParser.getNumberOfCities();
 		map = fileParser.getCityList();
+		if(map.size()<2){
+			System.err.println("Failure: Map has less than 2 drilling points.");
+		}
 		System.out.println("Read " + numberOfCities + " points");
 	}
 
@@ -33,7 +35,7 @@ public class CityReader {
 	}
 
 	public List<City> getMapClone() {
-		return new LinkedList<City>(map);
+		return new ArrayList<City>(map);
 	}
 
 	public int getNumberOfCities() {

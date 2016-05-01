@@ -26,6 +26,32 @@
 					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-openTS</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>mvn</executable>
+					<arguments>
+						<argument>install:install-file</argument>
+						<argument>-Dfile=${project.basedir}/lib/OpenTS.jar</argument>
+						<argument>-DgroupId=org.coinor</argument>
+						<argument>-DartifactId=opents</argument>
+						<argument>-Dversion=1.0</argument>
+						<argument>-Dpackaging=jar</argument>
+					</arguments>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

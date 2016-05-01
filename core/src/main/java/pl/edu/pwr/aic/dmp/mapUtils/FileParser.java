@@ -1,6 +1,6 @@
 package pl.edu.pwr.aic.dmp.mapUtils;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -46,7 +46,7 @@ public class FileParser {
 	}
 
 	private void readCities(Scanner scanner) {
-		cityList = new LinkedList<City>();
+		cityList = new ArrayList<City>();
 		for(int i=0;i<numberOfCities;i++){
 			cityList.add(new City(scanner.nextInt(),scanner.nextDouble(), scanner.nextDouble()));
 		}

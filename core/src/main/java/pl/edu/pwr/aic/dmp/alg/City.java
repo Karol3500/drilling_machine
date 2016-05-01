@@ -9,10 +9,10 @@ public class City implements Cloneable{
     private double x;
     private double y;
 
-    public City(int nubmer,double x, double y){
+    public City(int number,double x, double y){
         this.x = x;
         this.y = y;
-        number=nubmer;
+        this.number=number;
     }
 
     public City getCity(){

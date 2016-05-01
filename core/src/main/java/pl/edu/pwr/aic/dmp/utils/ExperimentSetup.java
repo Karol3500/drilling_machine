@@ -38,7 +38,9 @@ public class ExperimentSetup {
 			ExperimentResult res = new ExperimentResult(p, mapName, algorithm.getClass());
 			algorithm.setAlgorithmParameters(p);
 			for(int i=0; i<numberOfUnitExperimentRepetitions; i++){
-				algorithm.setCities(cr.getMapClone());
+				List<City> cities = cr.getMapClone();
+				algorithm.setStartCity(cities.get(0));
+				algorithm.setCities(cities.subList(1, cities.size()));
 				algorithm.setDrillChangeInterval(drillChangeInterval);
 				algorithm.run();
 				res.getResults().add(algorithm.getResult());

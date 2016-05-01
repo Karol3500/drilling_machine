@@ -17,8 +17,8 @@ public class IwoParameters implements Parameters {
 	@Override
 	public Parameters setSaneDefaults(){
 		minSpecimenInPopulation = 10;
-		maxSpecimenInPopulation = 100;
-		numberOfIterations = 100;
+		maxSpecimenInPopulation = 200;
+		numberOfIterations = 400;
 		maxSeedNumber = 10;
 		minSeedNumber = 2;
 		nonLinearCoefficient = 1;
