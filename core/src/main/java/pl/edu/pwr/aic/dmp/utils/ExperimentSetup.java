@@ -21,11 +21,12 @@ public class ExperimentSetup {
 	private int numberOfUnitExperimentRepetitions;
 
 	public void setupExperimentEnvironment(String filePath, Core algorithm, List<Parameters> params, 
-			int numberOfUnitExperimentRepetitions){
+			int numberOfUnitExperimentRepetitions, int drillChangeInterval){
 		setupMap(filePath);
 		this.algorithm = algorithm;
 		this.paramsList = params;
 		this.numberOfUnitExperimentRepetitions = numberOfUnitExperimentRepetitions;
+		this.drillChangeInterval = drillChangeInterval;
 		results = new ArrayList<ExperimentResult>();
 	}
 	public void setupExperimentEnvironment(){

@@ -11,7 +11,6 @@ public class GaParameters implements Parameters {
 	double crossingProbability;
 	SelectionMethod selectionMethod = SelectionMethod.TOURNAMENT;
 
-
 	@Override
 	public List<? extends Object> getParameterNamesAsList() {
 		return Arrays.asList("Population count", "Generations count",
@@ -28,11 +27,11 @@ public class GaParameters implements Parameters {
 	
 	@Override
 	public Parameters setSaneDefaults() {
-		populationCount = 800;
-		generationsCount = 400;
+		populationCount = 400;
+		generationsCount = 200;
 		crossingProbability = 0.65;
 		mutationProbability = 0.2;
-		selectionMethod = SelectionMethod.RANKING;
+		selectionMethod = SelectionMethod.TOURNAMENT;
 		return this;
 	}
 

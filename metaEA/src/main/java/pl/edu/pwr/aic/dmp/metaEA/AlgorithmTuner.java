@@ -11,11 +11,9 @@ import org.coinor.opents.TabuSearch;
 
 import pl.edu.pwr.aic.dmp.alg.City;
 import pl.edu.pwr.aic.dmp.alg.Core;
-import pl.edu.pwr.aic.dmp.alg.utils.MachineParameters;
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.mapUtils.CityReader;
 import pl.edu.pwr.aic.dmp.metaEA.parameters.DmpParametersSolution;
-import pl.edu.pwr.aic.dmp.utils.Machine;
 
 public class AlgorithmTuner {
 
@@ -28,14 +26,17 @@ public class AlgorithmTuner {
 	private TabuList tabuList;
 	private TabuSearch tabuSearchEngine;
 	private String mapFilePath;
+	private int drillChangeInterval;
 	
-	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath, MoveManager moveManager){
+	public AlgorithmTuner(Core algorithm, Parameters algParams, String mapFilePath,
+			MoveManager moveManager, int drillChangeInterval){
 		this.algorithm = algorithm;
 		this.algParams = algParams;
 		objFunc = new DmpObjectiveFunction();
 		this.moveManager = moveManager;
 		tabuList = new SimpleTabuList(TABU_SEARCH_TENURE);
 		this.mapFilePath = mapFilePath;
+		this.drillChangeInterval = drillChangeInterval;
 	}
 
 	public void performExperiment(int iterations){
@@ -81,13 +82,7 @@ public class AlgorithmTuner {
 	}
 
 	private void setupAlgorithm() {
-		algorithm = configureAlgorithm(algorithm,
-				algParams,
-				getDefaultMachine().getDrillChangeInterval());
-	}
-
-	private Machine getDefaultMachine() {
-		return new Machine((MachineParameters)new MachineParameters().setSaneDefaults());
+		algorithm = configureAlgorithm(algorithm, algParams, drillChangeInterval);
 	}
 
 	private Core configureAlgorithm(Core algorithm, Parameters algParams, int drillChangeInterval) {

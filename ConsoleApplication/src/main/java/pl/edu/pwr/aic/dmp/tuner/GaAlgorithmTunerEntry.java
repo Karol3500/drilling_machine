@@ -13,6 +13,6 @@ public class GaAlgorithmTunerEntry extends AbstractTuningApplicationEntry{
 	
 	public static void main(String[] args) throws WriteException, IOException{
 		runExperiment(args, DEFAULT_MAP_FILE_NAME, DEFAULT_RESULT_FILE_NAME, new GACore(),
-				new GaParameters().setSaneDefaults(),new GaMoveManager());
+				new GaParameters().setSaneDefaults(),new GaMoveManager(), 20);
 	}
 }

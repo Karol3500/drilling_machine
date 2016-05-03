@@ -13,6 +13,6 @@ public class SaAlgorithmTunerEntry extends AbstractTuningApplicationEntry{
 	
 	public static void main(String[] args) throws WriteException, IOException{
 		runExperiment(args, DEFAULT_MAP_FILE_NAME, DEFAULT_RESULT_FILE_NAME, new SACore(),
-				new SaParameters().setSaneDefaults(),new SaMoveManager());
+				new SaParameters().setSaneDefaults(),new SaMoveManager(), 20);
 	}
 }

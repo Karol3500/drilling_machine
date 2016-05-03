@@ -10,8 +10,6 @@ import pl.edu.pwr.aic.dmp.alg.utils.SelectionMethod;
 public class GACore extends Core{
 
 	private GaParameters params;
-	private int rankingIter;
-	private int rankingCount;
 	
 	public GACore() {
 		algorithmName = "Genetic Algorthm";
@@ -62,14 +60,11 @@ public class GACore extends Core{
 		}
 	}
 
-	private Specimen selectSpecimen(SelectionMethod metoda) {
-		if (metoda == SelectionMethod.ROULETTE) {
+	private Specimen selectSpecimen(SelectionMethod method) {
+		if (method == SelectionMethod.ROULETTE) {
 			return selectionRoulette();
-		} else if (metoda == SelectionMethod.TOURNAMENT) {
+		} else{
 			return selectionTournament();
-		} else {
-			return selectionRanking();
-
 		}
 	}
 
@@ -84,19 +79,6 @@ public class GACore extends Core{
 			}
 		}
 		return population.get(j);
-	}
-
-	private Specimen selectionRanking() {
-		if(rankingIter>=rankingCount){
-			rankingIter=0;
-		}
-
-		if(ranking.isEmpty()){
-			ranking=createRanking();
-		}
-
-		Specimen os=ranking.get(rankingIter++);
-		return os;
 	}
 
 	private void cross(Specimen o1, Specimen o2) {
@@ -150,14 +132,6 @@ public class GACore extends Core{
 		for (int i = 0; startindex + i <= endindex; i++) {
 			o.setCity(startindex + i, odwracaneMiasta.get(odwracaneMiasta.size() - 1 - i));
 		}
-	}
-
-	private ArrayList<Specimen> createRanking(){
-		ArrayList<Specimen> wynik= new ArrayList<Specimen>();
-		for(int i=0;i<rankingCount;i++){
-			wynik.add(population.get(i).clone());
-		}
-		return wynik;
 	}
 
 	@Override

@@ -13,6 +13,6 @@ public class IwoAlgorithmTunerEntry extends AbstractTuningApplicationEntry{
 	
 	public static void main(String[] args) throws WriteException, IOException{
 		runExperiment(args, DEFAULT_MAP_FILE_NAME, DEFAULT_RESULT_FILE_NAME, new IwoCore(),
-				new IwoParameters().setSaneDefaults(),new IwoMoveManager());
+				new IwoParameters().setSaneDefaults(),new IwoMoveManager(), 20);
 	}
 }
