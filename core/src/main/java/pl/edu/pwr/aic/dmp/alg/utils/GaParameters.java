@@ -21,7 +21,7 @@ public class GaParameters implements Parameters {
 	@Override
 	public List<? extends Object> getParameterValuesAsList() {
 		return Arrays.asList(populationCount, generationsCount,
-				mutationProbability, crossingProbability);
+				mutationProbability, crossingProbability, selectionMethod);
 	}
 
 	

@@ -12,7 +12,7 @@ public class GACore extends Core{
 	private GaParameters params;
 	
 	public GACore() {
-		algorithmName = "Genetic Algorthm";
+		algorithmName = "GeneticAlgorthm";
 		population = new ArrayList<Specimen>();
 		tournament = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();

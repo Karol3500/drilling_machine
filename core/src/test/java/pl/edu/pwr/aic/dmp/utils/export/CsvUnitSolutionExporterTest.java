@@ -80,7 +80,7 @@ public class CsvUnitSolutionExporterTest {
 		UnitResult res = new UnitResult();
 		res.setBestRouteLength(5d);
 		res.setExecutionTimeInSeconds(100);
-		res.setPermutation(Arrays.asList(5,15,54,4,1,2,3,5,6));
+		res.setBestRoute(Arrays.asList(5,15,54,4,1,2,3,5,6));
 		return res;
 	}
 	

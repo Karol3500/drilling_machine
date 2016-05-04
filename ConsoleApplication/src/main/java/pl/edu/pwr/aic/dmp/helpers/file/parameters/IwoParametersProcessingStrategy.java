@@ -1,4 +1,4 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.helpers.file.parameters;
 
 import java.util.List;
 

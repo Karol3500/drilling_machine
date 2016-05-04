@@ -39,7 +39,7 @@ class DmpObjectiveFunction implements ObjectiveFunction {
 				return new double[]{Double.MAX_VALUE};
 			}
 			double[] calculatedObjectiveValue = getCalculatedObjectiveValue(algorithm, startTime);
-			SolutionsSingleton.addResult(prepareExperimentResult(sol, startTime, calculatedObjectiveValue[0]));
+			TuningSolutionsSingleton.addResult(prepareExperimentResult(sol, startTime, calculatedObjectiveValue[0]));
 			return calculatedObjectiveValue;
 		} catch(TimeoutException e) {
 			return cancelTask(future);

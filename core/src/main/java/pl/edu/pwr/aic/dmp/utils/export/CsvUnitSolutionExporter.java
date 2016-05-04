@@ -28,6 +28,10 @@ public class CsvUnitSolutionExporter {
 	public void writeRow(List<Object> row) throws IOException {
 		util.writeRow(row, fileName);
 	}
+	
+	public void writeEmptyRow() throws IOException {
+		util.writeRow(Arrays.asList("\n"), fileName);
+	}
 
 	public void writeUnitResult(UnitResult res) throws IOException {
 		writeHeader();
@@ -39,7 +43,7 @@ public class CsvUnitSolutionExporter {
 		List<Object> unitResultRow = new ArrayList<>();
 		unitResultRow.add(res.getBestRouteLength());
 		unitResultRow.add(res.getExecutionTimeInSeconds());
-		unitResultRow.add(getStringPermutationRepresentation(res.getPermutation()));
+		unitResultRow.add(getStringPermutationRepresentation(res.getBestRoute()));
 		return unitResultRow;
 	}
 

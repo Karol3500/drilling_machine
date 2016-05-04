@@ -6,7 +6,7 @@ public class SACore extends Core{
 	private double bestLength;
 	
 	public SACore() {
-		algorithmName = "Simulated Annealing";
+		algorithmName = "SimulatedAnnealing";
 		bestLength = Double.MAX_VALUE;
 	}
 

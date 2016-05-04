@@ -6,12 +6,12 @@ import java.util.List;
 
 import pl.edu.pwr.aic.dmp.metaEA.export.CsvTuningExperimentResultExporter;
 
-public class SolutionsSingleton {
+public class TuningSolutionsSingleton {
 
 	private static final List<TuningExperimentResult> RESULTS = new ArrayList<TuningExperimentResult>();
 	public static CsvTuningExperimentResultExporter exporter;
 	
-	private SolutionsSingleton() {
+	private TuningSolutionsSingleton() {
     }
 	
 	public static void setResultExporter(CsvTuningExperimentResultExporter resExporter){

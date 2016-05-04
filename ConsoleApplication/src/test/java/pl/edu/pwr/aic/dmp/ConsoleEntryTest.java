@@ -9,12 +9,12 @@ import org.junit.Test;
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.helpers.FileParsingStrategy;
 
-public class AbstractConsoleEntryTest {
+public class ConsoleEntryTest {
 
 	@Test
 	public void shouldReadParametersProperlyForOneRow(){
 		String testFilePath = "src/test/resources/abstractParameters";
-		AbstractConsoleEntry entry = new AbstractConsoleEntry() {
+		ConsoleEntry entry = new ConsoleEntry() {
 		};
 
 		TestParameters params = (TestParameters)entry.getParametersListsFromFile(testFilePath, new TestParamsFileParsingStrategy()).get(0);

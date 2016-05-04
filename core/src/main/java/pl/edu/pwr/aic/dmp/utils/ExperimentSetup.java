@@ -29,10 +29,6 @@ public class ExperimentSetup {
 		this.drillChangeInterval = drillChangeInterval;
 		results = new ArrayList<ExperimentResult>();
 	}
-	public void setupExperimentEnvironment(){
-		setupMap(filePath);
-		results = new ArrayList<ExperimentResult>();
-	}
 	
 	public void performExperiment(){
 		for(Parameters p : paramsList){

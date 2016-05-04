@@ -62,13 +62,13 @@ public class ExperimentResult {
 			bestRouteLength += u.getBestRouteLength();
 			if(u.getBestRouteLength() < bestRouteLengthSoFar){
 				bestRouteLengthSoFar = u.getBestRouteLength();
-				bestPermutation = u.getPermutation();
+				bestPermutation = u.getBestRoute();
 			}
 		}
 		UnitResult res = new UnitResult();
 		res.setBestRouteLength(bestRouteLength/results.size());
 		res.setExecutionTimeInSeconds(executionTime/results.size());
-		res.setPermutation(bestPermutation);
+		res.setBestRoute(bestPermutation);
 		return res;
 	}
 }

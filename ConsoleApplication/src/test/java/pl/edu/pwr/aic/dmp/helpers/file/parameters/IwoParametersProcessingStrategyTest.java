@@ -1,11 +1,13 @@
-package pl.edu.pwr.aic.dmp;
+package pl.edu.pwr.aic.dmp.helpers.file.parameters;
 
 import java.util.List;
 
 import org.junit.Test;
 
+import pl.edu.pwr.aic.dmp.IwoConsoleEntry;
 import pl.edu.pwr.aic.dmp.alg.utils.IwoParameters;
 import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
+import pl.edu.pwr.aic.dmp.helpers.file.parameters.IwoParametersProcessingStrategy;
 
 import static org.junit.Assert.assertEquals;
 

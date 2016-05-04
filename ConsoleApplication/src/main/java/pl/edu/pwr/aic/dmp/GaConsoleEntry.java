@@ -3,13 +3,15 @@ package pl.edu.pwr.aic.dmp;
 import pl.edu.pwr.aic.dmp.alg.GACore;
 import pl.edu.pwr.aic.dmp.helpers.file.parameters.GaParametersProcessingStrategy;
 
-public class GaConsoleEntry extends AbstractConsoleEntry {
+public class GaConsoleEntry extends ConsoleEntry {
 
 	public static void main(String[] args) throws InterruptedException{
-		AbstractConsoleEntry entry = new GaConsoleEntry();
-		entry.init(new GACore(), new GaParametersProcessingStrategy(), args);
-
+//		args= new String[]{"src/main/resources/maps_working/a280.tsp","src/test/resources/gaParameters", "20", "4"};
+		ConsoleEntry entry = new GaConsoleEntry();
+		if(!entry.init(new GACore(), new GaParametersProcessingStrategy(), args)){
+			return;
+		}
 		entry.setup.performExperiment();
-		System.out.println(entry.setup.getResults().get(0).getResults().get(0).getPermutation());
+		entry.exportResultsToFile();
 	}
 }

@@ -6,10 +6,10 @@ import java.util.List;
 public class UnitResult {
 	private double executionTimeInSeconds;
 	private double bestRouteLength;
-	List<Integer> bestPermutation;
+	List<Integer> bestRoute;
 	
 	public UnitResult(){
-		bestPermutation = new ArrayList<Integer>();
+		bestRoute = new ArrayList<Integer>();
 	}
 
 	public double getExecutionTimeInSeconds() {
@@ -28,11 +28,11 @@ public class UnitResult {
 		this.bestRouteLength = d;
 	}
 
-	public List<Integer> getPermutation() {
-		return bestPermutation;
+	public List<Integer> getBestRoute() {
+		return bestRoute;
 	}
 
-	public void setPermutation(List<Integer> permutation) {
-		this.bestPermutation = permutation;
+	public void setBestRoute(List<Integer> permutation) {
+		this.bestRoute = permutation;
 	}
 }

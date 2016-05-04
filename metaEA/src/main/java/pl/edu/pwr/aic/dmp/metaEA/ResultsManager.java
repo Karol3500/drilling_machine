@@ -26,7 +26,7 @@ public class ResultsManager {
 	}
 	
 	private List<TuningExperimentResult> getResCopy(){
-		return new ArrayList<>(SolutionsSingleton.getResultsList());
+		return new ArrayList<>(TuningSolutionsSingleton.getResultsList());
 	}
 	
 	private class ObjectiveFunctionComparator implements Comparator<TuningExperimentResult>{

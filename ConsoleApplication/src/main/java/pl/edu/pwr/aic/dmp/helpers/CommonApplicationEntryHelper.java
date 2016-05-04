@@ -3,7 +3,7 @@ package pl.edu.pwr.aic.dmp.helpers;
 import java.io.IOException;
 
 import jxl.write.WriteException;
-import pl.edu.pwr.aic.dmp.metaEA.SolutionsSingleton;
+import pl.edu.pwr.aic.dmp.metaEA.TuningSolutionsSingleton;
 import pl.edu.pwr.aic.dmp.metaEA.export.CsvTuningExperimentResultExporter;
 
 public class CommonApplicationEntryHelper {
@@ -21,9 +21,8 @@ public class CommonApplicationEntryHelper {
 	public void initMapAndSolutionsSignleton(String[] args, String degaultMapFileName, String defaultResultFileName) throws WriteException, IOException {
 		map = getMap(args, degaultMapFileName);
 		fileName = getFileName(args, defaultResultFileName);
-		SolutionsSingleton.setResultExporter(new CsvTuningExperimentResultExporter(fileName));
+		TuningSolutionsSingleton.setResultExporter(new CsvTuningExperimentResultExporter(fileName));
 	}
-
 	
 	public String getFileName() {
 		return fileName;

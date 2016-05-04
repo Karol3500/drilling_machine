@@ -10,7 +10,7 @@ public class IwoCore extends Core {
 	private IwoParameters params;
 
 	public IwoCore() {
-		algorithmName = "IWO Algorithm";
+		algorithmName = "IWO";
 		population = getNewSpecimenList();
 		abort = false;
 	}

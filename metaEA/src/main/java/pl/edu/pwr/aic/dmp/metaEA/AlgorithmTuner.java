@@ -46,7 +46,7 @@ public class AlgorithmTuner {
 	}
 
 	public void printAllSolutions() {
-		for(TuningExperimentResult s : SolutionsSingleton.getResultsList()){
+		for(TuningExperimentResult s : TuningSolutionsSingleton.getResultsList()){
 			System.out.println(s);
 		}
 	}
@@ -55,7 +55,7 @@ public class AlgorithmTuner {
 		DmpParametersSolution best = (DmpParametersSolution) tabuSearchEngine.getBestSolution();
 		Parameters params = best.getParameters();
 		double routeLength = 0;
-		for(TuningExperimentResult res : SolutionsSingleton.getResultsList()){
+		for(TuningExperimentResult res : TuningSolutionsSingleton.getResultsList()){
 			if(res.getParams().equals(params)){
 				routeLength = res.getRouteLength();
 			}

@@ -8,6 +8,8 @@
 	</parent>
 	<groupId>pl.edu.pwr.aic.dmp</groupId>
 	<artifactId>ConsoleApplication</artifactId>
+
+	<packaging>jar</packaging>
 	<build>
 		<plugins>
 			<plugin>
@@ -50,6 +52,14 @@
 						</program>
 					</programs>
 				</configuration>
+				<executions>
+					<execution>
+						<id>assemble</id>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

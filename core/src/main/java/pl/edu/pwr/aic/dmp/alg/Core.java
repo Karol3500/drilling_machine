@@ -24,21 +24,22 @@ public abstract class Core extends Thread {
 	protected List<Specimen> tournament;
 	protected List<Specimen> ranking;
 	protected List<Specimen> population;
-	protected Core(){
-		result = new UnitResult();
-	}
 	
 	@Override
 	public void run(){
-		startTime=System.currentTimeMillis();
-		setupSaneParametersIfNotGiven();
+		prepareFreshSetup();
 		runAlg();
 		stopTime=System.currentTimeMillis();
 		result.setExecutionTimeInSeconds((stopTime-startTime)/1000d);
 		result.setBestRouteLength(bestSpecimen.getRouteLength());
-		result.setPermutation(bestSpecimen.getRoute());
-		
-//		showEffects();
+		result.setBestRoute(bestSpecimen.getRoute());
+	}
+	
+	public void prepareFreshSetup(){
+		startTime = System.currentTimeMillis();
+		stopTime = 0;
+		result = new UnitResult();
+		setupSaneParametersIfNotGiven();
 	}
 	
 	abstract void runAlg();
@@ -60,7 +61,7 @@ public abstract class Core extends Thread {
 		addLine("Route length: " + result.getBestRouteLength());
 		String tempS = "";
 		addLine("Generation with best specimen found: " + bestGeneration + tempS);
-		addPhrase("Best found route: " + result.getPermutation());
+		addPhrase("Best found route: " + result.getBestRoute());
 		newLine();
 	
 		addLine("============================================================================================================");
@@ -140,6 +141,14 @@ public abstract class Core extends Thread {
 
 	public void setStartCity(City startCity) {
 		this.startCity = startCity;
+	}
+	
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
+
+	public void setAlgorithmName(String algorithmName) {
+		this.algorithmName = algorithmName;
 	}
 	
 	protected abstract boolean areProperParametersGiven() ;
