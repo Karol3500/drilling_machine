@@ -202,7 +202,7 @@ public abstract class Core extends Thread {
 		return new Specimen(cities, startCity, drillChangeInterval);
 	}
 	
-	public Specimen getRandomSolution(Core alg){
+	public Specimen getRandomSolution(){
 		Specimen specimen = new Specimen(cities, startCity, drillChangeInterval);
 		specimen.shuffleRoute();
 		return specimen;
