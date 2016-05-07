@@ -51,8 +51,8 @@ public class IwoParameters implements Parameters {
 	
 	@Override
 	public List<? extends Object> getParameterValuesAsList() {
-		return Arrays.asList(minSpecimenInPopulation, maxSpecimenInPopulation,
-				numberOfIterations, maxSeedNumber, minSeedNumber,
+		return Arrays.asList(numberOfIterations, minSpecimenInPopulation,
+				maxSpecimenInPopulation, minSeedNumber, maxSeedNumber,
 				nonLinearCoefficient, initialTransformationsPerSeed,
 				finalTransformationsPerSeed);
 	}
