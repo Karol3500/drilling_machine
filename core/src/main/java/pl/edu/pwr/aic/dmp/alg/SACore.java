@@ -3,8 +3,6 @@ import pl.edu.pwr.aic.dmp.alg.utils.SaParameters;
 
 public class SACore extends Core{
 	private SaParameters params;
-	private double bestRouteLength;
-
 	public SACore() {
 		algorithmName = "SimulatedAnnealing";
 		bestRouteLength = Double.MAX_VALUE;

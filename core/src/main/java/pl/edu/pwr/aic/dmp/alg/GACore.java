@@ -16,7 +16,6 @@ public class GACore extends Core{
 		population = new ArrayList<Specimen>();
 		tournament = new ArrayList<Specimen>();
 		ranking = new ArrayList<Specimen>();
-		abort = false;
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class GACore extends Core{
 		Collections.sort(population);
 		bestSpecimen = population.get(0).clone();
 
-		for (int pok = 0; !abort && pok < params.getGenerationsCount(); pok++) {
+		for (int pok = 0; pok < params.getGenerationsCount(); pok++) {
 			List<Specimen> populacja_kolejna = getNewSpecimenList();
 			
 			while (populacja_kolejna.size() < population.size()) {

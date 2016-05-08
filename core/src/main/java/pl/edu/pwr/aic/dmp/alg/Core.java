@@ -9,7 +9,6 @@ import pl.edu.pwr.aic.dmp.alg.utils.Parameters;
 import pl.edu.pwr.aic.dmp.utils.UnitResult;
 
 public abstract class Core extends Thread {
-	boolean abort;
 	City startCity;
 	int drillChangeInterval;
 	protected List<City> cities;
@@ -24,6 +23,7 @@ public abstract class Core extends Thread {
 	protected List<Specimen> tournament;
 	protected List<Specimen> ranking;
 	protected List<Specimen> population;
+	protected double bestRouteLength;
 	
 	@Override
 	public void run(){
@@ -49,9 +49,6 @@ public abstract class Core extends Thread {
 		addLine("============================================================================================================");
 		addDate();
 		String temp = "";
-		if (abort == true) {
-			temp = "(because of abort) ";
-		}
 		addLine(">>>"+algorithmName+" finished " + temp + "with result:");
 		addPhrase("Algorithm working time: " + result.getExecutionTimeInSeconds() + " s");
 		newLine();
@@ -280,9 +277,10 @@ public abstract class Core extends Thread {
 
 	protected void setBestSpecimenAndIterationIfFound(int iteration, List<Specimen> population) {
 		Collections.sort(population);
-		if (bestSpecimen.getRouteLength() > getMinRoute(population)) {
+		if (bestRouteLength > getMinRoute(population)) {
 			bestGeneration=iteration;
 			bestSpecimen=population.get(0).clone();
+			bestRouteLength = bestSpecimen.getRouteLength();
 		}
 	}
 

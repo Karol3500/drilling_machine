@@ -25,7 +25,7 @@ public class RandomCore extends Core{
 		cycleLen = new double[params.getCyclesNumber() + 1];
 		currentSpecimen = new Specimen(cities, startCity, drillChangeInterval);
 		int i = 0;
-		while (!abort && i <= params.getCyclesNumber()) {
+		while (i <= params.getCyclesNumber()) {
 			generateSpecimen(i);
 			i++;
 		}

@@ -54,20 +54,20 @@ public class ExperimentResult {
 	
 	public UnitResult getAveragedUnitResult(){
 		List<Integer> bestPermutation = null;
-		double executionTime = 0d;
-		double bestRouteLength = 0d;
-		double bestRouteLengthSoFar = Double.MAX_VALUE;
+		double totalExecutionTimeSum = 0d;
+		double totalRouteLengthSum = 0d;
+		double bestRouteLength = Double.MAX_VALUE;
 		for(UnitResult u : results){
-			executionTime += u.getExecutionTimeInSeconds();
-			bestRouteLength += u.getBestRouteLength();
-			if(u.getBestRouteLength() < bestRouteLengthSoFar){
-				bestRouteLengthSoFar = u.getBestRouteLength();
+			totalExecutionTimeSum += u.getExecutionTimeInSeconds();
+			totalRouteLengthSum += u.getBestRouteLength();
+			if(u.getBestRouteLength() < bestRouteLength){
+				bestRouteLength = u.getBestRouteLength();
 				bestPermutation = u.getBestRoute();
 			}
 		}
 		UnitResult res = new UnitResult();
-		res.setBestRouteLength(bestRouteLength/results.size());
-		res.setExecutionTimeInSeconds(executionTime/results.size());
+		res.setBestRouteLength(totalRouteLengthSum/results.size());
+		res.setExecutionTimeInSeconds(totalExecutionTimeSum/results.size());
 		res.setBestRoute(bestPermutation);
 		return res;
 	}
