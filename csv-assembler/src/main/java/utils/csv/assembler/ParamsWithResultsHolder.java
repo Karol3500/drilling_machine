@@ -2,7 +2,7 @@ package utils.csv.assembler;
 
 import java.util.List;
 
-public class ParamsWithResultsHolder {
+public class ParamsWithResultsHolder implements Comparable<ParamsWithResultsHolder>{
 	String parameters;
 	List<SingleResult> results;
 	
@@ -17,6 +17,10 @@ public class ParamsWithResultsHolder {
 	}
 	public void setResults(List<SingleResult> results) {
 		this.results = results;
+	}
+	@Override
+	public int compareTo(ParamsWithResultsHolder o) {
+		return o.getParameters().compareTo(parameters);
 	}
 	
 }

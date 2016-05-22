@@ -3,7 +3,6 @@ package utils.csv.assembler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -117,7 +116,7 @@ public class CsvCompactAveragedResultsMergerTest {
 		List<ParamsWithResultsHolder> holders = createHolder();
 		String expected = getExpectedLatexOutcome();
 		
-		String latexTable = merger.getParamsAndResultsFromHoldersAsLatex(holders);
+		String latexTable = merger.getResultsFromHoldersAsLatex(holders);
 		System.out.println("Expected:");
 		System.out.println(expected);
 		

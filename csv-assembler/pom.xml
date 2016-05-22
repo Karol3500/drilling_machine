@@ -31,7 +31,7 @@
 							<addClasspath>true</addClasspath>
 						</manifest>
 						<manifestEntries>
-							<Main-Class>utils.csv.assembler.CsvAveragedResultsMerger</Main-Class>
+							<Main-Class>utils.csv.assembler.CsvCompactAveragedResultsMerger</Main-Class>
 						</manifestEntries>
 					</archive>
 				</configuration>

@@ -3,6 +3,7 @@ package utils.csv.assembler;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,14 +19,17 @@ public class CsvCompactAveragedResultsMerger {
 	CsvFileReadingUtil util = new CsvFileReadingUtil();
 	
 	public static void main(String args[]){
-		args = new String[]{};
 		
 		CsvCompactAveragedResultsMerger merger = new CsvCompactAveragedResultsMerger();
 		List<ParamsWithResultsHolder> holders = merger.readAllParamsAndResults(args);
-		String table = merger.getParamsAndResultsFromHoldersAsLatex(holders);
-		System.out.println(table);
+		Collections.sort(holders);
+		String params = merger.getParamsFromHoldersAsLatex(holders);
+		String resultsTable = merger.getResultsFromHoldersAsLatex(holders);
+		System.out.println(params);
+		System.out.println("\n\n\n");
+		System.out.println(resultsTable);
 	}
-	
+
 	public List<String> readParameters(String[] filePaths) {
 		List<String> parameters = new ArrayList<>();
 		
@@ -81,7 +85,7 @@ public class CsvCompactAveragedResultsMerger {
 		return new SingleResult(Double.valueOf(params[0]), Double.valueOf(params[1]));
 	}
 
-	public String getParamsAndResultsFromHoldersAsLatex(List<ParamsWithResultsHolder> holders) {
+	public String getResultsFromHoldersAsLatex(List<ParamsWithResultsHolder> holders) {
 		StringBuilder tex = new StringBuilder();
 		tex.append("\\begin{longtable}{|c|c|c|c|c|c|}");
 		tex.append(HLINE);
@@ -96,7 +100,6 @@ public class CsvCompactAveragedResultsMerger {
 			tex.append(HLINE);
 		}
 		tex.append("\\end{longtable}");
-		System.out.println(tex.toString());
 		return tex.toString();
 	}
 
@@ -125,7 +128,7 @@ public class CsvCompactAveragedResultsMerger {
 		}
 		avgRoute /= results.size();
 		avgExecTime /= results.size();
-		d=bestRoute * avgExecTime;
+		d = bestRoute * avgExecTime;
 		res.append(TABLE_SEPARATOR);
 		res.append(f.format(bestRoute));
 		res.append(TABLE_SEPARATOR);
@@ -138,4 +141,53 @@ public class CsvCompactAveragedResultsMerger {
 		res.append(f.format(d));
 		return res.toString();
 	}
+	
+	
+	private String getParamsFromHoldersAsLatex(List<ParamsWithResultsHolder> holders) {
+		StringBuilder s = new StringBuilder();
+		appendTableHeader(holders, s);
+		s.append(HLINE);
+		
+		DecimalFormatSymbols sym = new DecimalFormatSymbols(Locale.getDefault());
+		sym.setDecimalSeparator('.');
+		DecimalFormat f = new DecimalFormat("0.00", sym);
+		
+		for(ParamsWithResultsHolder h : holders){
+			String[] parameters = h.getParameters().split(" ");
+			s.append(holders.indexOf(h) + 1 + TABLE_SEPARATOR);
+			s.append(getLatexParamsLine(f, parameters));
+			s.append(LINE_END);
+			s.append(HLINE);
+		}
+		s.append("\\end{longtable}");
+		return s.toString();
+	}
+
+	private void appendTableHeader(List<ParamsWithResultsHolder> holders, StringBuilder s) {
+		s.append("\\begin{longtable}{|c|");
+		for(int i=0; i<holders.get(0).getParameters().split(" ").length; i++){
+			s.append("c|");
+		}
+		s.append("}");
+	}
+
+private String getLatexParamsLine(DecimalFormat f, String[] parameters) {
+	StringBuilder paramLine = new StringBuilder();
+	for (int i = 0; i < parameters.length; i++) {
+		String param = parameters[i];
+		String paramToAdd;
+		try{
+			Double p = Double.parseDouble(param);
+			paramToAdd = f.format(p);
+		}
+		catch(Exception e){
+			paramToAdd = param;
+		}
+		paramLine.append(paramToAdd);
+		if(i != parameters.length-1){
+			paramLine.append(" & ");
+		}
+	}
+	return paramLine.toString();
+}
 }
