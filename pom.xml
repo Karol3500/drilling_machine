@@ -15,6 +15,7 @@
 		<module>core</module>
 		<module>ConsoleApplication</module>
 		<module>metaEA</module>
+		<module>csv-assembler</module>
 	</modules>
 	<build>
 		<plugins>
