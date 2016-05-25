@@ -20,6 +20,7 @@ public class GACore extends Core{
 
 	@Override
 	void runAlg() {
+		bestRouteLength = Double.MAX_VALUE;
 		params = (GaParameters)algorithmParameters;
 		population = initPopulation(params.getPopulationCount());
 

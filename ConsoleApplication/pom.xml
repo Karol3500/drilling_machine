@@ -50,6 +50,10 @@
 							<mainClass>pl.edu.pwr.aic.dmp.SaConsoleEntry</mainClass>
 							<id>sa_single</id>
 						</program>
+						<program>
+							<mainClass>pl.edu.pwr.aic.dmp.RandomConsoleEntry</mainClass>
+							<id>random_single</id>
+						</program>
 					</programs>
 				</configuration>
 				<executions>

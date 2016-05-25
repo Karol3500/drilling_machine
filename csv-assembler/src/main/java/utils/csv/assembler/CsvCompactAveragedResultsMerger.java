@@ -3,7 +3,9 @@ package utils.csv.assembler;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,10 +21,37 @@ public class CsvCompactAveragedResultsMerger {
 	CsvFileReadingUtil util = new CsvFileReadingUtil();
 	
 	public static void main(String args[]){
-		
+//		args = new String[] {"--sort-random",
+//				"src/test/java/resources/Random_a280.tsp_1.csv",
+//				"src/test/java/resources/Random_a280.tsp.csv"};
+		boolean sortRandom = false;
+		if(args[0].equals("--sort-random")){
+			sortRandom = true;
+			args = Arrays.copyOfRange(args, 1, args.length);
+		}
 		CsvCompactAveragedResultsMerger merger = new CsvCompactAveragedResultsMerger();
 		List<ParamsWithResultsHolder> holders = merger.readAllParamsAndResults(args);
-		Collections.sort(holders);
+		if(sortRandom){
+			Comparator <ParamsWithResultsHolder> hComp = new Comparator<ParamsWithResultsHolder>() {
+				
+				@Override
+				public int compare(ParamsWithResultsHolder o1, ParamsWithResultsHolder o2) {
+					double h1Param = Double.valueOf(o1.getParameters());
+					double h2Param = Double.valueOf(o2.getParameters());
+					if(h1Param < h2Param){
+						return -1;
+					}
+					if(h1Param == h2Param){
+						return 0;
+					}
+					return 1;
+				}
+			};
+			holders.sort(hComp);
+		}
+		else{
+			Collections.sort(holders);
+		}
 		String params = merger.getParamsFromHoldersAsLatex(holders);
 		String resultsTable = merger.getResultsFromHoldersAsLatex(holders);
 		System.out.println(params);
@@ -89,9 +118,9 @@ public class CsvCompactAveragedResultsMerger {
 		StringBuilder tex = new StringBuilder();
 		tex.append("\\begin{longtable}{|c|c|c|c|c|c|}");
 		tex.append(HLINE);
-		tex.append("\\cellcolor{lightgray}ParamId &" + "\\cellcolor{lightgray}Best route lenght &" +
-				"\\cellcolor{lightgray}Worst route length &" + "\\cellcolor{lightgray}Avg route length &" + 
-				"\\cellcolor{lightgray}Avg exec time &" + "\\cellcolor{lightgray}D");
+		tex.append("ParamId &" + "Best route length &" +
+				"Worst route length &" + "Avg route length &" + 
+				"Avg exec time &" + "D");
 		tex.append(LINE_END);
 		tex.append(HLINE);
 		for(ParamsWithResultsHolder h : holders){

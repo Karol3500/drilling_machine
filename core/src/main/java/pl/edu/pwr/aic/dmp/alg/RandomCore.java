@@ -1,52 +1,35 @@
 package pl.edu.pwr.aic.dmp.alg;
-import java.math.BigDecimal;
-
 import pl.edu.pwr.aic.dmp.alg.utils.RandomParameters;
 
 public class RandomCore extends Core{
-	double[][] lengths;
-	double currentLen;
-	int bestCycle;
 	Specimen currentSpecimen;
-	double bestLen;
-	double cycleLen[];
 	RandomParameters params;
 
 	public RandomCore() {
 		algorithmName = "Random";
-		bestLen = Double.POSITIVE_INFINITY;
-		currentLen = Double.POSITIVE_INFINITY;
-		bestCycle = -1;
 	}
 
 	@Override
 	void runAlg() {
+		bestRouteLength = Double.MAX_VALUE;
 		params = (RandomParameters) algorithmParameters;
-		cycleLen = new double[params.getCyclesNumber() + 1];
 		currentSpecimen = new Specimen(cities, startCity, drillChangeInterval);
-		int i = 0;
-		while (i <= params.getCyclesNumber()) {
-			generateSpecimen(i);
-			i++;
+		for(int i = 0; i < params.getCyclesNumber(); i++) {
+			currentSpecimen.shuffleRoute();
+			if(currentSpecimen.getRouteLength() < bestRouteLength){
+				bestSpecimen=currentSpecimen;
+				bestRouteLength=currentSpecimen.getRouteLength();
+				bestGeneration=i;
+			}
 		}
 	}
 
 	public void generateSpecimen(int n) {
 		currentSpecimen.shuffleRoute();
-		currentLen=currentSpecimen.getRouteLength();
-
-		if(currentLen<bestLen){
+		if(currentSpecimen.getRouteLength() < bestRouteLength){
 			bestSpecimen=currentSpecimen;
-			bestLen=currentLen;
-			bestCycle=n;
-		}
-	}
-
-	public double round(double d,int pos){
-		if(Double.isInfinite(d) || Double.isNaN(d)){
-			return -1;
-		} else {
-			return new BigDecimal(d).setScale(pos, BigDecimal.ROUND_HALF_UP).doubleValue();
+			bestRouteLength=currentSpecimen.getRouteLength();
+			bestGeneration=n;
 		}
 	}
 	

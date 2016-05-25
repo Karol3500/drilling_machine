@@ -144,9 +144,9 @@ public class CsvCompactAveragedResultsMergerTest {
 		
 		return "\\begin{longtable}{|c|c|c|c|c|c|}" + 
 				hline +
-				"\\cellcolor{lightgray}ParamId &" + "\\cellcolor{lightgray}Best route lenght &" +
-				"\\cellcolor{lightgray}Worst route length &" + "\\cellcolor{lightgray}Avg route length &" + 
-				"\\cellcolor{lightgray}Avg exec time &" + "\\cellcolor{lightgray}D" + end +
+				"ParamId &" + "Best route length &" +
+				"Worst route length &" + "Avg route length &" + 
+				"Avg exec time &" + "D" + end +
 				hline +
 				"1 & 1.00 & 3.00 & 2.00 & 3.00 & 3.00" + end +
 				hline + 

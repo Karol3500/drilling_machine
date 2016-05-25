@@ -29,7 +29,7 @@ public class IwoCore extends Core {
 				((params.getMaxSeedNumber() - params.getMinSeedNumber()) / (minRate - maxRate))));
 	}
 
-	double getMinTrasa() {
+	double getMinRoute() {
 		return population.get(0).getRouteLength();
 	}
 
@@ -72,10 +72,10 @@ public class IwoCore extends Core {
 					population.remove(population.size()-1);
 				}
 			}
-			if (bestRouteLength > getMinTrasa()) {
+			if (bestRouteLength > getMinRoute()) {
 				bestGeneration=pok;
 				bestSpecimen=population.get(0).clone();
-				bestRouteLength = getMinTrasa();
+				bestRouteLength = getMinRoute();
 			}
 		}
 	}

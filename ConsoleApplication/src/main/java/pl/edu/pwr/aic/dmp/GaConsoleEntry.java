@@ -6,7 +6,7 @@ import pl.edu.pwr.aic.dmp.helpers.file.parameters.GaParametersProcessingStrategy
 public class GaConsoleEntry extends ConsoleEntry {
 
 	public static void main(String[] args) throws InterruptedException{
-//		args= new String[]{"src/main/resources/maps_working/a280.tsp","src/test/resources/gaParameters", "20", "4"};
+//		args= new String[]{"src/main/resources/maps_working/pr107.tsp","src/test/resources/gaParameters", "20", "1"};
 		ConsoleEntry entry = new GaConsoleEntry();
 		if(!entry.init(new GACore(), new GaParametersProcessingStrategy(), args)){
 			return;

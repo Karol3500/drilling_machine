@@ -23,7 +23,7 @@ public abstract class Core extends Thread {
 	protected List<Specimen> tournament;
 	protected List<Specimen> ranking;
 	protected List<Specimen> population;
-	protected double bestRouteLength;
+	protected double bestRouteLength = Double.MAX_VALUE;
 	
 	@Override
 	public void run(){
@@ -277,6 +277,7 @@ public abstract class Core extends Thread {
 
 	protected void setBestSpecimenAndIterationIfFound(int iteration, List<Specimen> population) {
 		Collections.sort(population);
+		
 		if (bestRouteLength > getMinRoute(population)) {
 			bestGeneration=iteration;
 			bestSpecimen=population.get(0).clone();

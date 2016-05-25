@@ -2,7 +2,7 @@ package pl.edu.pwr.aic.dmp.alg;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Specimen implements Comparable<Specimen>, Cloneable{
 	private List<City> cities;
@@ -139,9 +139,8 @@ public class Specimen implements Comparable<Specimen>, Cloneable{
 	}
 
 	Specimen inver(Specimen specimen) {
-		Random generator = new Random();
-		int startCity = generator.nextInt(cities.size()-1);
-				int endCity = generator.nextInt(cities.size()-startCity)+startCity;
+		int startCity = ThreadLocalRandom.current().nextInt(cities.size()-1);
+				int endCity = ThreadLocalRandom.current().nextInt(cities.size()-startCity)+startCity;//Possibly could be changed to nextInt(startCity, cities.size())
 				for ( int start = startCity, end = endCity ;
 						start < startCity+((endCity-startCity)/2);
 						start++, end-- )
